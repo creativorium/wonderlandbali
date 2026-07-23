@@ -1,0 +1,64 @@
+// Hero block — shared by front end (frontend.css) and editor preview (editor.css).
+
+.wl-hero {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: clamp(420px, 80vh, 820px);
+	padding: clamp(2rem, 6vw, 6rem) var(--wl-gutter, 1.5rem);
+	text-align: center;
+	color: #fff;
+	background-size: cover;
+	background-position: center;
+	background-color: #16302a; // fallback when no image is set
+	overflow: hidden;
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		background: #000;
+		pointer-events: none;
+	}
+
+	&__inner {
+		position: relative;
+		z-index: 1;
+		max-width: 760px;
+		display: grid;
+		gap: 1.25rem;
+		justify-items: center;
+	}
+
+	&__title {
+		margin: 0;
+		font-family: var(--wl-font-head, inherit);
+		font-size: clamp(2.25rem, 6vw, 4.25rem);
+		line-height: 1.05;
+		font-weight: 700;
+		text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+	}
+
+	&__subtitle {
+		margin: 0;
+		font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+		opacity: 0.95;
+	}
+
+	&__cta {
+		display: inline-block;
+		margin-top: 0.5rem;
+		padding: 0.85rem 2rem;
+		border-radius: 999px;
+		background: var(--wl-color-primary, #1f6f5c);
+		color: var(--wl-color-primary-ink, #fff);
+		font-weight: 600;
+		text-decoration: none;
+		transition: transform 0.15s ease, background 0.15s ease;
+
+		&:hover {
+			transform: translateY(-2px);
+			background: color-mix(in srgb, var(--wl-color-primary, #1f6f5c) 85%, #000);
+		}
+	}
+}

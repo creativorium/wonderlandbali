@@ -1,0 +1,95 @@
+import { defineConfig } from 'vite';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = fileURLToPath(new URL('.', import.meta.url));
+
+/**
+ * Three independent build targets, each selected with `--mode <name>`.
+ *
+ *  theme    -> theme/build/main.js  + main.css      (site-wide frontend CSS/JS, no WP deps)
+ *  editor   -> plugin/build/editor.js + editor.css  (block editor: registers blocks; @wordpress/* externalized to wp.* globals)
+ *  frontend -> plugin/build/frontend.css            (front-end styles for the blocks)
+ *
+ * Fixed filenames + PHP filemtime() cache-busting — no manifest needed.
+ * JSX compiles straight to wp.element.createElement (no React dependency shipped).
+ */
+const TARGETS = {
+  theme: {
+    entry: resolve(root, 'theme/src/main.js'),
+    name: 'wonderlandTheme',
+    outDir: resolve(root, 'theme/build'),
+    fileBase: 'main',
+    external: [],
+    globals: {},
+  },
+  editor: {
+    entry: resolve(root, 'plugin/src/editor.js'),
+    name: 'wonderlandEditor',
+    outDir: resolve(root, 'plugin/build'),
+    fileBase: 'editor',
+    external: [
+      '@wordpress/blocks',
+      '@wordpress/block-editor',
+      '@wordpress/components',
+      '@wordpress/element',
+      '@wordpress/i18n',
+      '@wordpress/data',
+    ],
+    globals: {
+      '@wordpress/blocks': 'wp.blocks',
+      '@wordpress/block-editor': 'wp.blockEditor',
+      '@wordpress/components': 'wp.components',
+      '@wordpress/element': 'wp.element',
+      '@wordpress/i18n': 'wp.i18n',
+      '@wordpress/data': 'wp.data',
+    },
+  },
+  frontend: {
+    entry: resolve(root, 'plugin/src/frontend.js'),
+    name: 'wonderlandFrontend',
+    outDir: resolve(root, 'plugin/build'),
+    fileBase: 'frontend',
+    external: [],
+    globals: {},
+  },
+};
+
+export default defineConfig(({ mode }) => {
+  const t = TARGETS[mode] ?? TARGETS.theme;
+
+  return {
+    // Classic JSX transform -> wp.element.createElement / wp.element.Fragment.
+    esbuild: {
+      jsx: 'transform',
+      jsxFactory: 'wp.element.createElement',
+      jsxFragment: 'wp.element.Fragment',
+    },
+    build: {
+      outDir: t.outDir,
+      // editor + frontend share plugin/build, so never auto-empty here —
+      // the `clean` npm script wipes build dirs once before all three runs.
+      emptyOutDir: false,
+      cssCodeSplit: false,
+      target: 'es2020',
+      minify: 'esbuild',
+      lib: {
+        entry: t.entry,
+        name: t.name,
+        formats: ['iife'],
+        fileName: () => `${t.fileBase}.js`,
+      },
+      rollupOptions: {
+        external: t.external,
+        output: {
+          globals: t.globals,
+          assetFileNames: (asset) => {
+            const n = asset.names?.[0] ?? asset.name ?? '';
+            if (n.endsWith('.css')) return `${t.fileBase}.css`;
+            return '[name][extname]';
+          },
+        },
+      },
+    },
+  };
+});

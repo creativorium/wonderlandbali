@@ -1,0 +1,46 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/hero",
+	"title": "Wonderland Hero",
+	"category": "wonderland",
+	"icon": "cover-image",
+	"description": "Full-width hero with headline, subheadline and a call-to-action over a background image.",
+	"keywords": [ "hero", "banner", "cover", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": [ "full" ]
+	},
+	"attributes": {
+		"heading": {
+			"type": "string",
+			"default": "Welcome to Wonderland Bali"
+		},
+		"subheading": {
+			"type": "string",
+			"default": "An unforgettable escape in the heart of the island."
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Book Now"
+		},
+		"buttonUrl": {
+			"type": "string",
+			"default": "#"
+		},
+		"backgroundId": {
+			"type": "number"
+		},
+		"backgroundUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"overlayOpacity": {
+			"type": "number",
+			"default": 40
+		}
+	},
+	"render": "file:./render.php"
+}
