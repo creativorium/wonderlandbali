@@ -21,6 +21,19 @@ add_action(
 		add_theme_support( 'align-wide' );
 		add_theme_support( 'editor-styles' );
 
+		// Load the fonts + compiled theme CSS inside the block editor so block
+		// previews match the front end.
+		$editor_styles = array();
+		if ( file_exists( get_stylesheet_directory() . '/assets/fonts/fonts.css' ) ) {
+			$editor_styles[] = 'assets/fonts/fonts.css';
+		}
+		if ( file_exists( get_stylesheet_directory() . '/build/main.css' ) ) {
+			$editor_styles[] = 'build/main.css';
+		}
+		if ( $editor_styles ) {
+			add_editor_style( $editor_styles );
+		}
+
 		register_nav_menus(
 			array(
 				'primary' => __( 'Primary Menu', 'wonderland' ),

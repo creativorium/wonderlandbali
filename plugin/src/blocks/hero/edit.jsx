@@ -8,17 +8,30 @@ import {
 } from '@wordpress/block-editor';
 import { PanelBody, Button, RangeControl, TextControl } from '@wordpress/components';
 
-/**
- * Editor UI for the Hero block. Mirrors render.php so the editor preview
- * matches the front end.
- */
+const PinIcon = () => (
+	<svg
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		strokeWidth="1.6"
+		strokeLinecap="round"
+		strokeLinejoin="round"
+		aria-hidden="true"
+	>
+		<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z" />
+		<circle cx="12" cy="10" r="2.5" />
+	</svg>
+);
+
 export default function Edit( { attributes, setAttributes } ) {
 	const {
 		heading,
 		subheading,
+		sideText,
 		buttonText,
 		buttonUrl,
 		backgroundUrl,
+		badgeUrl,
 		overlayOpacity,
 	} = attributes;
 
@@ -66,6 +79,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						style={ { marginTop: '16px' } }
 					/>
 				</PanelBody>
+
 				<PanelBody title={ __( 'Call to action', 'wonderland-blocks' ) } initialOpen={ false }>
 					<TextControl
 						label={ __( 'Button URL', 'wonderland-blocks' ) }
@@ -73,6 +87,35 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( v ) => setAttributes( { buttonUrl: v } ) }
 						placeholder="https://"
 					/>
+				</PanelBody>
+
+				<PanelBody title={ __( 'Award badge', 'wonderland-blocks' ) } initialOpen={ false }>
+					<MediaUploadCheck>
+						<MediaUpload
+							onSelect={ ( media ) =>
+								setAttributes( { badgeId: media.id, badgeUrl: media.url } )
+							}
+							allowedTypes={ [ 'image' ] }
+							value={ attributes.badgeId }
+							render={ ( { open } ) => (
+								<Button variant="secondary" onClick={ open }>
+									{ badgeUrl
+										? __( 'Replace badge', 'wonderland-blocks' )
+										: __( 'Select badge', 'wonderland-blocks' ) }
+								</Button>
+							) }
+						/>
+					</MediaUploadCheck>
+					{ badgeUrl && (
+						<Button
+							variant="link"
+							isDestructive
+							onClick={ () => setAttributes( { badgeId: undefined, badgeUrl: '' } ) }
+							style={ { marginTop: '8px' } }
+						>
+							{ __( 'Remove badge', 'wonderland-blocks' ) }
+						</Button>
+					) }
 				</PanelBody>
 			</InspectorControls>
 
@@ -82,6 +125,16 @@ export default function Edit( { attributes, setAttributes } ) {
 					style={ { opacity: overlayOpacity / 100 } }
 					aria-hidden="true"
 				/>
+
+				<RichText
+					tagName="p"
+					className="wl-hero__side"
+					value={ sideText }
+					onChange={ ( v ) => setAttributes( { sideText: v } ) }
+					placeholder={ __( 'Vertical label…', 'wonderland-blocks' ) }
+					allowedFormats={ [] }
+				/>
+
 				<div className="wl-hero__inner">
 					<RichText
 						tagName="h1"
@@ -99,15 +152,21 @@ export default function Edit( { attributes, setAttributes } ) {
 						placeholder={ __( 'Add a subheadline…', 'wonderland-blocks' ) }
 						allowedFormats={ [ 'core/bold', 'core/italic' ] }
 					/>
-					<RichText
-						tagName="span"
-						className="wl-hero__cta"
-						value={ buttonText }
-						onChange={ ( v ) => setAttributes( { buttonText: v } ) }
-						placeholder={ __( 'Button text…', 'wonderland-blocks' ) }
-						allowedFormats={ [] }
-					/>
+					<span className="wl-hero__cta">
+						<PinIcon />
+						<RichText
+							tagName="span"
+							value={ buttonText }
+							onChange={ ( v ) => setAttributes( { buttonText: v } ) }
+							placeholder={ __( 'Button text…', 'wonderland-blocks' ) }
+							allowedFormats={ [] }
+						/>
+					</span>
 				</div>
+
+				{ badgeUrl && (
+					<img className="wl-hero__badge" src={ badgeUrl } alt="" />
+				) }
 			</section>
 		</>
 	);

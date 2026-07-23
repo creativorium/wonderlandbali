@@ -5,7 +5,7 @@
 	"title": "Wonderland Hero",
 	"category": "wonderland",
 	"icon": "cover-image",
-	"description": "Full-width hero with headline, subheadline and a call-to-action over a background image.",
+	"description": "Full-screen hero banner with vertical label, headline, subheadline, ghost CTA and an award badge — matches the Wonderland Bali homepage.",
 	"keywords": [ "hero", "banner", "cover", "wonderland" ],
 	"textdomain": "wonderland-blocks",
 	"supports": {
@@ -14,33 +14,25 @@
 		"align": [ "full" ]
 	},
 	"attributes": {
+		"backgroundId": { "type": "number" },
+		"backgroundUrl": { "type": "string", "default": "" },
+		"overlayOpacity": { "type": "number", "default": 35 },
+		"sideText": {
+			"type": "string",
+			"default": "WEDDING PLANNING & STYLING   |   EVENT PLANNING & STYLING"
+		},
 		"heading": {
 			"type": "string",
-			"default": "Welcome to Wonderland Bali"
+			"default": "\"OH WOW\" WEDDING PLANNING & STYLING"
 		},
 		"subheading": {
 			"type": "string",
-			"default": "An unforgettable escape in the heart of the island."
+			"default": "Creating wonders in Bali, Portugal and Italy."
 		},
-		"buttonText": {
-			"type": "string",
-			"default": "Book Now"
-		},
-		"buttonUrl": {
-			"type": "string",
-			"default": "#"
-		},
-		"backgroundId": {
-			"type": "number"
-		},
-		"backgroundUrl": {
-			"type": "string",
-			"default": ""
-		},
-		"overlayOpacity": {
-			"type": "number",
-			"default": 40
-		}
+		"buttonText": { "type": "string", "default": "MAKE A REQUEST" },
+		"buttonUrl": { "type": "string", "default": "#" },
+		"badgeId": { "type": "number" },
+		"badgeUrl": { "type": "string", "default": "" }
 	},
 	"render": "file:./render.php"
 }

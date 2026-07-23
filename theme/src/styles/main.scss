@@ -1,4 +1,6 @@
 @use 'tokens';
+// Note: @font-face lives in /assets/fonts/fonts.css (enqueued separately) so the
+// .ttf files stay as cacheable external files instead of being inlined by Vite.
 
 /* ---------- Base ---------- */
 *,
