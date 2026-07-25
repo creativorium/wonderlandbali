@@ -1,4 +1,6 @@
 @use 'tokens';
+@use 'header';
+@use 'footer';
 // Note: @font-face lives in /assets/fonts/fonts.css (enqueued separately) so the
 // .ttf files stay as cacheable external files instead of being inlined by Vite.
 
@@ -36,45 +38,9 @@ a { color: var(--wl-color-primary); }
   padding: .6rem 1rem; background: #fff; z-index: 1000;
 }
 
-/* ---------- Header ---------- */
-.site-header {
-  position: sticky; top: 0; z-index: 100;
-  background: color-mix(in srgb, var(--wl-color-bg) 92%, transparent);
-  backdrop-filter: saturate(150%) blur(6px);
-  transition: box-shadow .2s ease;
-
-  &.is-scrolled { box-shadow: 0 1px 0 rgba(0,0,0,.08); }
-
-  &__inner {
-    @include tokens.wl-container;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 1.5rem; min-height: 72px;
-  }
-
-  &__title { font-weight: 700; text-decoration: none; color: var(--wl-color-fg); }
-}
-
-.site-nav {
-  display: flex; gap: 1.25rem; list-style: none; margin: 0; padding: 0;
-
-  a { text-decoration: none; color: var(--wl-color-fg); }
-  a:hover { color: var(--wl-color-primary); }
-}
-
 /* ---------- Content ---------- */
 .site-main { min-height: 40vh; }
 
 .entry-content > *:not(.alignfull):not(.wl-hero) {
   @include tokens.wl-container;
 }
-
-/* ---------- Footer ---------- */
-.site-footer {
-  margin-top: 4rem; padding-block: 3rem;
-  background: var(--wl-color-fg); color: #fff;
-
-  &__inner { @include tokens.wl-container; display: grid; gap: 1rem; }
-  a { color: #fff; text-decoration: none; }
-  &__copy { margin: 0; color: rgba(255,255,255,.7); font-size: .9rem; }
-}
-.footer-nav { display: flex; flex-wrap: wrap; gap: 1rem; list-style: none; margin: 0; padding: 0; }
