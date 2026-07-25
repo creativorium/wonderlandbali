@@ -71,6 +71,8 @@ export default defineConfig(({ mode }) => {
       // the `clean` npm script wipes build dirs once before all three runs.
       emptyOutDir: false,
       cssCodeSplit: false,
+      // Never inline assets (fonts) as base64 — emit them as cacheable files.
+      assetsInlineLimit: 0,
       target: 'es2020',
       minify: 'esbuild',
       lib: {

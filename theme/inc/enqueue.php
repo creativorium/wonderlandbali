@@ -27,9 +27,15 @@ function wonderland_asset( $rel ) {
 add_action(
 	'wp_enqueue_scripts',
 	function () {
+		// Web fonts first (static file — relative @font-face URLs).
+		$fonts = wonderland_asset( '/assets/fonts/fonts.css' );
+		if ( $fonts ) {
+			wp_enqueue_style( 'wonderland-fonts', $fonts[0], array(), $fonts[1] );
+		}
+
 		$css = wonderland_asset( '/build/main.css' );
 		if ( $css ) {
-			wp_enqueue_style( 'wonderland-main', $css[0], array(), $css[1] );
+			wp_enqueue_style( 'wonderland-main', $css[0], array( 'wonderland-fonts' ), $css[1] );
 		}
 
 		$js = wonderland_asset( '/build/main.js' );

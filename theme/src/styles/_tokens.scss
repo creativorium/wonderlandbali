@@ -1,30 +1,45 @@
-// Design tokens for Wonderland Bali.
-// TODO: replace placeholder values with the real palette/typography pulled
-// from wonderlandbali.com as we rebuild each section.
+// Design tokens for Wonderland Bali — extracted from the live Elementor site.
+//
+// Global palette (Elementor kit):
+//   primary   #E3DEDA  greige / warm off-white
+//   secondary #EFA58F  coral
+//   accent    #E2B9C9  soft pink
+//   text      #000000
+//
+// Typography (Elementor kit):
+//   headings  "Analogue Modern"  (serif)
+//   labels    "Gill" (Gill Sans) (letter-spaced caps)
 
 :root {
-  // Colours (placeholders — refine against the live site)
-  --wl-color-bg: #ffffff;
-  --wl-color-fg: #1a1a1a;
-  --wl-color-muted: #6b6b6b;
-  --wl-color-primary: #1f6f5c;      // tropical green placeholder
-  --wl-color-primary-ink: #ffffff;
-  --wl-color-accent: #e8b04b;       // sand/gold placeholder
+	// Brand palette
+	--wl-greige: #e3deda;
+	--wl-coral: #efa58f;
+	--wl-pink: #e2b9c9;
+	--wl-ink: #000000;
 
-  // Typography
-  --wl-font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --wl-font-head: var(--wl-font-body);
+	// Semantic
+	--wl-color-bg: #ffffff;
+	--wl-color-fg: var(--wl-ink);
+	--wl-color-muted: #6b6b6b;
+	--wl-color-primary: var(--wl-coral);      // primary action accent
+	--wl-color-primary-ink: #ffffff;
+	--wl-color-accent: var(--wl-pink);
+	--wl-on-dark: #ffffff;                     // text over imagery
 
-  // Layout
-  --wl-content-max: 1200px;
-  --wl-gutter: clamp(1rem, 4vw, 3rem);
-  --wl-radius: 10px;
+	// Typography
+	--wl-font-head: 'Analogue Modern', 'Times New Roman', serif;
+	--wl-font-label: 'Gill', 'Gill Sans', 'Gill Sans MT', system-ui, sans-serif;
+	--wl-font-body: 'Gill', 'Gill Sans', system-ui, sans-serif;
+
+	// Layout
+	--wl-content-max: 1200px;
+	--wl-gutter: clamp(1.25rem, 5vw, 6rem);
+	--wl-radius: 0px;
 }
 
-// Shared mixins
 @mixin wl-container {
-  width: 100%;
-  max-width: var(--wl-content-max);
-  margin-inline: auto;
-  padding-inline: var(--wl-gutter);
+	width: 100%;
+	max-width: var(--wl-content-max);
+	margin-inline: auto;
+	padding-inline: var(--wl-gutter);
 }

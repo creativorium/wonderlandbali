@@ -95,5 +95,16 @@ add_action(
 				filemtime( $css )
 			);
 		}
+
+		$js = WONDERLAND_BLOCKS_DIR . 'build/frontend.js';
+		if ( file_exists( $js ) ) {
+			wp_enqueue_script(
+				'wonderland-blocks',
+				WONDERLAND_BLOCKS_URL . 'build/frontend.js',
+				array(),
+				filemtime( $js ),
+				true
+			);
+		}
 	}
 );

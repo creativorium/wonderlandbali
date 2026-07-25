@@ -1,0 +1,44 @@
+/*
+ * Wonderland Bali web fonts. Static (not built by Vite) so the .ttf files stay
+ * as separate cacheable requests. URLs are relative to this file's folder.
+ *
+ *   "Analogue Modern" -> Analogue.ttf       (serif — headings)
+ *   "Gill" (Gill Sans) -> Gill-Sans-*.ttf   (letter-spaced caps — labels/buttons)
+ */
+
+@font-face {
+	font-family: 'Analogue Modern';
+	src: url('Analogue.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Analogue Modern';
+	src: url('Analogue-Italic.ttf') format('truetype');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Gill';
+	src: url('Gill-Sans-Light.ttf') format('truetype');
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Gill';
+	src: url('Gill-Sans-Medium.ttf') format('truetype');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Gill';
+	src: url('Gill-Sans-Bold.ttf') format('truetype');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
