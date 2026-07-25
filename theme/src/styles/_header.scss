@@ -1,0 +1,175 @@
+@use 'tokens';
+
+/* ---------- Site header ---------- */
+.site-header {
+	position: fixed;
+	inset: 0 0 auto 0;
+	z-index: 200;
+	transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+	&__inner {
+		@include tokens.wl-container;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.5rem;
+		min-height: 96px;
+	}
+
+	&__brand {
+		display: inline-flex;
+		line-height: 0;
+	}
+
+	&__logo {
+		width: auto;
+		height: clamp(52px, 6vw, 72px);
+		transition: filter 0.3s ease;
+	}
+
+	/* Menu toggle (label + burger) */
+	&__toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.7rem;
+		padding: 0;
+		background: none;
+		border: 0;
+		cursor: pointer;
+		color: inherit;
+		font-family: var(--wl-font-label, sans-serif);
+		font-weight: 500;
+		font-size: 0.85rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	&__burger {
+		display: inline-grid;
+		gap: 4px;
+		width: 26px;
+
+		span {
+			display: block;
+			height: 2px;
+			width: 100%;
+			background: currentColor;
+			transition: transform 0.3s ease, opacity 0.3s ease;
+		}
+	}
+
+	/* Transparent over the hero (front page, top of page) */
+	&--transparent {
+		background: transparent;
+		color: #fff;
+
+		.site-header__logo {
+			filter: brightness(0) invert(1); // black SVG -> white
+		}
+	}
+
+	/* Solid — inner pages, and the front page once scrolled */
+	&--solid,
+	&.is-scrolled {
+		background: var(--wl-greige, #e3deda);
+		color: var(--wl-ink, #000);
+		box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+
+		.site-header__logo {
+			filter: none;
+		}
+	}
+}
+
+/* Push non-front content below the fixed header (front page hero sits under it). */
+body:not(.home) .site-main {
+	padding-top: 96px;
+}
+
+/* ---------- Full-screen menu overlay ---------- */
+.menu-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 300;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--wl-greige, #e3deda);
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.35s ease, visibility 0.35s ease;
+
+	&.is-open {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	&__close {
+		position: absolute;
+		top: 1.75rem;
+		right: clamp(1.25rem, 5vw, 4rem);
+		background: none;
+		border: 0;
+		color: var(--wl-ink, #000);
+		font-size: 2.75rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	&__inner {
+		width: 100%;
+		max-width: var(--wl-content-max);
+		padding: 2rem clamp(1.5rem, 6vw, 6rem);
+	}
+}
+
+body.menu-open {
+	overflow: hidden;
+}
+
+.overlay-nav {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.35rem;
+	text-align: center;
+
+	a {
+		text-decoration: none;
+		color: var(--wl-ink, #000);
+		font-family: var(--wl-font-head, serif);
+		text-transform: uppercase;
+		letter-spacing: 0.02em;
+		transition: color 0.2s ease;
+	}
+
+	/* Top-level items */
+	> li > a {
+		display: inline-block;
+		padding: 0.35rem 0;
+		font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+	}
+
+	a:hover {
+		color: var(--wl-coral, #efa58f);
+	}
+
+	/* Sub-menus (Region / Services) */
+	.sub-menu {
+		list-style: none;
+		margin: 0.25rem 0 0.75rem;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.25rem 1.5rem;
+
+		a {
+			font-family: var(--wl-font-label, sans-serif);
+			font-size: 0.85rem;
+			letter-spacing: 0.16em;
+			opacity: 0.85;
+		}
+	}
+}
