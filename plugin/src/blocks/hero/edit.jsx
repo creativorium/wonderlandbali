@@ -6,7 +6,13 @@ import {
 	MediaUpload,
 	MediaUploadCheck,
 } from '@wordpress/block-editor';
-import { PanelBody, Button, RangeControl, TextControl } from '@wordpress/components';
+import {
+	PanelBody,
+	Button,
+	RangeControl,
+	TextControl,
+	ToggleControl,
+} from '@wordpress/components';
 
 const PinIcon = () => (
 	<svg
@@ -30,53 +36,78 @@ export default function Edit( { attributes, setAttributes } ) {
 		sideText,
 		buttonText,
 		buttonUrl,
-		backgroundUrl,
+		slides = [],
+		slideDuration = 4000,
+		kenBurns = true,
 		badgeUrl,
 		overlayOpacity,
 	} = attributes;
 
+	// Editor preview shows the first slide as a static background.
+	const previewUrl = slides[ 0 ]?.url || attributes.backgroundUrl || '';
+
 	const blockProps = useBlockProps( {
-		className: 'wl-hero',
-		style: backgroundUrl ? { backgroundImage: `url(${ backgroundUrl })` } : undefined,
+		className: `wl-hero${ kenBurns ? ' wl-hero--kenburns-preview' : '' }`,
+		style: previewUrl ? { backgroundImage: `url(${ previewUrl })` } : undefined,
 	} );
 
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Background', 'wonderland-blocks' ) }>
+				<PanelBody title={ __( 'Background slideshow', 'wonderland-blocks' ) }>
 					<MediaUploadCheck>
 						<MediaUpload
-							onSelect={ ( media ) =>
-								setAttributes( { backgroundId: media.id, backgroundUrl: media.url } )
-							}
+							multiple
+							gallery
+							addToGallery
 							allowedTypes={ [ 'image' ] }
-							value={ attributes.backgroundId }
+							value={ slides.map( ( s ) => s.id ).filter( Boolean ) }
+							onSelect={ ( media ) =>
+								setAttributes( {
+									slides: ( Array.isArray( media ) ? media : [ media ] ).map(
+										( m ) => ( { id: m.id, url: m.url } )
+									),
+								} )
+							}
 							render={ ( { open } ) => (
 								<Button variant="secondary" onClick={ open }>
-									{ backgroundUrl
-										? __( 'Replace image', 'wonderland-blocks' )
-										: __( 'Select image', 'wonderland-blocks' ) }
+									{ slides.length
+										? __( 'Edit images', 'wonderland-blocks' ) +
+										  ` (${ slides.length })`
+										: __( 'Select images', 'wonderland-blocks' ) }
 								</Button>
 							) }
 						/>
 					</MediaUploadCheck>
-					{ backgroundUrl && (
+					{ slides.length > 0 && (
 						<Button
 							variant="link"
 							isDestructive
-							onClick={ () => setAttributes( { backgroundId: undefined, backgroundUrl: '' } ) }
-							style={ { marginTop: '8px' } }
+							onClick={ () => setAttributes( { slides: [] } ) }
+							style={ { marginTop: '8px', display: 'block' } }
 						>
-							{ __( 'Remove image', 'wonderland-blocks' ) }
+							{ __( 'Clear images', 'wonderland-blocks' ) }
 						</Button>
 					) }
+					<RangeControl
+						label={ __( 'Seconds per slide', 'wonderland-blocks' ) }
+						value={ Math.round( slideDuration / 1000 ) }
+						onChange={ ( v ) => setAttributes( { slideDuration: v * 1000 } ) }
+						min={ 2 }
+						max={ 10 }
+						style={ { marginTop: '16px' } }
+					/>
+					<ToggleControl
+						label={ __( 'Ken Burns zoom', 'wonderland-blocks' ) }
+						checked={ kenBurns }
+						onChange={ ( v ) => setAttributes( { kenBurns: v } ) }
+					/>
 					<RangeControl
 						label={ __( 'Overlay darkness (%)', 'wonderland-blocks' ) }
 						value={ overlayOpacity }
 						onChange={ ( v ) => setAttributes( { overlayOpacity: v } ) }
 						min={ 0 }
 						max={ 90 }
-						style={ { marginTop: '16px' } }
 					/>
 				</PanelBody>
 
@@ -164,9 +195,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					</span>
 				</div>
 
-				{ badgeUrl && (
-					<img className="wl-hero__badge" src={ badgeUrl } alt="" />
-				) }
+				{ badgeUrl && <img className="wl-hero__badge" src={ badgeUrl } alt="" /> }
 			</section>
 		</>
 	);

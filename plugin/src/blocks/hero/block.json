@@ -14,9 +14,12 @@
 		"align": [ "full" ]
 	},
 	"attributes": {
+		"slides": { "type": "array", "default": [] },
+		"slideDuration": { "type": "number", "default": 4000 },
+		"kenBurns": { "type": "boolean", "default": true },
 		"backgroundId": { "type": "number" },
 		"backgroundUrl": { "type": "string", "default": "" },
-		"overlayOpacity": { "type": "number", "default": 35 },
+		"overlayOpacity": { "type": "number", "default": 40 },
 		"sideText": {
 			"type": "string",
 			"default": "WEDDING PLANNING & STYLING   |   EVENT PLANNING & STYLING"
