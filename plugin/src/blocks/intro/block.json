@@ -1,0 +1,31 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/intro",
+	"title": "Wonderland Intro (About)",
+	"category": "wonderland",
+	"icon": "book",
+	"description": "About / Our Story intro: image cluster with a display title, eyebrow, paragraph and a link.",
+	"keywords": [ "about", "intro", "story", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": [ "full" ]
+	},
+	"attributes": {
+		"label": { "type": "string", "default": "About Us" },
+		"eyebrow": { "type": "string", "default": "OUR STORY" },
+		"text": {
+			"type": "string",
+			"default": "True to our name, we are the wonder-makers. Inspired by Lewis Carroll's Alice's Adventures in Wonderland, we are focused on fairytale scenarios, with a strong emphasis on attention to detail. Wonderland Bali Events is an international team of creatives based in Bali, one of the most romantic places in the world, and a perfect location for a dreamy wedding. Founded and managed by Anastasia Wolf, who has 10 years of event experience in Bali, it's safe to say that we know the best locations, be it in the lush jungle, on the beach, or on a cliff top for vertigo addicts."
+		},
+		"buttonText": { "type": "string", "default": "LEARN MORE" },
+		"buttonUrl": { "type": "string", "default": "/about-us/" },
+		"imageMainId": { "type": "number" },
+		"imageMainUrl": { "type": "string", "default": "" },
+		"imageSubId": { "type": "number" },
+		"imageSubUrl": { "type": "string", "default": "" }
+	},
+	"render": "file:./render.php"
+}

@@ -3,6 +3,7 @@
  * Built by Vite -> build/frontend.css + build/frontend.js.
  */
 import './blocks/hero/style.scss';
+import './blocks/intro/style.scss';
 
 // Hero background slideshow: advance the .is-active slide on an interval.
 // Progressive enhancement — the first slide is visible without JS.

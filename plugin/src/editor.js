@@ -4,3 +4,5 @@
  */
 import './blocks/hero/style.scss';
 import './blocks/hero/index.js';
+import './blocks/intro/style.scss';
+import './blocks/intro/index.js';
