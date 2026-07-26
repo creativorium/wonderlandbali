@@ -144,6 +144,11 @@
 		height: auto;
 	}
 
+	// Nudge the copy a bit below centre on larger screens.
+	@media (min-width: 701px) {
+		&__inner { transform: translateY(clamp(2.5rem, 8vh, 6.5rem)); }
+	}
+
 	@media (max-width: 700px) {
 		align-items: flex-end; // push the copy lower so more of the image shows up top
 
