@@ -11,7 +11,14 @@
 	background-size: cover;
 	background-position: center;
 
-	&.has-bg { color: #fff; }
+	// Full-bleed image separator: taller, content vertically centred.
+	&.has-bg {
+		color: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: clamp(540px, 80vh, 860px);
+	}
 
 	&__overlay {
 		position: absolute;
