@@ -48,7 +48,7 @@ $pin_svg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wi
 			<?php foreach ( $slides as $i => $slide ) : ?>
 				<?php $url = is_array( $slide ) ? ( $slide['url'] ?? '' ) : (string) $slide; ?>
 				<?php if ( $url ) : ?>
-					<div class="wl-hero__slide<?php echo 0 === $i ? ' is-active' : ''; ?>" style="background-image:url(<?php echo esc_url( $url ); ?>)"></div>
+					<div class="wl-hero__slide js-slide<?php echo 0 === $i ? ' is-active' : ''; ?>" style="background-image:url(<?php echo esc_url( $url ); ?>)"></div>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>
