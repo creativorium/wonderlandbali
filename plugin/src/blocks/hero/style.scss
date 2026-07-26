@@ -55,7 +55,7 @@
 		position: absolute;
 		left: clamp(0.5rem, 1.6vw, 1.75rem);
 		top: 50%;
-		z-index: 2;
+		z-index: 4; // above the content column so the links stay clickable
 		transform: translateY(-50%) rotate(180deg);
 		writing-mode: vertical-rl;
 		margin: 0;
@@ -144,9 +144,17 @@
 		height: auto;
 	}
 
-	@media (max-width: 600px) {
-		&__side { font-size: 0.6rem; letter-spacing: 0.16em; }
-		&__inner { padding-left: clamp(2rem, 14vw, 3.5rem); }
+	@media (max-width: 700px) {
+		align-items: flex-end; // push the copy lower so more of the image shows up top
+
+		&__side { display: none; } // hide the vertical service links on mobile
+
+		&__inner {
+			padding: 0 clamp(1.5rem, 8vw, 2rem) clamp(3rem, 10vh, 5.5rem);
+		}
+
+		&__title { font-size: clamp(2rem, 8vw, 3rem); }
+		&__badge { width: clamp(84px, 24vw, 120px); }
 	}
 }
 
