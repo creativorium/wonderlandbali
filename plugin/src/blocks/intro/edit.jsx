@@ -76,48 +76,50 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<section { ...blockProps }>
 				<div className="wl-intro__grid">
-					<figure className="wl-intro__media wl-intro__media--main">
-						{ imageMainUrl && <img src={ imageMainUrl } alt="" /> }
-					</figure>
+					<div className="wl-intro__col wl-intro__col--left">
+						<figure className="wl-intro__media wl-intro__media--main">
+							{ imageMainUrl && <img src={ imageMainUrl } alt="" /> }
+						</figure>
+						<div className="wl-intro__story">
+							<RichText
+								tagName="p"
+								className="wl-intro__eyebrow"
+								value={ eyebrow }
+								onChange={ ( v ) => setAttributes( { eyebrow: v } ) }
+								placeholder={ __( 'Eyebrow…', 'wonderland-blocks' ) }
+								allowedFormats={ [] }
+							/>
+							<RichText
+								tagName="div"
+								className="wl-intro__text"
+								value={ text }
+								onChange={ ( v ) => setAttributes( { text: v } ) }
+								placeholder={ __( 'Body text…', 'wonderland-blocks' ) }
+								allowedFormats={ [ 'core/bold', 'core/italic', 'core/link' ] }
+							/>
+							<RichText
+								tagName="span"
+								className="wl-intro__cta"
+								value={ buttonText }
+								onChange={ ( v ) => setAttributes( { buttonText: v } ) }
+								placeholder={ __( 'Button…', 'wonderland-blocks' ) }
+								allowedFormats={ [] }
+							/>
+						</div>
+					</div>
 
-					<RichText
-						tagName="h2"
-						className="wl-intro__title"
-						value={ label }
-						onChange={ ( v ) => setAttributes( { label: v } ) }
-						placeholder={ __( 'Title…', 'wonderland-blocks' ) }
-						allowedFormats={ [ 'core/italic' ] }
-					/>
-
-					<figure className="wl-intro__media wl-intro__media--sub">
-						{ imageSubUrl && <img src={ imageSubUrl } alt="" /> }
-					</figure>
-
-					<div className="wl-intro__story">
+					<div className="wl-intro__col wl-intro__col--right">
 						<RichText
-							tagName="p"
-							className="wl-intro__eyebrow"
-							value={ eyebrow }
-							onChange={ ( v ) => setAttributes( { eyebrow: v } ) }
-							placeholder={ __( 'Eyebrow…', 'wonderland-blocks' ) }
-							allowedFormats={ [] }
+							tagName="h2"
+							className="wl-intro__title"
+							value={ label }
+							onChange={ ( v ) => setAttributes( { label: v } ) }
+							placeholder={ __( 'Title…', 'wonderland-blocks' ) }
+							allowedFormats={ [ 'core/italic' ] }
 						/>
-						<RichText
-							tagName="div"
-							className="wl-intro__text"
-							value={ text }
-							onChange={ ( v ) => setAttributes( { text: v } ) }
-							placeholder={ __( 'Body text…', 'wonderland-blocks' ) }
-							allowedFormats={ [ 'core/bold', 'core/italic', 'core/link' ] }
-						/>
-						<RichText
-							tagName="span"
-							className="wl-intro__cta"
-							value={ buttonText }
-							onChange={ ( v ) => setAttributes( { buttonText: v } ) }
-							placeholder={ __( 'Button…', 'wonderland-blocks' ) }
-							allowedFormats={ [] }
-						/>
+						<figure className="wl-intro__media wl-intro__media--sub">
+							{ imageSubUrl && <img src={ imageSubUrl } alt="" /> }
+						</figure>
 					</div>
 				</div>
 			</section>
