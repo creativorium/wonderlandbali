@@ -4,7 +4,7 @@
 .wl-hero {
 	position: relative;
 	display: flex;
-	align-items: center;
+	align-items: flex-end; // anchor the copy to the bottom
 	min-height: 100vh;
 	margin: 0;
 	padding: 0;
@@ -84,7 +84,7 @@
 		position: relative;
 		z-index: 2;
 		max-width: 920px;
-		padding: 6rem clamp(1.5rem, 4vw, 3rem) 6rem clamp(2.5rem, 12vw, 12rem);
+		padding: 6rem clamp(1.5rem, 4vw, 3rem) clamp(4.5rem, 12vh, 9rem) clamp(2.5rem, 12vw, 12rem);
 	}
 
 	&__title {
@@ -144,13 +144,7 @@
 		height: auto;
 	}
 
-	// Nudge the copy a bit below centre on larger screens.
-	@media (min-width: 701px) {
-		&__inner { transform: translateY(clamp(8rem, 15vh, 12.5rem)); }
-	}
-
 	@media (max-width: 700px) {
-		align-items: flex-end; // push the copy lower so more of the image shows up top
 
 		&__side { display: none; } // hide the vertical service links on mobile
 
