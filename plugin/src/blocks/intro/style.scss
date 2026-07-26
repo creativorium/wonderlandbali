@@ -109,18 +109,18 @@
 
 		&__title {
 			grid-area: title;
-			align-self: end;
+			align-self: start; // line the title up with the top of the image
 			text-align: left;
 			position: relative;
 			z-index: 2;
 			font-size: clamp(4.5rem, 10vw, 10rem);
-			margin-bottom: clamp(-5rem, -7vh, -9rem); // overlap the sub image more
 		}
 
 		&__media--sub {
 			grid-area: sub;
 			position: relative;
 			z-index: 1;
+			margin-top: clamp(-9rem, -12vh, -12rem); // pull up so the title overlaps it
 			img { aspect-ratio: 3 / 4; }
 		}
 
