@@ -8,3 +8,5 @@ import './blocks/intro/style.scss';
 import './blocks/intro/index.js';
 import './blocks/divider/style.scss';
 import './blocks/divider/index.js';
+import './blocks/services/style.scss';
+import './blocks/services/index.js';
