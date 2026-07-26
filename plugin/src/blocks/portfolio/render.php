@@ -36,7 +36,10 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-portfolio' ) );
 
 	<?php if ( $btn_text ) : ?>
 		<div class="wl-portfolio__more">
-			<a class="wl-portfolio__btn" href="<?php echo esc_url( $btn_url ); ?>"><?php echo esc_html( $btn_text ); ?></a>
+			<a class="wl-portfolio__btn" href="<?php echo esc_url( $btn_url ); ?>">
+				<span><?php echo esc_html( $btn_text ); ?></span>
+				<svg class="wl-portfolio__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+			</a>
 		</div>
 	<?php endif; ?>
 </section>

@@ -1,42 +1,49 @@
-// Wonderland Portfolio — heading + gallery grid + View More.
+// Wonderland Portfolio — giant title overlapping an async masonry collage.
 
 .wl-portfolio {
-	padding-block: clamp(3.5rem, 7vw, 6rem);
+	padding-block: clamp(3rem, 6vw, 5rem) clamp(3.5rem, 7vw, 6rem);
 	padding-inline: var(--wl-gutter, 1.5rem);
 	background: #fff;
 	color: var(--wl-ink, #000);
 
 	&__title {
-		margin: 0 auto clamp(2rem, 4vw, 3rem);
+		position: relative;
+		z-index: 2;
+		max-width: min(1500px, 94vw);
+		margin: 0 auto clamp(-4rem, -6vw, -7rem); // pull the collage up behind it
 		text-align: center;
 		font-family: var(--wl-font-head, serif);
 		font-weight: 400;
-		font-size: clamp(2rem, 4.5vw, 3.4rem);
-		letter-spacing: 0.04em;
+		font-size: clamp(3.5rem, 12vw, 11rem);
+		line-height: 0.9;
+		letter-spacing: 0.02em;
 		text-transform: uppercase;
 	}
 
+	/* Async masonry — varied heights & placement via CSS multicol. */
 	&__grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-		gap: 8px;
-		max-width: var(--wl-content-max, 1200px);
+		position: relative;
+		z-index: 1;
+		max-width: min(1500px, 94vw);
 		margin-inline: auto;
+		column-count: 3;
+		column-gap: clamp(0.75rem, 1.5vw, 1.5rem);
 	}
 
 	&__item {
 		display: block;
+		break-inside: avoid;
+		-webkit-column-break-inside: avoid;
+		margin-bottom: clamp(0.75rem, 1.5vw, 1.5rem);
 		overflow: hidden;
-		aspect-ratio: 1 / 1;
 
 		img {
 			width: 100%;
-			height: 100%;
-			object-fit: cover;
+			height: auto; // natural ratios -> varied sizes
+			display: block;
 			transition: transform 0.6s ease, opacity 0.3s ease;
 		}
-
-		&:hover img { transform: scale(1.06); opacity: 0.92; }
+		&:hover img { transform: scale(1.04); opacity: 0.92; }
 	}
 
 	&__more {
@@ -45,18 +52,28 @@
 	}
 
 	&__btn {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.7rem;
 		padding: 0.95rem 2.4rem;
-		border: 1px solid var(--wl-ink, #000);
+		background: var(--wl-ink, #000);
+		color: #fff;
 		font-family: var(--wl-font-label, sans-serif);
 		font-weight: 500;
 		font-size: 0.78rem;
 		letter-spacing: 0.2em;
 		text-transform: uppercase;
 		text-decoration: none;
-		color: var(--wl-ink, #000);
 		transition: background-color 0.2s ease, color 0.2s ease;
 
-		&:hover { background: var(--wl-ink, #000); color: #fff; }
+		&:hover { background: var(--wl-coral, #efa58f); color: var(--wl-ink, #000); }
+	}
+
+	&__arrow { width: 18px; height: 18px; flex: none; }
+
+	@media (max-width: 900px) { &__grid { column-count: 2; } }
+	@media (max-width: 560px) {
+		&__grid { column-count: 2; }
+		&__title { font-size: clamp(3rem, 18vw, 6rem); margin-bottom: clamp(-2rem, -6vw, -3.5rem); }
 	}
 }

@@ -17,8 +17,10 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-height: clamp(540px, 80vh, 860px);
+		min-height: clamp(460px, 66vh, 720px);
 	}
+
+	&__mark { width: 20px; height: 20px; flex: none; }
 
 	&__overlay {
 		position: absolute;
@@ -52,7 +54,9 @@
 	}
 
 	&__btn {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
 		padding: 0.95rem 2.2rem;
 		border: 1px solid var(--wl-ink, #000);
 		background: var(--wl-ink, #000);

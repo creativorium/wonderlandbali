@@ -15,6 +15,7 @@
 		"buttonText": { "type": "string", "default": "Follow Now" },
 		"buttonUrl": { "type": "string", "default": "https://www.instagram.com/wonderland_events_worldwide/" },
 		"shortcode": { "type": "string", "default": "[instagram-feed feed=1]" },
+		"placeholders": { "type": "array", "default": [] },
 		"logos": { "type": "array", "default": [] }
 	},
 	"render": "file:./render.php"
