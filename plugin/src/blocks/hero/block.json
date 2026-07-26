@@ -24,6 +24,13 @@
 			"type": "string",
 			"default": "WEDDING PLANNING & STYLING   |   EVENT PLANNING & STYLING"
 		},
+		"sideLinks": {
+			"type": "array",
+			"default": [
+				{ "text": "Wedding Planning & Styling", "url": "/weddings-planning-styling/" },
+				{ "text": "Event Planning & Styling", "url": "/events-planning-styling/" }
+			]
+		},
 		"heading": {
 			"type": "string",
 			"default": "\"OH WOW\" WEDDING PLANNING & STYLING"
