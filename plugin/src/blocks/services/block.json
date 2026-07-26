@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/services",
+	"title": "Wonderland Services",
+	"category": "wonderland",
+	"icon": "grid-view",
+	"description": "\"Our Services\" heading with a grid of service cards (image, title, text, link).",
+	"keywords": [ "services", "grid", "cards", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"heading": { "type": "string", "default": "Our Services" },
+		"items": { "type": "array", "default": [] }
+	},
+	"render": "file:./render.php"
+}
