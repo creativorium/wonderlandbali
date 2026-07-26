@@ -32,7 +32,7 @@
 		align-items: stretch; // both columns end at the same bottom
 		// A base height so the flex-1 media has room to fill (otherwise it
 		// collapses to 0). Grows if the copy needs more.
-		min-height: clamp(1200px, 175vh, 2400px);
+		min-height: clamp(2100px, 240vh, 3300px);
 	}
 
 	// Two equal-weight columns.
