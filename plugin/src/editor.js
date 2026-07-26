@@ -16,3 +16,7 @@ import './blocks/portfolio/style.scss';
 import './blocks/portfolio/index.js';
 import './blocks/follow/style.scss';
 import './blocks/follow/index.js';
+import './blocks/page-hero/style.scss';
+import './blocks/page-hero/index.js';
+import './blocks/media-text/style.scss';
+import './blocks/media-text/index.js';

@@ -9,6 +9,8 @@ import './blocks/services/style.scss';
 import './blocks/cta/style.scss';
 import './blocks/portfolio/style.scss';
 import './blocks/follow/style.scss';
+import './blocks/page-hero/style.scss';
+import './blocks/media-text/style.scss';
 
 /**
  * Generic crossfade slideshow: any element with [data-slideshow] cycles the
