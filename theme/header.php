@@ -1,14 +1,15 @@
 <?php
 /**
- * Site header — transparent overlay on the front page (over the hero), solid
- * elsewhere. The "Menu" button opens a full-screen overlay navigation.
+ * Site header — edge-to-edge transparent overlay on the front page (over the
+ * hero, with an oversized logo that shrinks on scroll), solid elsewhere.
+ * The "Menu" button opens a right-side off-canvas panel.
  *
  * @package Wonderland
  */
 
-$is_overlay = is_front_page();
+$is_overlay   = is_front_page();
 $header_class = 'site-header ' . ( $is_overlay ? 'site-header--transparent' : 'site-header--solid' );
-$logo_uri = WONDERLAND_URI . '/assets/img/logo.svg';
+$logo_uri     = WONDERLAND_URI . '/assets/img/logo.svg';
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -39,8 +40,14 @@ $logo_uri = WONDERLAND_URI . '/assets/img/logo.svg';
 </header>
 
 <div class="menu-overlay" id="menu-overlay" hidden>
-	<div class="menu-overlay__inner">
+	<div class="menu-overlay__backdrop" data-menu-close></div>
+	<aside class="menu-overlay__panel" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Menu', 'wonderland' ); ?>">
 		<button class="menu-overlay__close" id="menu-close" aria-label="<?php esc_attr_e( 'Close menu', 'wonderland' ); ?>">&times;</button>
+
+		<a class="menu-overlay__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+			<img src="<?php echo esc_url( $logo_uri ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="120" height="107" />
+		</a>
+
 		<nav class="menu-overlay__nav" aria-label="<?php esc_attr_e( 'Primary', 'wonderland' ); ?>">
 			<?php
 			wp_nav_menu(
@@ -54,7 +61,19 @@ $logo_uri = WONDERLAND_URI . '/assets/img/logo.svg';
 			);
 			?>
 		</nav>
-	</div>
+
+		<div class="menu-overlay__social">
+			<a href="https://www.facebook.com/wonderlandbali/" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
+			<a href="https://www.instagram.com/wonderland_events_worldwide/" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+			<a href="https://wa.me/6287861138090" target="_blank" rel="noopener" aria-label="WhatsApp">WhatsApp</a>
+		</div>
+
+		<ul class="menu-overlay__contact">
+			<li><a href="mailto:info@wonderlandbali.com">info@wonderlandbali.com</a></li>
+			<li><a href="mailto:anastasia@wonderlandbali.com">anastasia@wonderlandbali.com</a></li>
+			<li><a href="tel:+6287861138090">+62 878 6113 8090</a> &nbsp;|&nbsp; English</li>
+		</ul>
+	</aside>
 </div>
 
 <main id="content" class="site-main">
