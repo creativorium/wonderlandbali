@@ -3,23 +3,34 @@
 /* ---------- Press / featured-in logos band ---------- */
 .site-press {
 	background: #cdc8c4;
-	padding: clamp(2rem, 4vw, 3.25rem) var(--wl-gutter, 1.5rem);
+	padding: clamp(2.25rem, 4vw, 3.5rem) 0;
+	overflow: hidden;
 
-	&__inner {
-		max-width: var(--wl-content-max, 1200px);
-		margin-inline: auto;
+	&__track {
 		display: flex;
-		flex-wrap: wrap;
+		width: max-content;
 		align-items: center;
-		justify-content: space-between;
-		gap: clamp(1.5rem, 4vw, 3rem);
+		animation: press-scroll 40s linear infinite;
 	}
+	&:hover &__track { animation-play-state: paused; }
 
+	// Equal trailing margin on every logo makes translateX(-50%) loop seamlessly.
 	&__logo {
-		height: clamp(38px, 4.5vw, 66px);
+		height: clamp(58px, 7vw, 104px);
 		width: auto;
+		margin-right: clamp(3.5rem, 8vw, 8rem);
 		opacity: 0.85;
+		flex: none;
 	}
+}
+
+@keyframes press-scroll {
+	from { transform: translateX(0); }
+	to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site-press__track { animation: none; flex-wrap: wrap; justify-content: center; }
 }
 
 /* ---------- Dark footer ---------- */
@@ -32,7 +43,7 @@
 	a:hover { color: var(--wl-coral, #efa58f); }
 
 	&__main {
-		max-width: var(--wl-content-max, 1200px);
+		max-width: min(1760px, 92vw);
 		margin-inline: auto;
 		padding: clamp(3rem, 6vw, 5rem) var(--wl-gutter, 1.5rem);
 		display: grid;

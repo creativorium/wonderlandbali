@@ -15,7 +15,8 @@
 		flex-wrap: wrap;
 		gap: clamp(1rem, 3vw, 2.5rem);
 		padding-inline: var(--wl-gutter, 1.5rem);
-		margin-bottom: clamp(-3.5rem, -5vw, -6rem); // pull the posts up behind it
+		align-items: flex-end; // sit the row of buttons/title low so posts touch them
+		margin-bottom: clamp(-5.5rem, -8vw, -10rem); // pull the posts up behind it
 	}
 
 	&__title {

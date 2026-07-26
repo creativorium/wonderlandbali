@@ -16,10 +16,13 @@ $icon_wa = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><pat
 ?>
 </main><!-- #content -->
 
-<section class="site-press">
-	<div class="site-press__inner">
-		<?php for ( $i = 1; $i <= 6; $i++ ) : ?>
-			<img class="site-press__logo" src="<?php echo esc_url( $uploads . '/2023/06/' . $i . '.png' ); ?>" alt="" loading="lazy" decoding="async" />
+<section class="site-press" aria-label="<?php esc_attr_e( 'Featured in', 'wonderland' ); ?>">
+	<div class="site-press__track">
+		<?php // two identical runs so the marquee loops seamlessly. ?>
+		<?php for ( $run = 0; $run < 2; $run++ ) : ?>
+			<?php for ( $i = 1; $i <= 6; $i++ ) : ?>
+				<img class="site-press__logo" src="<?php echo esc_url( $uploads . '/2023/06/' . $i . '.png' ); ?>" alt="" loading="lazy" decoding="async" <?php echo $run ? 'aria-hidden="true"' : ''; ?> />
+			<?php endfor; ?>
 		<?php endfor; ?>
 	</div>
 </section>
