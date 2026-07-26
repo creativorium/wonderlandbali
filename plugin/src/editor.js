@@ -10,3 +10,5 @@ import './blocks/divider/style.scss';
 import './blocks/divider/index.js';
 import './blocks/services/style.scss';
 import './blocks/services/index.js';
+import './blocks/cta/style.scss';
+import './blocks/cta/index.js';
