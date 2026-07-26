@@ -7,7 +7,7 @@
 	justify-content: center;
 	min-height: clamp(600px, 92vh, 900px);
 	overflow: hidden;
-	padding: clamp(4rem, 8vw, 7rem) clamp(3.5rem, 8vw, 8rem);
+	padding: clamp(4rem, 8vw, 7rem) clamp(3.5rem, 6vw, 6rem);
 	text-align: center;
 	color: #fff;
 	background: #2c2a26;
@@ -49,7 +49,7 @@
 	&__items {
 		position: relative;
 		z-index: 2;
-		width: min(920px, 100%);
+		width: min(1180px, 100%);
 	}
 
 	&__item {
@@ -78,14 +78,16 @@
 
 	&__quote {
 		margin: 0 auto;
-		max-width: 62ch;
+		max-width: 84ch;
 		font-family: var(--wl-font-body, sans-serif);
-		font-size: clamp(0.95rem, 1.2vw, 1.05rem);
-		line-height: 1.7;
+		font-size: clamp(0.98rem, 1.2vw, 1.1rem);
+		line-height: 1.75;
 	}
 
 	&__btn {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
 		margin-top: 2rem;
 		padding: 0.9rem 2.2rem;
 		border: 1px solid #fff;
@@ -99,4 +101,6 @@
 		transition: background-color 0.2s ease, color 0.2s ease;
 		&:hover { background: #fff; color: #000; }
 	}
+
+	&__rabbit { width: 20px; height: 20px; flex: none; }
 }
