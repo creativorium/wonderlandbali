@@ -47,22 +47,29 @@
 	&__btn {
 		display: inline-block;
 		padding: 0.95rem 2.2rem;
-		border: 1px solid currentColor;
+		border: 1px solid var(--wl-ink, #000);
+		background: var(--wl-ink, #000);
+		color: #fff;
 		font-family: var(--wl-font-label, sans-serif);
 		font-weight: 500;
 		font-size: 0.8rem;
 		letter-spacing: 0.18em;
 		text-transform: uppercase;
 		text-decoration: none;
-		color: inherit;
 		transition: background-color 0.2s ease, color 0.2s ease;
 
 		&:hover {
-			background: var(--wl-ink, #000);
-			color: var(--wl-taupe, #c5b7b3);
+			background: transparent;
+			color: var(--wl-ink, #000);
 		}
 	}
 
+	// Over an image: keep the white-outline style instead of the black fill.
+	&.has-bg &__btn {
+		background: transparent;
+		border-color: rgba(255, 255, 255, 0.9);
+		color: #fff;
+	}
 	&.has-bg &__btn:hover {
 		background: #fff;
 		color: #000;
