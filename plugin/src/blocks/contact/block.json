@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/contact",
+	"title": "Wonderland Contact",
+	"category": "wonderland",
+	"icon": "email",
+	"description": "Contact section: intro, working form, and contact details / socials.",
+	"keywords": [ "contact", "form", "enquiry", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"heading": { "type": "string", "default": "Contact us today and let's embark on this extraordinary journey together!" },
+		"text": { "type": "string", "default": "" },
+		"formSubject": { "type": "string", "default": "Website enquiry" },
+		"formButton": { "type": "string", "default": "Send Message" },
+		"email1": { "type": "string", "default": "info@wonderlandbali.com" },
+		"email2": { "type": "string", "default": "anastasia@wonderlandbali.com" },
+		"phone": { "type": "string", "default": "+62 878 6113 8090" },
+		"whatsapp": { "type": "string", "default": "6287861138090" },
+		"instagram": { "type": "string", "default": "https://www.instagram.com/wonderland_events_worldwide/" },
+		"facebook": { "type": "string", "default": "https://www.facebook.com/wonderlandbali/" }
+	},
+	"render": "file:./render.php"
+}
