@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/page-hero",
+	"title": "Wonderland Page Hero",
+	"category": "wonderland",
+	"icon": "cover-image",
+	"description": "Inner-page banner: big title with optional eyebrow, subtitle and background image.",
+	"keywords": [ "page", "hero", "banner", "title", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "Page Title" },
+		"subtitle": { "type": "string", "default": "" },
+		"backgroundId": { "type": "number" },
+		"backgroundUrl": { "type": "string", "default": "" },
+		"overlayOpacity": { "type": "number", "default": 40 },
+		"height": { "type": "string", "default": "short" }
+	},
+	"render": "file:./render.php"
+}

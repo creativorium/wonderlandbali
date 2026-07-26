@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/media-text",
+	"title": "Wonderland Media + Text",
+	"category": "wonderland",
+	"icon": "align-pull-left",
+	"description": "Two-column image + text row (reversible), with optional eyebrow, heading and button.",
+	"keywords": [ "media", "text", "image", "columns", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" },
+		"imageId": { "type": "number" },
+		"imageUrl": { "type": "string", "default": "" },
+		"imagePosition": { "type": "string", "default": "left" },
+		"background": { "type": "string", "default": "white" }
+	},
+	"render": "file:./render.php"
+}

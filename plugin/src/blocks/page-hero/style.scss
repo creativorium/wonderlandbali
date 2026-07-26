@@ -1,0 +1,64 @@
+// Wonderland Page Hero — inner-page banner.
+
+.wl-page-hero {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	padding: clamp(3.5rem, 8vw, 7rem) var(--wl-gutter, 1.5rem);
+	text-align: center;
+	background: var(--wl-greige, #e3deda);
+	color: var(--wl-ink, #000);
+	background-size: cover;
+	background-position: center;
+
+	&--tall { min-height: 70vh; }
+	&--short { min-height: 38vh; }
+
+	&.has-bg { color: #fff; }
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		background: #000;
+		pointer-events: none;
+	}
+
+	&__inner {
+		position: relative;
+		z-index: 1;
+		max-width: 900px;
+		display: grid;
+		gap: 1rem;
+		justify-items: center;
+	}
+
+	&__eyebrow {
+		margin: 0;
+		font-family: var(--wl-font-label, sans-serif);
+		font-weight: 500;
+		font-size: 0.8rem;
+		letter-spacing: 0.28em;
+		text-transform: uppercase;
+		color: var(--wl-coral, #efa58f);
+	}
+
+	&__title {
+		margin: 0;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(2.75rem, 7vw, 6rem);
+		line-height: 1;
+		text-transform: uppercase;
+	}
+
+	&__subtitle {
+		margin: 0;
+		max-width: 60ch;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: clamp(1rem, 1.6vw, 1.2rem);
+		line-height: 1.6;
+	}
+}
