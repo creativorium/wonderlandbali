@@ -104,8 +104,8 @@
 		color: rgba(255, 255, 255, 0.85);
 	}
 
-	/* Right contact column */
-	&__col--contact { display: grid; gap: 1rem; justify-items: start; }
+	/* Right contact column — pushed to the far right */
+	&__col--contact { display: grid; gap: 1rem; justify-items: end; text-align: right; }
 
 	&__heading {
 		margin: 0;
@@ -143,9 +143,10 @@
 
 	&__bar {
 		p {
-			max-width: var(--wl-content-max, 1200px);
-			margin-inline: auto;
-			padding: 1.25rem var(--wl-gutter, 1.5rem);
+			max-width: min(1760px, 92vw);
+			margin: 0 auto; // no vertical margin (was leaking a white line under the footer)
+			padding: 0 var(--wl-gutter, 1.5rem) clamp(2rem, 4vw, 3rem);
+			text-align: left; // align the copyright with the badges / left column
 			font-size: 0.78rem;
 			letter-spacing: 0.04em;
 			color: var(--wl-coral, #efa58f);
@@ -155,6 +156,8 @@
 	@media (max-width: 860px) {
 		&__main { grid-template-columns: 1fr; text-align: center; }
 		&__col--left, &__col--contact { justify-items: center; }
+		&__col--contact { text-align: center; }
 		&__tagline { max-width: none; }
+		&__bar p { text-align: center; }
 	}
 }
