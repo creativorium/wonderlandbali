@@ -13,6 +13,7 @@ import './blocks/page-hero/style.scss';
 import './blocks/media-text/style.scss';
 import './blocks/contact/style.scss';
 import './blocks/features/style.scss';
+import './blocks/testimonials/style.scss';
 
 /**
  * Generic crossfade slideshow: any element with [data-slideshow] cycles the
@@ -35,8 +36,45 @@ function initSlideshows() {
 	} );
 }
 
-if ( document.readyState !== 'loading' ) {
+/**
+ * Testimonial slider: prev/next arrows crossfade both the background photo and
+ * the review text; optional autoplay via data-duration.
+ */
+function initTestimonials() {
+	document.querySelectorAll( '[data-testi]' ).forEach( ( root ) => {
+		const bgs = Array.from( root.querySelectorAll( '.js-testi-bg' ) );
+		const items = Array.from( root.querySelectorAll( '.js-testi-item' ) );
+		const n = Math.max( bgs.length, items.length );
+		if ( n < 2 ) {
+			return;
+		}
+		let i = 0;
+		const go = ( target ) => {
+			bgs[ i ]?.classList.remove( 'is-active' );
+			items[ i ]?.classList.remove( 'is-active' );
+			i = ( ( target % n ) + n ) % n;
+			bgs[ i ]?.classList.add( 'is-active' );
+			items[ i ]?.classList.add( 'is-active' );
+		};
+		root.querySelector( '[data-testi-prev]' )?.addEventListener( 'click', () => go( i - 1 ) );
+		root.querySelector( '[data-testi-next]' )?.addEventListener( 'click', () => go( i + 1 ) );
+
+		const dur = parseInt( root.dataset.duration || '0', 10 );
+		if ( dur > 0 ) {
+			let timer = setInterval( () => go( i + 1 ), dur );
+			root.addEventListener( 'pointerenter', () => clearInterval( timer ) );
+			root.addEventListener( 'pointerleave', () => { timer = setInterval( () => go( i + 1 ), dur ); } );
+		}
+	} );
+}
+
+function initAll() {
 	initSlideshows();
+	initTestimonials();
+}
+
+if ( document.readyState !== 'loading' ) {
+	initAll();
 } else {
-	document.addEventListener( 'DOMContentLoaded', initSlideshows );
+	document.addEventListener( 'DOMContentLoaded', initAll );
 }
