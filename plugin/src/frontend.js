@@ -7,6 +7,7 @@ import './blocks/intro/style.scss';
 import './blocks/divider/style.scss';
 import './blocks/services/style.scss';
 import './blocks/cta/style.scss';
+import './blocks/portfolio/style.scss';
 
 /**
  * Generic crossfade slideshow: any element with [data-slideshow] cycles the

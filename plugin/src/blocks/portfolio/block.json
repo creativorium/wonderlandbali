@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/portfolio",
+	"title": "Wonderland Portfolio",
+	"category": "wonderland",
+	"icon": "format-gallery",
+	"description": "Portfolio heading with an image gallery grid and a View More link.",
+	"keywords": [ "portfolio", "gallery", "grid", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"heading": { "type": "string", "default": "Portfolio" },
+		"images": { "type": "array", "default": [] },
+		"buttonText": { "type": "string", "default": "View More" },
+		"buttonUrl": { "type": "string", "default": "/portfolio-lp/" }
+	},
+	"render": "file:./render.php"
+}

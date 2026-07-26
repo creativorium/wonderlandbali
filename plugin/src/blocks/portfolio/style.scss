@@ -1,0 +1,62 @@
+// Wonderland Portfolio — heading + gallery grid + View More.
+
+.wl-portfolio {
+	padding-block: clamp(3.5rem, 7vw, 6rem);
+	padding-inline: var(--wl-gutter, 1.5rem);
+	background: #fff;
+	color: var(--wl-ink, #000);
+
+	&__title {
+		margin: 0 auto clamp(2rem, 4vw, 3rem);
+		text-align: center;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(2rem, 4.5vw, 3.4rem);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		gap: 8px;
+		max-width: var(--wl-content-max, 1200px);
+		margin-inline: auto;
+	}
+
+	&__item {
+		display: block;
+		overflow: hidden;
+		aspect-ratio: 1 / 1;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: transform 0.6s ease, opacity 0.3s ease;
+		}
+
+		&:hover img { transform: scale(1.06); opacity: 0.92; }
+	}
+
+	&__more {
+		margin-top: clamp(2rem, 4vw, 3rem);
+		text-align: center;
+	}
+
+	&__btn {
+		display: inline-block;
+		padding: 0.95rem 2.4rem;
+		border: 1px solid var(--wl-ink, #000);
+		font-family: var(--wl-font-label, sans-serif);
+		font-weight: 500;
+		font-size: 0.78rem;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		text-decoration: none;
+		color: var(--wl-ink, #000);
+		transition: background-color 0.2s ease, color 0.2s ease;
+
+		&:hover { background: var(--wl-ink, #000); color: #fff; }
+	}
+}
