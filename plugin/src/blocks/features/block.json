@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/features",
+	"title": "Wonderland Features",
+	"category": "wonderland",
+	"icon": "list-view",
+	"description": "Section heading with a grid of title + text items (e.g. \"What you will get\", pricing).",
+	"keywords": [ "features", "list", "inclusions", "pricing", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"heading": { "type": "string", "default": "" },
+		"background": { "type": "string", "default": "white" },
+		"columns": { "type": "number", "default": 2 },
+		"items": { "type": "array", "default": [] }
+	},
+	"render": "file:./render.php"
+}
