@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/testimonials",
+	"title": "Wonderland Testimonials",
+	"category": "wonderland",
+	"icon": "format-quote",
+	"description": "Full-bleed testimonial slider: background photo per slide with a name, review and CTA, plus prev/next arrows.",
+	"keywords": [ "testimonial", "review", "slider", "quote", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"items": { "type": "array", "default": [] },
+		"overlayOpacity": { "type": "number", "default": 45 },
+		"duration": { "type": "number", "default": 8000 }
+	},
+	"render": "file:./render.php"
+}

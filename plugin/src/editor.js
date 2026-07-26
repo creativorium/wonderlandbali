@@ -24,3 +24,5 @@ import './blocks/contact/style.scss';
 import './blocks/contact/index.js';
 import './blocks/features/style.scss';
 import './blocks/features/index.js';
+import './blocks/testimonials/style.scss';
+import './blocks/testimonials/index.js';
