@@ -76,24 +76,24 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<section { ...blockProps }>
 				<div className="wl-intro__grid">
-					<div className="wl-intro__media">
-						{ imageMainUrl && (
-							<img className="wl-intro__img wl-intro__img--main" src={ imageMainUrl } alt="" />
-						) }
-						{ imageSubUrl && (
-							<img className="wl-intro__img wl-intro__img--sub" src={ imageSubUrl } alt="" />
-						) }
-					</div>
+					<figure className="wl-intro__media wl-intro__media--main">
+						{ imageMainUrl && <img src={ imageMainUrl } alt="" /> }
+					</figure>
 
-					<div className="wl-intro__body">
-						<RichText
-							tagName="h2"
-							className="wl-intro__title"
-							value={ label }
-							onChange={ ( v ) => setAttributes( { label: v } ) }
-							placeholder={ __( 'Title…', 'wonderland-blocks' ) }
-							allowedFormats={ [ 'core/italic' ] }
-						/>
+					<RichText
+						tagName="h2"
+						className="wl-intro__title"
+						value={ label }
+						onChange={ ( v ) => setAttributes( { label: v } ) }
+						placeholder={ __( 'Title…', 'wonderland-blocks' ) }
+						allowedFormats={ [ 'core/italic' ] }
+					/>
+
+					<figure className="wl-intro__media wl-intro__media--sub">
+						{ imageSubUrl && <img src={ imageSubUrl } alt="" /> }
+					</figure>
+
+					<div className="wl-intro__story">
 						<RichText
 							tagName="p"
 							className="wl-intro__eyebrow"
