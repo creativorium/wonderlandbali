@@ -22,3 +22,5 @@ import './blocks/media-text/style.scss';
 import './blocks/media-text/index.js';
 import './blocks/contact/style.scss';
 import './blocks/contact/index.js';
+import './blocks/features/style.scss';
+import './blocks/features/index.js';

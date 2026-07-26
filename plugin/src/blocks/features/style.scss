@@ -1,0 +1,45 @@
+// Wonderland Features — heading + title/text item grid.
+
+.wl-features {
+	padding-block: clamp(3rem, 7vw, 6rem);
+	padding-inline: var(--wl-gutter, 1.5rem);
+	color: var(--wl-ink, #000);
+
+	&.is-white { background: #fff; }
+	&.is-greige { background: var(--wl-greige, #e3deda); }
+
+	&__title {
+		margin: 0 auto clamp(2rem, 4vw, 3rem);
+		text-align: center;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(1.9rem, 4vw, 3rem);
+	}
+
+	&__grid {
+		max-width: var(--wl-content-max, 1200px);
+		margin-inline: auto;
+		display: grid;
+		grid-template-columns: repeat(var(--wl-cols, 2), 1fr);
+		gap: clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 4vw, 4rem);
+	}
+
+	&__name {
+		margin: 0 0 0.5rem;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: 1.25rem;
+	}
+
+	&__text {
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: rgba(0, 0, 0, 0.72);
+		p { margin: 0 0 0.75rem; }
+	}
+
+	@media (max-width: 760px) {
+		&__grid { grid-template-columns: 1fr; }
+	}
+}
