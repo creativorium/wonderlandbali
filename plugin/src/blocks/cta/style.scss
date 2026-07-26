@@ -1,0 +1,70 @@
+// Wonderland CTA Band — centered call to action, optional background.
+
+.wl-cta {
+	position: relative;
+	overflow: hidden;
+	padding-block: clamp(3rem, 7vw, 6rem);
+	padding-inline: var(--wl-gutter, 1.5rem);
+	text-align: center;
+	background: var(--wl-taupe, #c5b7b3);
+	color: var(--wl-ink, #000);
+	background-size: cover;
+	background-position: center;
+
+	&.has-bg { color: #fff; }
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		background: #000;
+		pointer-events: none;
+	}
+
+	&__inner {
+		position: relative;
+		z-index: 1;
+		max-width: 820px;
+		margin-inline: auto;
+		display: grid;
+		gap: 1.75rem;
+		justify-items: center;
+	}
+
+	&__text {
+		font-family: var(--wl-font-head, serif);
+		font-size: clamp(1.25rem, 2.6vw, 2rem);
+		line-height: 1.4;
+		p { margin: 0; }
+	}
+
+	/* Quote variant: larger, italic, decorative */
+	&--quote &__text {
+		font-style: italic;
+		font-size: clamp(1.4rem, 3vw, 2.4rem);
+	}
+
+	&__btn {
+		display: inline-block;
+		padding: 0.95rem 2.2rem;
+		border: 1px solid currentColor;
+		font-family: var(--wl-font-label, sans-serif);
+		font-weight: 500;
+		font-size: 0.8rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		text-decoration: none;
+		color: inherit;
+		transition: background-color 0.2s ease, color 0.2s ease;
+
+		&:hover {
+			background: var(--wl-ink, #000);
+			color: var(--wl-taupe, #c5b7b3);
+		}
+	}
+
+	&.has-bg &__btn:hover {
+		background: #fff;
+		color: #000;
+	}
+}

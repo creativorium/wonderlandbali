@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/cta",
+	"title": "Wonderland CTA Band",
+	"category": "wonderland",
+	"icon": "megaphone",
+	"description": "Centered call-to-action band: optional text/quote over an optional background, with a button.",
+	"keywords": [ "cta", "band", "quote", "button", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"text": { "type": "string", "default": "" },
+		"variant": { "type": "string", "default": "plain" },
+		"buttonText": { "type": "string", "default": "Learn More" },
+		"buttonUrl": { "type": "string", "default": "#" },
+		"buttonNewTab": { "type": "boolean", "default": false },
+		"backgroundId": { "type": "number" },
+		"backgroundUrl": { "type": "string", "default": "" },
+		"overlayOpacity": { "type": "number", "default": 45 }
+	},
+	"render": "file:./render.php"
+}
