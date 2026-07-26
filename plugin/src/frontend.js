@@ -4,17 +4,20 @@
  */
 import './blocks/hero/style.scss';
 import './blocks/intro/style.scss';
+import './blocks/divider/style.scss';
 
-// Hero background slideshow: advance the .is-active slide on an interval.
-// Progressive enhancement — the first slide is visible without JS.
-function initHeroSlideshows() {
-	const heroes = document.querySelectorAll( '.wl-hero[data-slideshow]' );
-	heroes.forEach( ( hero ) => {
-		const slides = Array.from( hero.querySelectorAll( '.wl-hero__slide' ) );
+/**
+ * Generic crossfade slideshow: any element with [data-slideshow] cycles the
+ * .is-active class across its `.js-slide` children. Used by the hero + divider.
+ * Progressive enhancement — the first slide is visible without JS.
+ */
+function initSlideshows() {
+	document.querySelectorAll( '[data-slideshow]' ).forEach( ( root ) => {
+		const slides = root.querySelectorAll( '.js-slide' );
 		if ( slides.length < 2 ) {
 			return;
 		}
-		const duration = parseInt( hero.dataset.slideDuration || '4000', 10 );
+		const duration = parseInt( root.dataset.slideDuration || '4000', 10 );
 		let current = 0;
 		setInterval( () => {
 			slides[ current ].classList.remove( 'is-active' );
@@ -25,7 +28,7 @@ function initHeroSlideshows() {
 }
 
 if ( document.readyState !== 'loading' ) {
-	initHeroSlideshows();
+	initSlideshows();
 } else {
-	document.addEventListener( 'DOMContentLoaded', initHeroSlideshows );
+	document.addEventListener( 'DOMContentLoaded', initSlideshows );
 }

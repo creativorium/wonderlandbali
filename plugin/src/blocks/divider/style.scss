@@ -1,0 +1,24 @@
+// Wonderland Image Divider — full-width crossfading image band.
+
+.wl-divider {
+	position: relative;
+	width: 100%;
+	height: clamp(320px, 46vh, 560px);
+	overflow: hidden;
+	background-color: #2c2a26;
+
+	&__slide {
+		position: absolute;
+		inset: 0;
+		background-size: cover;
+		background-position: center;
+		opacity: 0;
+		transition: opacity 1.2s ease-in-out;
+
+		&.is-active { opacity: 1; }
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wl-divider__slide { transition: none; }
+}

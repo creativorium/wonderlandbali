@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/divider",
+	"title": "Wonderland Image Divider",
+	"category": "wonderland",
+	"icon": "images-alt2",
+	"description": "Full-width band of crossfading images.",
+	"keywords": [ "divider", "slideshow", "band", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"slides": { "type": "array", "default": [] },
+		"slideDuration": { "type": "number", "default": 5000 }
+	},
+	"render": "file:./render.php"
+}
