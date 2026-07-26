@@ -21,8 +21,8 @@ $args = array(
 );
 $wrapper = get_block_wrapper_attributes( $args );
 
-// White-rabbit icon for the CTA.
-$rabbit_svg = '<svg class="wl-testi__rabbit" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.4 2.6c-.9 0-1.5 1.4-1.5 3.6 0 1.7.4 3.2 1 4.1-1.8 1-3 2.8-3 4.9C4.9 18.4 8.1 21 12 21s7.1-2.6 7.1-5.8c0-2.1-1.2-3.9-3-4.9.6-.9 1-2.4 1-4.1 0-2.2-.6-3.6-1.5-3.6-1 0-1.8 1.8-1.8 4.1 0 .5 0 .9.1 1.3-.6-.2-1.3-.3-1.9-.3s-1.3.1-1.9.3c.1-.4.1-.8.1-1.3 0-2.3-.8-4.1-1.8-4.1zM9.6 14.2a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4.8 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM12 16.6c.7 0 1.3.3 1.3.8 0 .4-.6.8-1.3.8s-1.3-.4-1.3-.8c0-.5.6-.8 1.3-.8z"/></svg>';
+// Wonderland mark for the CTA (same mark as the hero button).
+$rabbit_svg = function_exists( 'wonderland_mark_svg' ) ? wonderland_mark_svg( 'wl-testi__rabbit' ) : '';
 ?>
 <section <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="wl-testi__bg" aria-hidden="true">

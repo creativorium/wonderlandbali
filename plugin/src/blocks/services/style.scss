@@ -27,23 +27,39 @@
 	&__grid {
 		max-width: min(1500px, 94vw);
 		margin-inline: auto;
-		column-count: 2;
-		column-gap: clamp(1.5rem, 3vw, 3rem);
+		display: flex;
+		gap: clamp(1.5rem, 3vw, 3rem);
+		align-items: stretch; // both columns end at the same bottom
 	}
 
+	// Two equal-weight columns.
+	&__col {
+		flex: 1 1 0;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: clamp(1.5rem, 3vw, 3rem);
+	}
+
+	// Cards share their column's height equally (2 items -> 50% each, 3 -> ~33%).
 	&__card {
-		break-inside: avoid;
-		-webkit-column-break-inside: avoid;
-		margin-bottom: clamp(2rem, 4vw, 3.5rem);
+		flex: 1 1 0;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
 	}
 
 	&__media {
+		flex: 1 1 0;
+		min-height: 0;
 		display: block;
 		overflow: hidden;
 
-		img {
+		img,
+		video {
 			width: 100%;
-			height: auto; // natural ratio -> varied heights
+			height: 100%;
+			object-fit: cover;
 			display: block;
 			transition: transform 0.6s ease;
 		}
@@ -51,6 +67,7 @@
 	}
 
 	&__body {
+		flex: none;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
@@ -93,7 +110,12 @@
 	}
 
 	@media (max-width: 760px) {
-		&__grid { column-count: 1; }
+		&__grid { flex-direction: column; }
+		&__card { flex: none; }
+		&__media {
+			flex: none;
+			img, video { height: auto; aspect-ratio: 4 / 5; }
+		}
 		&__title { font-size: clamp(3.5rem, 20vw, 6rem); margin-top: clamp(-4rem, -14vw, -7rem); }
 	}
 }
