@@ -7,7 +7,7 @@
  * @package Wonderland
  */
 
-$is_overlay   = is_front_page();
+$is_overlay   = function_exists( 'wonderland_page_has_hero' ) ? wonderland_page_has_hero() : is_front_page();
 $header_class = 'site-header ' . ( $is_overlay ? 'site-header--transparent' : 'site-header--solid' );
 $logo_uri     = WONDERLAND_URI . '/assets/img/logo.svg';
 ?><!DOCTYPE html>

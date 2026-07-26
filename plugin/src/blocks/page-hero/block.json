@@ -16,7 +16,12 @@
 		"backgroundId": { "type": "number" },
 		"backgroundUrl": { "type": "string", "default": "" },
 		"overlayOpacity": { "type": "number", "default": 40 },
-		"height": { "type": "string", "default": "short" }
+		"height": { "type": "string", "default": "short" },
+		"layout": { "type": "string", "default": "center" },
+		"titleTop": { "type": "string", "default": "" },
+		"titleBottom": { "type": "string", "default": "" },
+		"badgeId": { "type": "number" },
+		"badgeUrl": { "type": "string", "default": "" }
 	},
 	"render": "file:./render.php"
 }

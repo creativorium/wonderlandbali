@@ -44,6 +44,53 @@ add_action(
 );
 
 /**
+ * Whether the current singular page opens with a full-bleed hero that the header
+ * should sit transparently over (the wonderland/hero block, or a page-hero with a
+ * background image / split layout).
+ *
+ * @return bool
+ */
+function wonderland_page_has_hero() {
+	if ( is_front_page() ) {
+		return true;
+	}
+	if ( ! is_singular() ) {
+		return false;
+	}
+	$post = get_post();
+	if ( ! $post ) {
+		return false;
+	}
+	foreach ( parse_blocks( $post->post_content ) as $block ) {
+		if ( empty( $block['blockName'] ) ) {
+			continue; // skip empty/whitespace blocks
+		}
+		if ( 'wonderland/hero' === $block['blockName'] ) {
+			return true;
+		}
+		if ( 'wonderland/page-hero' === $block['blockName'] ) {
+			$attrs = $block['attrs'] ?? array();
+			return ! empty( $attrs['backgroundUrl'] ) || ( ( $attrs['layout'] ?? '' ) === 'split' );
+		}
+		return false; // first real block is something else
+	}
+	return false;
+}
+
+/**
+ * Flag hero pages on the body so the header can overlay them.
+ */
+add_filter(
+	'body_class',
+	function ( $classes ) {
+		if ( wonderland_page_has_hero() ) {
+			$classes[] = 'has-hero';
+		}
+		return $classes;
+	}
+);
+
+/**
  * Let the editor width match the front-end content width.
  */
 add_action(

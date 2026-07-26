@@ -88,8 +88,9 @@
 	}
 }
 
-/* Push non-front content below the fixed header. */
-body:not(.home) .site-main { padding-top: 84px; }
+/* Push content below the fixed header — except hero pages, where the hero sits
+   under the transparent header. */
+body:not(.has-hero) .site-main { padding-top: 84px; }
 
 /* ---------- Off-canvas menu (slides from the right, black) ---------- */
 .menu-overlay {
