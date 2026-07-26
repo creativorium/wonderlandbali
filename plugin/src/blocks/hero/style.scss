@@ -146,7 +146,7 @@
 
 	// Nudge the copy a bit below centre on larger screens.
 	@media (min-width: 701px) {
-		&__inner { transform: translateY(clamp(2.5rem, 8vh, 6.5rem)); }
+		&__inner { transform: translateY(clamp(8rem, 15vh, 12.5rem)); }
 	}
 
 	@media (max-width: 700px) {
