@@ -12,3 +12,5 @@ import './blocks/services/style.scss';
 import './blocks/services/index.js';
 import './blocks/cta/style.scss';
 import './blocks/cta/index.js';
+import './blocks/portfolio/style.scss';
+import './blocks/portfolio/index.js';
