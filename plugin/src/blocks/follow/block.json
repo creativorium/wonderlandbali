@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/follow",
+	"title": "Wonderland Follow / Instagram",
+	"category": "wonderland",
+	"icon": "instagram",
+	"description": "Follow Us heading + Instagram feed (shortcode) + partner logos.",
+	"keywords": [ "instagram", "follow", "social", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"heading": { "type": "string", "default": "Follow Us" },
+		"handle": { "type": "string", "default": "@wonderland_events_worldwide" },
+		"buttonText": { "type": "string", "default": "Follow Now" },
+		"buttonUrl": { "type": "string", "default": "https://www.instagram.com/wonderland_events_worldwide/" },
+		"shortcode": { "type": "string", "default": "[instagram-feed feed=1]" },
+		"logos": { "type": "array", "default": [] }
+	},
+	"render": "file:./render.php"
+}

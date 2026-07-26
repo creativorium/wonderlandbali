@@ -14,3 +14,5 @@ import './blocks/cta/style.scss';
 import './blocks/cta/index.js';
 import './blocks/portfolio/style.scss';
 import './blocks/portfolio/index.js';
+import './blocks/follow/style.scss';
+import './blocks/follow/index.js';
