@@ -14,6 +14,7 @@
 		justify-content: space-between;
 		gap: 1.5rem;
 		min-height: 84px;
+		padding-block: clamp(0.6rem, 1.4vw, 1.25rem);
 		padding-inline: clamp(1.25rem, 4vw, 3.5rem);
 	}
 
@@ -173,7 +174,11 @@ body:not(.home) .site-main { padding-top: 84px; }
 	}
 }
 
-body.menu-open { overflow: hidden; }
+// Only lock scrolling on small screens (panel is full-width there); on desktop
+// the page stays scrollable behind the panel.
+@media (max-width: 700px) {
+	body.menu-open { overflow: hidden; }
+}
 
 /* Nav list inside the panel */
 .overlay-nav {
