@@ -175,3 +175,17 @@ body.lb-open { overflow: hidden; }
 		.wl-portfolio__item { flex: 1 1 100%; }
 	}
 }
+
+/* Roomier framing — used on Wedding Planning & Styling, where the gallery is
+   the page's centrepiece rather than a band between sections. */
+.wl-portfolio.is-padded {
+	padding-block: clamp(4rem, 8vw, 7rem);
+	padding-inline: clamp(2rem, 6vw, 7rem);
+
+	.wl-portfolio__grid {
+		max-width: 100%;
+		column-gap: var(--wl-gap, 20px);
+	}
+
+	.wl-portfolio__item { margin-bottom: var(--wl-gap, 20px); }
+}

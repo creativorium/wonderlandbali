@@ -18,7 +18,10 @@ $lightbox = ! empty( $attributes['lightbox'] );
 // full-bleed row of equal-height frames, used by the service pages.
 $layout = ( 'strip' === ( $attributes['layout'] ?? '' ) ) ? 'strip' : 'masonry';
 
-$wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-portfolio wl-portfolio--' . $layout ) );
+// Opt-in roomier framing: more air around the block and between frames.
+$padded = ! empty( $attributes['padded'] ) ? ' is-padded' : '';
+
+$wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-portfolio wl-portfolio--' . $layout . $padded ) );
 
 $grid_style = '--wl-cols:' . $columns . ';--wl-gap:' . $gap . 'px;';
 ?>
