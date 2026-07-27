@@ -18,6 +18,8 @@
 		"note": { "type": "string", "default": "" },
 		"introImageId": { "type": "number" },
 		"introImageUrl": { "type": "string", "default": "" },
+		"imagePlacement": { "type": "string", "default": "intro" },
+		"textPlacement": { "type": "string", "default": "intro" },
 		"email1": { "type": "string", "default": "info@wonderlandbali.com" },
 		"email2": { "type": "string", "default": "anastasia@wonderlandbali.com" },
 		"phone": { "type": "string", "default": "+62 878 6113 8090" },

@@ -3,7 +3,14 @@ import { useBlockProps, RichText, InspectorControls, MediaUpload, MediaUploadChe
 import { PanelBody, TextControl, SelectControl, Button } from '@wordpress/components';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { heading, text, note, email1, email2, phone, formPreset, formButton, introImageUrl } = attributes;
+	const { heading, text, note, email1, email2, phone, formPreset, formButton, introImageUrl,
+		imagePlacement, textPlacement } = attributes;
+	const imageInForm = 'form' === imagePlacement;
+	const textInForm = 'form' === textPlacement;
+	const placements = [
+		{ label: __( 'Left intro column', 'wonderland-blocks' ), value: 'intro' },
+		{ label: __( 'Above the form', 'wonderland-blocks' ), value: 'form' },
+	];
 	const blockProps = useBlockProps( { className: `wl-contact wl-contact--${ formPreset }` } );
 
 	return (
@@ -22,6 +29,21 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 					<TextControl label="Form subject" value={ attributes.formSubject } onChange={ ( v ) => setAttributes( { formSubject: v } ) } />
 					<TextControl label="Button text" value={ formButton } onChange={ ( v ) => setAttributes( { formButton: v } ) } />
+				</PanelBody>
+				<PanelBody title={ __( 'Layout', 'wonderland-blocks' ) }>
+					<SelectControl
+						label={ __( 'Intro copy sits', 'wonderland-blocks' ) }
+						value={ textPlacement }
+						options={ placements }
+						onChange={ ( v ) => setAttributes( { textPlacement: v } ) }
+					/>
+					<SelectControl
+						label={ __( 'Image sits', 'wonderland-blocks' ) }
+						value={ imagePlacement }
+						options={ placements }
+						onChange={ ( v ) => setAttributes( { imagePlacement: v } ) }
+						help={ __( 'Mixing these gives each page its own composition rather than one repeated layout.', 'wonderland-blocks' ) }
+					/>
 				</PanelBody>
 				<PanelBody title={ __( 'Intro image', 'wonderland-blocks' ) } initialOpen={ false }>
 					<MediaUploadCheck>
@@ -57,9 +79,11 @@ export default function Edit( { attributes, setAttributes } ) {
 					<div className="wl-contact__intro">
 						<RichText tagName="h2" className="wl-contact__title" value={ heading }
 							onChange={ ( v ) => setAttributes( { heading: v } ) } placeholder={ __( 'Heading…', 'wonderland-blocks' ) } allowedFormats={ [] } />
-						<RichText tagName="div" className="wl-contact__text" value={ text }
-							onChange={ ( v ) => setAttributes( { text: v } ) } placeholder={ __( 'Intro text…', 'wonderland-blocks' ) } allowedFormats={ [ 'core/bold', 'core/italic' ] } />
-						{ introImageUrl && (
+						{ ! textInForm && (
+							<RichText tagName="div" className="wl-contact__text" value={ text }
+								onChange={ ( v ) => setAttributes( { text: v } ) } placeholder={ __( 'Intro text…', 'wonderland-blocks' ) } allowedFormats={ [ 'core/bold', 'core/italic' ] } />
+						) }
+						{ ! imageInForm && introImageUrl && (
 							<figure className="wl-contact__image"><img src={ introImageUrl } alt="" /></figure>
 						) }
 						<ul className="wl-contact__details">
@@ -69,6 +93,13 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( v ) => setAttributes( { note: v } ) } placeholder={ __( 'Small print (response time, office hours…)', 'wonderland-blocks' ) } allowedFormats={ [ 'core/bold', 'core/italic' ] } />
 					</div>
 					<div className="wl-contact__form">
+						{ imageInForm && introImageUrl && (
+							<figure className="wl-contact__image wl-contact__image--above-form"><img src={ introImageUrl } alt="" /></figure>
+						) }
+						{ textInForm && (
+							<RichText tagName="div" className="wl-contact__text wl-contact__text--above-form" value={ text }
+								onChange={ ( v ) => setAttributes( { text: v } ) } placeholder={ __( 'Intro text…', 'wonderland-blocks' ) } allowedFormats={ [ 'core/bold', 'core/italic' ] } />
+						) }
 						<div style={ { background: '#fff', padding: '2rem', textAlign: 'center', opacity: 0.7, fontStyle: 'italic' } }>
 							{ 'request' === formPreset
 								? __( 'Full request form renders here on the front end.', 'wonderland-blocks' )

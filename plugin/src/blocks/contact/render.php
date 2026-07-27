@@ -19,6 +19,45 @@ $preset  = ( 'request' === ( $attributes['formPreset'] ?? '' ) ) ? 'request' : '
 
 $intro_image = $attributes['introImageUrl'] ?? '';
 
+// The intro copy and the image can each sit in the left intro column or directly
+// above the form, so Contact and Request compose differently from one block.
+$image_in_form = 'form' === ( $attributes['imagePlacement'] ?? 'intro' );
+$text_in_form  = 'form' === ( $attributes['textPlacement'] ?? 'intro' );
+
+/**
+ * Emit the intro copy.
+ *
+ * @param string $text     Raw text.
+ * @param string $modifier Extra BEM modifier suffix.
+ */
+$render_text = function ( $text, $modifier = '' ) {
+	if ( ! $text ) {
+		return;
+	}
+	printf(
+		'<div class="wl-contact__text%s">%s</div>',
+		$modifier ? ' wl-contact__text--' . esc_attr( $modifier ) : '',
+		wp_kses_post( wpautop( $text ) )
+	);
+};
+
+/**
+ * Emit the supporting image.
+ *
+ * @param string $url      Image URL.
+ * @param string $modifier Extra BEM modifier suffix.
+ */
+$render_image = function ( $url, $modifier = '' ) {
+	if ( ! $url ) {
+		return;
+	}
+	printf(
+		'<figure class="wl-contact__image%s"><img src="%s" alt="" loading="lazy" decoding="async" width="900" height="600" /></figure>',
+		$modifier ? ' wl-contact__image--' . esc_attr( $modifier ) : '',
+		esc_url( $url )
+	);
+};
+
 // Icons are decorative; degrade to plain text links if the helper is unavailable.
 $icon = function ( $name ) {
 	return function_exists( 'wonderland_icon_svg' ) ? wonderland_icon_svg( $name ) : '';
@@ -32,15 +71,14 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-contact wl-contac
 			<?php if ( $heading ) : ?>
 				<h2 class="wl-contact__title"><?php echo wp_kses_post( $heading ); ?></h2>
 			<?php endif; ?>
-			<?php if ( $text ) : ?>
-				<div class="wl-contact__text"><?php echo wp_kses_post( wpautop( $text ) ); ?></div>
-			<?php endif; ?>
-
-			<?php if ( $intro_image ) : ?>
-				<figure class="wl-contact__image">
-					<img src="<?php echo esc_url( $intro_image ); ?>" alt="" loading="lazy" decoding="async" width="900" height="600" />
-				</figure>
-			<?php endif; ?>
+			<?php
+			if ( ! $text_in_form ) {
+				$render_text( $text );
+			}
+			if ( ! $image_in_form ) {
+				$render_image( $intro_image );
+			}
+			?>
 
 			<?php if ( $email1 || $email2 || $phone ) : ?>
 				<ul class="wl-contact__details">
@@ -65,6 +103,14 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-contact wl-contac
 
 		<div class="wl-contact__form">
 			<?php
+			// Sits immediately above the form, inside the same column.
+			if ( $image_in_form ) {
+				$render_image( $intro_image, 'above-form' );
+			}
+			if ( $text_in_form ) {
+				$render_text( $text, 'above-form' );
+			}
+
 			if ( function_exists( 'wonderland_render_form' ) ) {
 				echo wonderland_render_form( array( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					'preset'  => $preset,

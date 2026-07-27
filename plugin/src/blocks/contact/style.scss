@@ -66,6 +66,25 @@
 		}
 	}
 
+	// Sitting directly on top of the form: a slim full-width band, flush with
+	// the white card below it so the two read as one stacked object.
+	&__image--above-form {
+		margin: 0;
+
+		img {
+			max-width: none;
+			aspect-ratio: 16 / 7;
+		}
+	}
+
+	// Intro copy moved above the form instead of into the left column.
+	&__text--above-form {
+		margin-bottom: 1.75rem;
+		max-width: 34rem;
+	}
+
+	&__image--above-form + &__text--above-form { margin-top: 1.75rem; }
+
 	&__details {
 		list-style: none;
 		margin: 1.5rem 0 0;
