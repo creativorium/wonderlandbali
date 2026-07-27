@@ -116,5 +116,8 @@
 
 	.wl-page-hero__t1 { color: #fff; }        // over the image
 	.wl-page-hero__t2 { color: var(--wl-ink, #000); } // on the page below
+
+	// Single word (e.g. PORTFOLIO): straddle the edge halfway.
+	.wl-page-hero__split-title.is-single { margin-top: -0.5em; }
 }
 

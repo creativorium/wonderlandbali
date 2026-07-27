@@ -12,6 +12,9 @@
 	"attributes": {
 		"heading": { "type": "string", "default": "Portfolio" },
 		"images": { "type": "array", "default": [] },
+		"columns": { "type": "number", "default": 3 },
+		"gap": { "type": "number", "default": 6 },
+		"lightbox": { "type": "boolean", "default": false },
 		"buttonText": { "type": "string", "default": "View More" },
 		"buttonUrl": { "type": "string", "default": "/portfolio-lp/" }
 	},

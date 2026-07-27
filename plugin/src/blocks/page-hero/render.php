@@ -31,9 +31,14 @@ if ( 'split' === $layout ) :
 				<img class="wl-page-hero__badge" src="<?php echo esc_url( $badge ); ?>" alt="" loading="lazy" decoding="async" />
 			<?php endif; ?>
 		</div>
-		<h1 class="wl-page-hero__split-title">
-			<span class="wl-page-hero__t1"><?php echo wp_kses_post( $t_top ); ?></span>
-			<span class="wl-page-hero__t2"><?php echo wp_kses_post( $t_bottom ); ?></span>
+		<?php $single = ( '' === trim( (string) $t_top ) || '' === trim( (string) $t_bottom ) ); ?>
+		<h1 class="wl-page-hero__split-title<?php echo $single ? ' is-single' : ''; ?>">
+			<?php if ( '' !== trim( (string) $t_top ) ) : ?>
+				<span class="wl-page-hero__t1"><?php echo wp_kses_post( $t_top ); ?></span>
+			<?php endif; ?>
+			<?php if ( '' !== trim( (string) $t_bottom ) ) : ?>
+				<span class="wl-page-hero__t2"><?php echo wp_kses_post( $t_bottom ); ?></span>
+			<?php endif; ?>
 		</h1>
 	</section>
 	<?php
