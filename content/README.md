@@ -16,9 +16,9 @@ wp post update <id> content/pages/<slug>.html      # set post_content
 |---|---|---|
 | Home | home | 4318 |
 | About Us | about-us | 1637 |
-| Portfolio | portfolio-lp | 1336 |
-| Contact | contact-2 | 1334 |
-| Make a Request | request-2 | 1337 |
+| Portfolio | portfolio | 1336 |
+| Contact | contact | 1334 |
+| Make a Request | request | 1337 |
 | Wedding Planning & Styling | weddings-planning-styling | 699 |
 | Event Planning & Styling | events-planning-styling | 752 |
 | Indian Weddings | indian-weddings | 848 |

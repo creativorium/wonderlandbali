@@ -15,3 +15,4 @@ define( 'WONDERLAND_URI', get_stylesheet_directory_uri() );
 
 require_once WONDERLAND_DIR . '/inc/setup.php';
 require_once WONDERLAND_DIR . '/inc/enqueue.php';
+require_once WONDERLAND_DIR . '/inc/redirects.php';
