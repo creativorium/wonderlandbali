@@ -12,7 +12,8 @@
 	"attributes": {
 		"slides": { "type": "array", "default": [] },
 		"slideDuration": { "type": "number", "default": 5000 },
-		"heading": { "type": "string", "default": "" }
+		"heading": { "type": "string", "default": "" },
+		"headingPosition": { "type": "string", "default": "above" }
 	},
 	"render": "file:./render.php"
 }
