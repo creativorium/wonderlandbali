@@ -41,7 +41,20 @@ $grid_style = '--wl-cols:' . $columns . ';--wl-gap:' . $gap . 'px;';
 				$href = $lightbox ? $url : $btn_url;
 				?>
 				<a class="wl-portfolio__item" href="<?php echo esc_url( $href ); ?>"<?php echo $lightbox ? ' data-lb' : ''; ?>>
-					<img src="<?php echo esc_url( $url ); ?>" alt="" loading="lazy" decoding="async" />
+					<?php
+					// The strip is one row of N, the masonry grid is columns of N.
+					$img_sizes = 'strip' === $layout
+						? '(max-width: 560px) 100vw, (max-width: 900px) 50vw, ' . round( 100 / max( 1, count( $images ) ) ) . 'vw'
+						: '(max-width: 900px) 50vw, ' . round( 100 / $columns ) . 'vw';
+					echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						$url,
+						array(
+							'alt'   => is_array( $img ) ? ( $img['alt'] ?? '' ) : '',
+							'size'  => 'large',
+							'sizes' => $img_sizes,
+						)
+					);
+					?>
 				</a>
 			<?php endforeach; ?>
 		</div>

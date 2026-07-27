@@ -22,6 +22,127 @@ if ( ! function_exists( 'wonderland_mark_svg' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wonderland_attachment_id_from_url' ) ) {
+	/**
+	 * Resolve an uploads URL to its attachment ID.
+	 *
+	 * Block content stores plain URLs, but responsive markup needs the ID.
+	 * attachment_url_to_postid() runs a query per call, so results are memoised
+	 * per request and cached persistently — the portfolio page alone would
+	 * otherwise issue well over a hundred queries.
+	 *
+	 * @param string $url Image URL (may be root-relative).
+	 * @return int Attachment ID, or 0 when it is not in the media library.
+	 */
+	function wonderland_attachment_id_from_url( $url ) {
+		static $memo = array();
+
+		if ( ! $url ) {
+			return 0;
+		}
+		if ( isset( $memo[ $url ] ) ) {
+			return $memo[ $url ];
+		}
+
+		$key    = 'wl_att_' . md5( $url );
+		$cached = wp_cache_get( $key, 'wonderland' );
+		if ( false !== $cached ) {
+			$memo[ $url ] = (int) $cached;
+			return $memo[ $url ];
+		}
+
+		// Root-relative URLs need the host back before WP will match them.
+		$absolute = $url;
+		if ( 0 === strpos( $url, '/' ) ) {
+			$absolute = home_url( $url );
+		}
+
+		$id = (int) attachment_url_to_postid( $absolute );
+
+		// The site forces HTTPS while home_url() may be http (or vice versa);
+		// try the other scheme before giving up.
+		if ( ! $id ) {
+			$flipped = ( 0 === strpos( $absolute, 'https://' ) )
+				? str_replace( 'https://', 'http://', $absolute )
+				: str_replace( 'http://', 'https://', $absolute );
+			$id      = (int) attachment_url_to_postid( $flipped );
+		}
+
+		wp_cache_set( $key, $id, 'wonderland', DAY_IN_SECONDS );
+		$memo[ $url ] = $id;
+
+		return $id;
+	}
+}
+
+if ( ! function_exists( 'wonderland_image' ) ) {
+	/**
+	 * Responsive <img> for an uploads URL.
+	 *
+	 * Emits srcset/sizes plus intrinsic width and height so browsers can pick an
+	 * appropriately sized file and reserve the space before it loads. Falls back
+	 * to a plain tag when the URL is not a library item.
+	 *
+	 * @param string $url  Image URL.
+	 * @param array  $args alt, class, size, sizes, lazy, priority, style.
+	 * @return string
+	 */
+	function wonderland_image( $url, $args = array() ) {
+		if ( ! $url ) {
+			return '';
+		}
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'alt'      => '',
+				'class'    => '',
+				'size'     => 'large',
+				'sizes'    => '',
+				'lazy'     => true,
+				'priority' => false, // above-the-fold images opt out of lazy loading
+				'style'    => '',
+			)
+		);
+
+		$attr = array(
+			'alt'      => $args['alt'],
+			'decoding' => 'async',
+		);
+		if ( $args['class'] ) {
+			$attr['class'] = $args['class'];
+		}
+		if ( $args['sizes'] ) {
+			$attr['sizes'] = $args['sizes'];
+		}
+		if ( $args['style'] ) {
+			$attr['style'] = $args['style'];
+		}
+
+		// A lazy-loaded LCP image delays the largest paint; hero art opts out.
+		if ( $args['priority'] ) {
+			$attr['loading']       = 'eager';
+			$attr['fetchpriority'] = 'high';
+		} elseif ( $args['lazy'] ) {
+			$attr['loading'] = 'lazy';
+		}
+
+		$id = wonderland_attachment_id_from_url( $url );
+		if ( $id ) {
+			$markup = wp_get_attachment_image( $id, $args['size'], false, $attr );
+			if ( $markup ) {
+				return $markup;
+			}
+		}
+
+		$out = '<img src="' . esc_url( $url ) . '"';
+		foreach ( $attr as $k => $v ) {
+			$out .= ' ' . esc_attr( $k ) . '="' . esc_attr( $v ) . '"';
+		}
+		return $out . ' />';
+	}
+}
+
 if ( ! function_exists( 'wonderland_icon_svg' ) ) {
 	/**
 	 * Small line icons for contact details and social links.

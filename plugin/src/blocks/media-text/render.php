@@ -21,7 +21,16 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => "wl-mt $pos $bg" ) );
 	<div class="wl-mt__grid">
 		<div class="wl-mt__media">
 			<?php if ( $img ) : ?>
-				<img src="<?php echo esc_url( $img ); ?>" alt="<?php echo esc_attr( wp_strip_all_tags( $heading ) ); ?>" loading="lazy" decoding="async" />
+				<?php
+				echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					$img,
+					array(
+						'alt'   => wp_strip_all_tags( $heading ),
+						'size'  => 'large',
+						'sizes' => '(max-width: 860px) 100vw, 50vw',
+					)
+				);
+				?>
 			<?php endif; ?>
 		</div>
 		<div class="wl-mt__body">

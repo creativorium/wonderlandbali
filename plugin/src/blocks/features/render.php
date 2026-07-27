@@ -59,7 +59,15 @@ $wrapper = get_block_wrapper_attributes(
 					<div class="wl-features__item<?php echo $media ? ' has-media' : ''; ?>">
 						<?php if ( $media ) : ?>
 							<figure class="wl-features__media">
-								<img src="<?php echo esc_url( $media ); ?>" alt="" loading="lazy" decoding="async" />
+								<?php
+								echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									$media,
+									array(
+										'size'  => 'medium_large',
+										'sizes' => '(max-width: 760px) 100vw, (max-width: 1000px) 50vw, ' . round( 100 / $cols ) . 'vw',
+									)
+								);
+								?>
 							</figure>
 						<?php endif; ?>
 						<?php if ( ! empty( $item['title'] ) ) : ?>

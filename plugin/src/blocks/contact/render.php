@@ -52,9 +52,9 @@ $render_image = function ( $url, $modifier = '' ) {
 		return;
 	}
 	printf(
-		'<figure class="wl-contact__image%s"><img src="%s" alt="" loading="lazy" decoding="async" width="900" height="600" /></figure>',
+		'<figure class="wl-contact__image%s">%s</figure>',
 		$modifier ? ' wl-contact__image--' . esc_attr( $modifier ) : '',
-		esc_url( $url )
+		wonderland_image( $url, array( 'size' => 'medium_large', 'sizes' => '(max-width: 860px) 100vw, 40vw' ) )
 	);
 };
 

@@ -20,7 +20,16 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => "wl-profile $pos" ) )
 	<div class="wl-profile__grid">
 		<figure class="wl-profile__media">
 			<?php if ( $img ) : ?>
-				<img src="<?php echo esc_url( $img ); ?>" alt="<?php echo esc_attr( wp_strip_all_tags( $name ) ); ?>" loading="lazy" decoding="async" />
+				<?php
+				echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					$img,
+					array(
+						'alt'   => wp_strip_all_tags( $name ),
+						'size'  => 'medium_large',
+						'sizes' => '(max-width: 860px) 60vw, 30vw',
+					)
+				);
+				?>
 			<?php endif; ?>
 		</figure>
 		<div class="wl-profile__text"><?php echo wp_kses_post( wpautop( $text ) ); ?></div>

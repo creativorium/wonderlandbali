@@ -44,8 +44,17 @@ if ( 'aside' === $layout ) :
 			</div>
 			<?php if ( $bg_url ) : ?>
 				<figure class="wl-page-hero__aside-media">
-					<img src="<?php echo esc_url( $bg_url ); ?>" alt="" fetchpriority="high" decoding="async"
-						style="object-position:<?php echo esc_attr( $img_pos ); ?>" />
+					<?php
+					echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						$bg_url,
+						array(
+							'size'     => 'large',
+							'sizes'    => '(max-width: 860px) 100vw, 50vw',
+							'priority' => true, // opener image: the likely LCP element
+							'style'    => 'object-position:' . $img_pos,
+						)
+					);
+					?>
 				</figure>
 			<?php endif; ?>
 		</div>
