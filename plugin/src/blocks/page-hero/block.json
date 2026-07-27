@@ -20,6 +20,7 @@
 		"layout": { "type": "string", "default": "center" },
 		"titleTop": { "type": "string", "default": "" },
 		"titleBottom": { "type": "string", "default": "" },
+		"imagePosition": { "type": "string", "default": "center" },
 		"badgeId": { "type": "number" },
 		"badgeUrl": { "type": "string", "default": "" }
 	},

@@ -23,10 +23,12 @@ $badge    = $attributes['badgeUrl'] ?? '';
 if ( 'split' === $layout ) :
 	$t_top    = $attributes['titleTop'] ?? '';
 	$t_bottom = $attributes['titleBottom'] ?? '';
+	$img_pos  = $attributes['imagePosition'] ?? 'center';
 	$wrapper  = get_block_wrapper_attributes( array( 'class' => 'wl-page-hero wl-page-hero--split' ) );
+	$media_style = $bg_url ? ' style="background-image:url(' . esc_url( $bg_url ) . ');background-position:' . esc_attr( $img_pos ) . '"' : '';
 	?>
 	<section <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-		<div class="wl-page-hero__media"<?php echo $bg_url ? ' style="background-image:url(' . esc_url( $bg_url ) . ')"' : ''; ?>>
+		<div class="wl-page-hero__media"<?php echo $media_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 			<?php if ( $badge ) : ?>
 				<img class="wl-page-hero__badge" src="<?php echo esc_url( $badge ); ?>" alt="" loading="lazy" decoding="async" />
 			<?php endif; ?>
