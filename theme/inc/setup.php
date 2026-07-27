@@ -54,6 +54,10 @@ function wonderland_page_has_hero() {
 	if ( is_front_page() ) {
 		return true;
 	}
+	// The 404 screen is a full-bleed brand panel — treat it like a hero.
+	if ( is_404() ) {
+		return true;
+	}
 	if ( ! is_singular() ) {
 		return false;
 	}

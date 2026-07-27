@@ -12,8 +12,12 @@
 	"attributes": {
 		"heading": { "type": "string", "default": "Contact us today and let's embark on this extraordinary journey together!" },
 		"text": { "type": "string", "default": "" },
+		"formPreset": { "type": "string", "default": "contact" },
 		"formSubject": { "type": "string", "default": "Website enquiry" },
 		"formButton": { "type": "string", "default": "Send Message" },
+		"note": { "type": "string", "default": "" },
+		"introImageId": { "type": "number" },
+		"introImageUrl": { "type": "string", "default": "" },
 		"email1": { "type": "string", "default": "info@wonderlandbali.com" },
 		"email2": { "type": "string", "default": "anastasia@wonderlandbali.com" },
 		"phone": { "type": "string", "default": "+62 878 6113 8090" },
