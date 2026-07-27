@@ -128,6 +128,9 @@ add_filter(
 		if ( wonderland_page_has_hero() ) {
 			$classes[] = 'has-hero';
 		}
+		if ( wonderland_uses_inline_nav() ) {
+			$classes[] = 'wl-inline-nav';
+		}
 		return $classes;
 	}
 );

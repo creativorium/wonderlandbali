@@ -270,6 +270,13 @@ body:not(.has-hero) .site-main { padding-top: 84px; }
     gap: 2rem;
   }
 
+  // Larger than the compact solid-header logo — this bar is taller and the
+  // mark is the only branding on the page, so it carries more weight.
+  .site-header__logo {
+    height: clamp(76px, 7vw, 104px);
+    filter: none;
+  }
+
   // The burger is the small-screen fallback here, not the primary control.
   .site-header__toggle.is-compact { display: none; }
 
@@ -278,6 +285,10 @@ body:not(.has-hero) .site-main { padding-top: 84px; }
     .site-header__toggle.is-compact { display: inline-flex; }
   }
 }
+
+/* This header sits in the flow rather than fixed, so the spacer that clears the
+   fixed bar would leave a gap here. */
+body.wl-inline-nav .site-main { padding-top: 0; }
 
 .site-nav {
   margin-left: auto;
