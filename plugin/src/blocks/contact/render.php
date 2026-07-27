@@ -19,6 +19,11 @@ $preset  = ( 'request' === ( $attributes['formPreset'] ?? '' ) ) ? 'request' : '
 
 $intro_image = $attributes['introImageUrl'] ?? '';
 
+// Icons are decorative; degrade to plain text links if the helper is unavailable.
+$icon = function ( $name ) {
+	return function_exists( 'wonderland_icon_svg' ) ? wonderland_icon_svg( $name ) : '';
+};
+
 $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-contact wl-contact--' . $preset ) );
 ?>
 <section <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -39,17 +44,17 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-contact wl-contac
 
 			<?php if ( $email1 || $email2 || $phone ) : ?>
 				<ul class="wl-contact__details">
-					<?php if ( $email1 ) : ?><li><a href="mailto:<?php echo esc_attr( $email1 ); ?>"><?php echo esc_html( $email1 ); ?></a></li><?php endif; ?>
-					<?php if ( $email2 ) : ?><li><a href="mailto:<?php echo esc_attr( $email2 ); ?>"><?php echo esc_html( $email2 ); ?></a></li><?php endif; ?>
-					<?php if ( $phone ) : ?><li><a href="tel:<?php echo esc_attr( preg_replace( '/[^\d+]/', '', $phone ) ); ?>"><?php echo esc_html( $phone ); ?></a></li><?php endif; ?>
+					<?php if ( $email1 ) : ?><li><a href="mailto:<?php echo esc_attr( $email1 ); ?>"><?php echo $icon( 'email' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php echo esc_html( $email1 ); ?></span></a></li><?php endif; ?>
+					<?php if ( $email2 ) : ?><li><a href="mailto:<?php echo esc_attr( $email2 ); ?>"><?php echo $icon( 'email' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php echo esc_html( $email2 ); ?></span></a></li><?php endif; ?>
+					<?php if ( $phone ) : ?><li><a href="tel:<?php echo esc_attr( preg_replace( '/[^\d+]/', '', $phone ) ); ?>"><?php echo $icon( 'phone' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php echo esc_html( $phone ); ?></span></a></li><?php endif; ?>
 				</ul>
 			<?php endif; ?>
 
 			<?php if ( $ig || $fb || $wa ) : ?>
 				<div class="wl-contact__social">
-					<?php if ( $ig ) : ?><a href="<?php echo esc_url( $ig ); ?>" target="_blank" rel="noopener">Instagram</a><?php endif; ?>
-					<?php if ( $fb ) : ?><a href="<?php echo esc_url( $fb ); ?>" target="_blank" rel="noopener">Facebook</a><?php endif; ?>
-					<?php if ( $wa ) : ?><a href="https://wa.me/<?php echo esc_attr( preg_replace( '/\D/', '', $wa ) ); ?>" target="_blank" rel="noopener">WhatsApp</a><?php endif; ?>
+					<?php if ( $ig ) : ?><a href="<?php echo esc_url( $ig ); ?>" target="_blank" rel="noopener"><?php echo $icon( 'instagram' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span>Instagram</span></a><?php endif; ?>
+					<?php if ( $fb ) : ?><a href="<?php echo esc_url( $fb ); ?>" target="_blank" rel="noopener"><?php echo $icon( 'facebook' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span>Facebook</span></a><?php endif; ?>
+					<?php if ( $wa ) : ?><a href="https://wa.me/<?php echo esc_attr( preg_replace( '/\D/', '', $wa ) ); ?>" target="_blank" rel="noopener"><?php echo $icon( 'whatsapp' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span>WhatsApp</span></a><?php endif; ?>
 				</div>
 			<?php endif; ?>
 
