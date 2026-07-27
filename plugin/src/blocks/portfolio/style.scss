@@ -189,3 +189,26 @@ body.lb-open { overflow: hidden; }
 
 	.wl-portfolio__item { margin-bottom: var(--wl-gap, 20px); }
 }
+
+/* Progressive reveal — hidden frames stay in the DOM so their lazy images are
+   only fetched once shown. */
+.wl-portfolio__item.is-hidden { display: none; }
+
+.wl-portfolio__reveal {
+	border: 0;
+	cursor: pointer;
+	font: inherit;
+	font-family: var(--wl-font-label, sans-serif);
+	font-weight: 500;
+	font-size: 0.78rem;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+}
+
+.wl-portfolio__count {
+	margin: 0.9rem 0 0;
+	font-family: var(--wl-font-label, sans-serif);
+	font-size: 0.72rem;
+	letter-spacing: 0.14em;
+	color: rgba(0, 0, 0, 0.5);
+}

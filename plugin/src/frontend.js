@@ -134,10 +134,63 @@ function initLightbox() {
 	} );
 }
 
+/**
+ * Progressive galleries: reveal the next batch of hidden frames per click.
+ *
+ * Hidden frames are already in the DOM but carry `hidden`, so their lazy images
+ * are not fetched until they are shown — the point is to keep the initial load
+ * small, not to defer the markup.
+ */
+function initReveal() {
+	document.querySelectorAll( '[data-reveal]' ).forEach( function ( grid ) {
+		const batch = parseInt( grid.getAttribute( 'data-reveal' ), 10 ) || 12;
+		const wrap = grid.parentElement;
+		const btn = wrap ? wrap.querySelector( '[data-reveal-btn]' ) : null;
+		const shown = wrap ? wrap.querySelector( '[data-shown]' ) : null;
+		if ( ! btn ) {
+			return;
+		}
+
+		btn.addEventListener( 'click', function () {
+			const hidden = grid.querySelectorAll( '.wl-portfolio__item.is-hidden' );
+			const next = Array.prototype.slice.call( hidden, 0, batch );
+
+			next.forEach( function ( el ) {
+				el.classList.remove( 'is-hidden' );
+				el.removeAttribute( 'hidden' );
+				el.removeAttribute( 'aria-hidden' );
+				el.removeAttribute( 'tabindex' );
+			} );
+
+			if ( shown ) {
+				shown.textContent = String(
+					grid.querySelectorAll( '.wl-portfolio__item:not(.is-hidden)' ).length
+				);
+			}
+
+			// Nothing left to reveal — retire the control.
+			if ( ! grid.querySelector( '.wl-portfolio__item.is-hidden' ) ) {
+				const more = btn.closest( '.wl-portfolio__more' );
+				if ( more ) {
+					more.remove();
+				}
+			}
+
+			// Move focus to the first new frame so keyboard users are not
+			// stranded where the button used to be.
+			if ( next.length ) {
+				next[ 0 ].setAttribute( 'tabindex', '-1' );
+				next[ 0 ].focus( { preventScroll: true } );
+			}
+		} );
+	} );
+}
+
 function initAll() {
 	initSlideshows();
 	initTestimonials();
 	initLightbox();
+	initReveal();
 }
 
 if ( document.readyState !== 'loading' ) {
