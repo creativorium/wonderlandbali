@@ -44,3 +44,48 @@ add_action(
 		}
 	}
 );
+
+/**
+ * Whether the current page is still rendered by Elementor.
+ *
+ * Rebuilt pages have `_elementor_edit_mode` cleared; the original data is kept
+ * so any page can be reverted (see Backup & reversibility in doc/README.md).
+ *
+ * @return bool
+ */
+function wonderland_page_uses_elementor() {
+	if ( ! is_singular() ) {
+		return false;
+	}
+	$post = get_post();
+	if ( ! $post ) {
+		return false;
+	}
+	return 'builder' === get_post_meta( $post->ID, '_elementor_edit_mode', true );
+}
+
+/**
+ * Drop Elementor's global kit stylesheet on pages we render ourselves.
+ *
+ * The kit sets sitewide rules from the old Elementor design — notably
+ * `.elementor-kit-9 a { color: #FFFFFF }`, which turns every link on the site
+ * white. It matches our own `a` rules at equal specificity but loads later, so
+ * it silently wins. Pages still on Elementor keep the kit so they render intact.
+ */
+add_action(
+	'wp_enqueue_scripts',
+	function () {
+		if ( wonderland_page_uses_elementor() ) {
+			return;
+		}
+
+		$kit_id = (int) get_option( 'elementor_active_kit', 0 );
+		if ( $kit_id ) {
+			wp_dequeue_style( 'elementor-post-' . $kit_id );
+		}
+		// The kit id is 9 on this install; dequeue it explicitly as a fallback
+		// in case the option is missing.
+		wp_dequeue_style( 'elementor-post-9' );
+	},
+	100
+);
