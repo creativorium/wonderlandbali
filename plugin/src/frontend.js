@@ -11,6 +11,7 @@ import './blocks/portfolio/style.scss';
 import './blocks/follow/style.scss';
 import './blocks/page-hero/style.scss';
 import './blocks/media-text/style.scss';
+import './blocks/profile/style.scss';
 import './blocks/contact/style.scss';
 import './blocks/features/style.scss';
 import './blocks/testimonials/style.scss';

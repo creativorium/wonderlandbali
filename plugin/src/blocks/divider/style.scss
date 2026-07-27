@@ -1,11 +1,33 @@
-// Wonderland Image Divider — full-width crossfading image band.
+// Wonderland Image Divider — full-width crossfading image band, with an
+// optional giant heading overlapping its top edge (e.g. "OUR STORY").
 
 .wl-divider {
 	position: relative;
-	width: 100%;
-	height: clamp(320px, 46vh, 560px);
-	overflow: hidden;
-	background-color: #2c2a26;
+
+	&__title {
+		max-width: min(1500px, 94vw);
+		margin: 0 auto clamp(-3rem, -5vw, -6rem); // pull the band up behind it
+		padding-inline: var(--wl-gutter, 1.5rem);
+		position: relative;
+		z-index: 2;
+		text-align: center;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(3rem, 10vw, 9rem);
+		line-height: 0.9;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+		color: var(--wl-ink, #000);
+	}
+
+	&__band {
+		position: relative;
+		z-index: 1;
+		width: 100%;
+		height: clamp(360px, 52vh, 620px);
+		overflow: hidden;
+		background-color: #2c2a26;
+	}
 
 	&__slide {
 		position: absolute;

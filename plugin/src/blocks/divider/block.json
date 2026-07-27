@@ -11,7 +11,8 @@
 	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
 	"attributes": {
 		"slides": { "type": "array", "default": [] },
-		"slideDuration": { "type": "number", "default": 5000 }
+		"slideDuration": { "type": "number", "default": 5000 },
+		"heading": { "type": "string", "default": "" }
 	},
 	"render": "file:./render.php"
 }

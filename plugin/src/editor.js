@@ -20,6 +20,8 @@ import './blocks/page-hero/style.scss';
 import './blocks/page-hero/index.js';
 import './blocks/media-text/style.scss';
 import './blocks/media-text/index.js';
+import './blocks/profile/style.scss';
+import './blocks/profile/index.js';
 import './blocks/contact/style.scss';
 import './blocks/contact/index.js';
 import './blocks/features/style.scss';

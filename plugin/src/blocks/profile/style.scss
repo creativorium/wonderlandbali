@@ -1,0 +1,61 @@
+// Wonderland Profile — big coral name overlapping a circular photo + bio.
+
+.wl-profile {
+	padding-block: clamp(2.5rem, 5vw, 4rem);
+	padding-inline: var(--wl-gutter, 1.5rem);
+	background: #fff;
+	color: var(--wl-ink, #000);
+
+	&__name {
+		max-width: min(1400px, 94vw);
+		margin: 0 auto clamp(-2rem, -3vw, -3.5rem); // overlap the row below
+		position: relative;
+		z-index: 2;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(2.5rem, 6vw, 5rem);
+		line-height: 1;
+		color: var(--wl-coral, #efa58f);
+	}
+
+	&__grid {
+		max-width: min(1400px, 94vw);
+		margin-inline: auto;
+		display: flex;
+		align-items: center;
+		gap: clamp(2rem, 5vw, 5rem);
+	}
+
+	&__media {
+		flex: none;
+		margin: 0;
+		width: clamp(220px, 26vw, 360px);
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		overflow: hidden;
+
+		img { width: 100%; height: 100%; object-fit: cover; display: block; }
+	}
+
+	&__text {
+		flex: 1;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.98rem;
+		line-height: 1.75;
+		color: rgba(0, 0, 0, 0.8);
+		p { margin: 0 0 1rem; }
+	}
+
+	/* Image left -> name right-aligned over the text; image right -> mirrored. */
+	&.is-left &__name { text-align: right; }
+	&.is-left &__grid { flex-direction: row; }
+
+	&.is-right &__name { text-align: left; }
+	&.is-right &__grid { flex-direction: row-reverse; }
+
+	@media (max-width: 760px) {
+		&__grid { flex-direction: column !important; text-align: center; }
+		&__name { text-align: center !important; margin-bottom: 1rem; }
+		&__media { width: clamp(180px, 55vw, 260px); }
+	}
+}
