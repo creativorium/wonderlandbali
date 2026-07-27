@@ -13,7 +13,7 @@
 
 $heading = $attributes['heading'] ?? '';
 $items   = isset( $attributes['items'] ) && is_array( $attributes['items'] ) ? $attributes['items'] : array();
-$cols    = isset( $attributes['columns'] ) ? max( 1, min( 3, (int) $attributes['columns'] ) ) : 2;
+$cols    = isset( $attributes['columns'] ) ? max( 1, min( 4, (int) $attributes['columns'] ) ) : 2;
 $bg      = ( $attributes['background'] ?? 'white' ) === 'greige' ? 'is-greige' : 'is-white';
 $variant = ( 'list' === ( $attributes['variant'] ?? '' ) ) ? 'list' : 'cards';
 $intro   = $attributes['intro'] ?? '';
@@ -55,7 +55,13 @@ $wrapper = get_block_wrapper_attributes(
 		<?php else : ?>
 			<div class="wl-features__grid" style="--wl-cols:<?php echo esc_attr( (string) $cols ); ?>">
 				<?php foreach ( $items as $item ) : ?>
-					<div class="wl-features__item">
+					<?php $media = $item['imageUrl'] ?? ''; ?>
+					<div class="wl-features__item<?php echo $media ? ' has-media' : ''; ?>">
+						<?php if ( $media ) : ?>
+							<figure class="wl-features__media">
+								<img src="<?php echo esc_url( $media ); ?>" alt="" loading="lazy" decoding="async" />
+							</figure>
+						<?php endif; ?>
 						<?php if ( ! empty( $item['title'] ) ) : ?>
 							<h3 class="wl-features__name"><?php echo wp_kses_post( $item['title'] ); ?></h3>
 						<?php endif; ?>

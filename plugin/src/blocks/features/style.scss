@@ -39,6 +39,23 @@
 		p { margin: 0 0 0.75rem; }
 	}
 
+	/* Illustrated points — image above the title. */
+	&__media {
+		margin: 0 0 1rem;
+
+		img {
+			width: 100%;
+			aspect-ratio: 4 / 3;
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	@media (max-width: 1000px) {
+		// 4-up only holds on wide screens; pair them up below that.
+		&__grid { grid-template-columns: repeat(min(var(--wl-cols, 2), 2), 1fr); }
+	}
+
 	@media (max-width: 760px) {
 		&__grid { grid-template-columns: 1fr; }
 	}
