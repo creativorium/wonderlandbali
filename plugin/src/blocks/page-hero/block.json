@@ -13,6 +13,7 @@
 		"eyebrow": { "type": "string", "default": "" },
 		"title": { "type": "string", "default": "Page Title" },
 		"subtitle": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
 		"backgroundId": { "type": "number" },
 		"backgroundUrl": { "type": "string", "default": "" },
 		"overlayOpacity": { "type": "number", "default": 40 },

@@ -7,8 +7,10 @@
  * @package Wonderland
  */
 
-$is_overlay   = function_exists( 'wonderland_page_has_hero' ) ? wonderland_page_has_hero() : is_front_page();
-$header_class = 'site-header ' . ( $is_overlay ? 'site-header--transparent' : 'site-header--solid' );
+$inline_nav   = function_exists( 'wonderland_uses_inline_nav' ) && wonderland_uses_inline_nav();
+$is_overlay   = ! $inline_nav && ( function_exists( 'wonderland_page_has_hero' ) ? wonderland_page_has_hero() : is_front_page() );
+$header_class = 'site-header ' . ( $is_overlay ? 'site-header--transparent' : 'site-header--solid' )
+	. ( $inline_nav ? ' site-header--inline' : '' );
 $logo_uri     = WONDERLAND_URI . '/assets/img/logo.svg';
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -32,7 +34,23 @@ $logo_uri     = WONDERLAND_URI . '/assets/img/logo.svg';
 			<?php endif; ?>
 		</a>
 
-		<button class="site-header__toggle" id="menu-toggle" aria-expanded="false" aria-controls="menu-overlay">
+		<?php if ( $inline_nav ) : ?>
+			<nav class="site-nav" aria-label="<?php esc_attr_e( 'Primary', 'wonderland' ); ?>">
+				<?php
+				wp_nav_menu(
+					array(
+						'theme_location' => 'primary',
+						'container'      => false,
+						'menu_class'     => 'site-nav__menu',
+						'fallback_cb'    => false,
+						'depth'          => 2,
+					)
+				);
+				?>
+			</nav>
+		<?php endif; ?>
+
+		<button class="site-header__toggle<?php echo $inline_nav ? ' is-compact' : ''; ?>" id="menu-toggle" aria-expanded="false" aria-controls="menu-overlay">
 			<span class="site-header__toggle-label"><?php esc_html_e( 'Menu', 'wonderland' ); ?></span>
 			<span class="site-header__burger" aria-hidden="true"><span></span><span></span><span></span></span>
 		</button>

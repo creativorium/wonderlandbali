@@ -74,11 +74,49 @@ function wonderland_page_has_hero() {
 		}
 		if ( 'wonderland/page-hero' === $block['blockName'] ) {
 			$attrs = $block['attrs'] ?? array();
+			// The aside layout is a boxed row, not a full-bleed banner — it uses
+			// backgroundUrl as a plain image, so the header must stay solid.
+			if ( 'aside' === ( $attrs['layout'] ?? '' ) ) {
+				return false;
+			}
 			return ! empty( $attrs['backgroundUrl'] ) || ( ( $attrs['layout'] ?? '' ) === 'split' );
 		}
 		return false; // first real block is something else
 	}
 	return false;
+}
+
+/**
+ * The service pages, which run a deliberately plainer layout than the rest of
+ * the site — boxed hero, image strip, bulleted lists — and a solid header with
+ * an inline nav instead of the transparent bar and off-canvas panel.
+ *
+ * @return string[] Page slugs.
+ */
+function wonderland_service_slugs() {
+	return apply_filters(
+		'wonderland_service_slugs',
+		array(
+			'weddings-planning-styling',
+			'events-planning-styling',
+			'indian-weddings',
+			'decoration',
+			'elopement',
+		)
+	);
+}
+
+/**
+ * Whether the current page uses the inline-nav header.
+ *
+ * @return bool
+ */
+function wonderland_uses_inline_nav() {
+	if ( ! is_page() ) {
+		return false;
+	}
+	$post = get_post();
+	return $post && in_array( $post->post_name, wonderland_service_slugs(), true );
 }
 
 /**

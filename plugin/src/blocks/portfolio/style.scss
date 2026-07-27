@@ -131,3 +131,41 @@
 }
 
 body.lb-open { overflow: hidden; }
+
+/* ---------- Strip layout: one full-bleed row of equal-height frames ---------- */
+.wl-portfolio--strip {
+	padding-inline: 0;
+
+	.wl-portfolio__grid {
+		// A flat row, not multicol — every frame shares one height and the
+		// row spans the viewport with no gutters.
+		column-count: initial;
+		display: flex;
+		gap: 0;
+		width: 100%;
+	}
+
+	.wl-portfolio__item {
+		flex: 1 1 0;
+		min-width: 0;
+		margin: 0;
+
+		img {
+			width: 100%;
+			height: clamp(240px, 30vw, 460px);
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	.wl-portfolio__title { padding-inline: var(--wl-gutter, 1.5rem); }
+
+	// Two per row on tablets, stacked pairs on phones — never a squashed sliver.
+	@media (max-width: 900px) {
+		.wl-portfolio__grid { flex-wrap: wrap; }
+		.wl-portfolio__item { flex: 1 1 50%; }
+	}
+	@media (max-width: 560px) {
+		.wl-portfolio__item { flex: 1 1 100%; }
+	}
+}

@@ -13,6 +13,9 @@
 		"heading": { "type": "string", "default": "" },
 		"background": { "type": "string", "default": "white" },
 		"columns": { "type": "number", "default": 2 },
+		"variant": { "type": "string", "default": "cards" },
+		"intro": { "type": "string", "default": "" },
+		"marker": { "type": "string", "default": "dot" },
 		"items": { "type": "array", "default": [] }
 	},
 	"render": "file:./render.php"

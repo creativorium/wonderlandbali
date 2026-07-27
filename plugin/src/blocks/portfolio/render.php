@@ -14,7 +14,11 @@ $columns  = isset( $attributes['columns'] ) ? max( 1, min( 6, (int) $attributes[
 $gap      = isset( $attributes['gap'] ) ? max( 0, (int) $attributes['gap'] ) : 6;
 $lightbox = ! empty( $attributes['lightbox'] );
 
-$wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-portfolio' ) );
+// `masonry` balances varied heights across columns; `strip` is a single
+// full-bleed row of equal-height frames, used by the service pages.
+$layout = ( 'strip' === ( $attributes['layout'] ?? '' ) ) ? 'strip' : 'masonry';
+
+$wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-portfolio wl-portfolio--' . $layout ) );
 
 $grid_style = '--wl-cols:' . $columns . ';--wl-gap:' . $gap . 'px;';
 ?>

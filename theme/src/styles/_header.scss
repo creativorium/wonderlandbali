@@ -251,3 +251,102 @@ body:not(.has-hero) .site-main { padding-top: 84px; }
 	}
 	.menu-item-has-children.is-open > .sub-menu { max-height: 420px; }
 }
+
+/* ---------------------------------------------------------------------------
+   Inline-nav header — service pages only.
+
+   The service pages run a plainer layout than the rest of the site, with a
+   solid header and a visible horizontal menu instead of the transparent bar
+   and off-canvas panel. Below the breakpoint it falls back to the burger, so
+   the off-canvas markup stays in place on every page.
+--------------------------------------------------------------------------- */
+.site-header--inline {
+  position: relative;
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, .08);
+
+  .site-header__inner {
+    align-items: center;
+    gap: 2rem;
+  }
+
+  // The burger is the small-screen fallback here, not the primary control.
+  .site-header__toggle.is-compact { display: none; }
+
+  @media (max-width: 1100px) {
+    .site-nav { display: none; }
+    .site-header__toggle.is-compact { display: inline-flex; }
+  }
+}
+
+.site-nav {
+  margin-left: auto;
+
+  &__menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2.4vw, 2.25rem);
+  }
+
+  li { position: relative; }
+
+  a {
+    display: block;
+    padding: .5rem 0;
+    font-family: var(--wl-font-head, serif);
+    font-size: 1rem;
+    color: var(--wl-ink, #000);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color .2s ease;
+
+    &:hover { color: var(--wl-coral, #efa58f); }
+  }
+
+  // Parent items get a caret; their submenu opens on hover and on keyboard focus.
+  .menu-item-has-children > a::after {
+    content: '';
+    display: inline-block;
+    margin-left: .45rem;
+    width: .38rem;
+    height: .38rem;
+    border-right: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+  }
+
+  .sub-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 20;
+    min-width: 15rem;
+    margin: 0;
+    padding: .5rem 0;
+    list-style: none;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, .08);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity .18s ease, transform .18s ease, visibility .18s;
+
+    a {
+      padding: .5rem 1.1rem;
+      font-family: var(--wl-font-label, sans-serif);
+      font-size: .85rem;
+      letter-spacing: .04em;
+    }
+  }
+
+  li:hover > .sub-menu,
+  li:focus-within > .sub-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}

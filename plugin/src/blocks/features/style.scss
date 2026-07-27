@@ -43,3 +43,61 @@
 		&__grid { grid-template-columns: 1fr; }
 	}
 }
+
+/* ---------- List variant: bulleted list flowed into columns ---------- */
+.wl-features--list {
+	.wl-features__intro {
+		max-width: var(--wl-content-max, 1200px);
+		margin: 0 auto 1.5rem;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.95rem;
+		line-height: 1.7;
+		color: rgba(0, 0, 0, 0.72);
+	}
+
+	.wl-features__list {
+		max-width: var(--wl-content-max, 1200px);
+		margin: 0 auto;
+		padding: 0;
+		list-style: none;
+		// Multicol keeps the reading order down each column and balances the
+		// halves automatically, which a grid of <li> would not.
+		column-count: var(--wl-cols, 2);
+		column-gap: clamp(2rem, 5vw, 4.5rem);
+
+		li {
+			break-inside: avoid;
+			position: relative;
+			margin: 0 0 0.55rem;
+			padding-left: 1.15rem;
+			font-family: var(--wl-font-body, sans-serif);
+			font-size: 0.95rem;
+			line-height: 1.6;
+			color: rgba(0, 0, 0, 0.78);
+		}
+
+		strong { font-weight: 600; }
+
+		&.has-dot li::before {
+			content: '•';
+			position: absolute;
+			left: 0;
+			color: rgba(0, 0, 0, 0.55);
+		}
+
+		&.has-ring li::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0.55em;
+			width: 0.5rem;
+			height: 0.5rem;
+			border: 1px solid rgba(0, 0, 0, 0.55);
+			border-radius: 50%;
+		}
+	}
+
+	@media (max-width: 760px) {
+		.wl-features__list { column-count: 1; }
+	}
+}
