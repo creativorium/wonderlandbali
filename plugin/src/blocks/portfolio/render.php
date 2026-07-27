@@ -10,8 +10,13 @@ $heading  = $attributes['heading'] ?? '';
 $images   = isset( $attributes['images'] ) && is_array( $attributes['images'] ) ? $attributes['images'] : array();
 $btn_text = $attributes['buttonText'] ?? '';
 $btn_url  = $attributes['buttonUrl'] ?? '#';
+$columns  = isset( $attributes['columns'] ) ? max( 1, min( 6, (int) $attributes['columns'] ) ) : 3;
+$gap      = isset( $attributes['gap'] ) ? max( 0, (int) $attributes['gap'] ) : 6;
+$lightbox = ! empty( $attributes['lightbox'] );
 
 $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-portfolio' ) );
+
+$grid_style = '--wl-cols:' . $columns . ';--wl-gap:' . $gap . 'px;';
 ?>
 <section <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<?php if ( $heading ) : ?>
@@ -19,15 +24,16 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-portfolio' ) );
 	<?php endif; ?>
 
 	<?php if ( ! empty( $images ) ) : ?>
-		<div class="wl-portfolio__grid">
+		<div class="wl-portfolio__grid" style="<?php echo esc_attr( $grid_style ); ?>"<?php echo $lightbox ? ' data-lightbox="1"' : ''; ?>>
 			<?php
 			foreach ( $images as $img ) :
 				$url = is_array( $img ) ? ( $img['url'] ?? '' ) : (string) $img;
 				if ( ! $url ) {
 					continue;
 				}
+				$href = $lightbox ? $url : $btn_url;
 				?>
-				<a class="wl-portfolio__item" href="<?php echo esc_url( $btn_url ); ?>">
+				<a class="wl-portfolio__item" href="<?php echo esc_url( $href ); ?>"<?php echo $lightbox ? ' data-lb' : ''; ?>>
 					<img src="<?php echo esc_url( $url ); ?>" alt="" loading="lazy" decoding="async" />
 				</a>
 			<?php endforeach; ?>

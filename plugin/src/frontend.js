@@ -69,9 +69,75 @@ function initTestimonials() {
 	} );
 }
 
+/**
+ * Minimal gallery lightbox: images inside a [data-lightbox] container open in a
+ * full-screen overlay with prev/next + keyboard support.
+ */
+function initLightbox() {
+	const containers = document.querySelectorAll( '[data-lightbox]' );
+	if ( ! containers.length ) {
+		return;
+	}
+	const ov = document.createElement( 'div' );
+	ov.className = 'wl-lightbox';
+	ov.innerHTML =
+		'<button class="wl-lightbox__close" aria-label="Close">×</button>' +
+		'<button class="wl-lightbox__nav wl-lightbox__prev" aria-label="Previous">‹</button>' +
+		'<img class="wl-lightbox__img" alt="" />' +
+		'<button class="wl-lightbox__nav wl-lightbox__next" aria-label="Next">›</button>';
+	document.body.appendChild( ov );
+	const imgEl = ov.querySelector( '.wl-lightbox__img' );
+	let items = [];
+	let idx = 0;
+	const show = ( i ) => {
+		idx = ( ( i % items.length ) + items.length ) % items.length;
+		imgEl.src = items[ idx ];
+	};
+	const open = ( list, i ) => {
+		items = list;
+		ov.classList.add( 'is-open' );
+		document.body.classList.add( 'lb-open' );
+		show( i );
+	};
+	const close = () => {
+		ov.classList.remove( 'is-open' );
+		document.body.classList.remove( 'lb-open' );
+		imgEl.removeAttribute( 'src' );
+	};
+
+	containers.forEach( ( c ) => {
+		const links = Array.from( c.querySelectorAll( '[data-lb]' ) );
+		const urls = links.map( ( a ) => a.getAttribute( 'href' ) );
+		links.forEach( ( a, i ) =>
+			a.addEventListener( 'click', ( e ) => {
+				e.preventDefault();
+				open( urls, i );
+			} )
+		);
+	} );
+
+	ov.querySelector( '.wl-lightbox__close' ).addEventListener( 'click', close );
+	ov.querySelector( '.wl-lightbox__prev' ).addEventListener( 'click', () => show( idx - 1 ) );
+	ov.querySelector( '.wl-lightbox__next' ).addEventListener( 'click', () => show( idx + 1 ) );
+	ov.addEventListener( 'click', ( e ) => {
+		if ( e.target === ov ) {
+			close();
+		}
+	} );
+	document.addEventListener( 'keydown', ( e ) => {
+		if ( ! ov.classList.contains( 'is-open' ) ) {
+			return;
+		}
+		if ( e.key === 'Escape' ) close();
+		if ( e.key === 'ArrowLeft' ) show( idx - 1 );
+		if ( e.key === 'ArrowRight' ) show( idx + 1 );
+	} );
+}
+
 function initAll() {
 	initSlideshows();
 	initTestimonials();
+	initLightbox();
 }
 
 if ( document.readyState !== 'loading' ) {
