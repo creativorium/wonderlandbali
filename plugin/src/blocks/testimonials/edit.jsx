@@ -8,7 +8,7 @@ import {
 } from '@wordpress/block-editor';
 import { PanelBody, Button, RangeControl } from '@wordpress/components';
 
-const blank = { name: '', quote: '', image: '', buttonText: 'Make A Request', buttonUrl: '/request-2/' };
+const blank = { name: '', quote: '', image: '', buttonText: 'Make A Request', buttonUrl: '/request/' };
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { items = [], overlayOpacity } = attributes;

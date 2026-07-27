@@ -16,7 +16,7 @@
 		"gap": { "type": "number", "default": 6 },
 		"lightbox": { "type": "boolean", "default": false },
 		"buttonText": { "type": "string", "default": "View More" },
-		"buttonUrl": { "type": "string", "default": "/portfolio-lp/" }
+		"buttonUrl": { "type": "string", "default": "/portfolio/" }
 	},
 	"render": "file:./render.php"
 }

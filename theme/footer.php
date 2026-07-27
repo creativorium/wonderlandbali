@@ -55,7 +55,7 @@ $icon_wa = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><pat
 				<li><a href="tel:+6287861138090">+62 878 6113 8090</a> &nbsp;|&nbsp; English</li>
 				<li><a href="https://wa.me/6287861138090" target="_blank" rel="noopener">+62 878 6113 8090</a></li>
 			</ul>
-			<a class="site-footer__request" href="<?php echo esc_url( home_url( '/request-2/' ) ); ?>">Make a Request</a>
+			<a class="site-footer__request" href="<?php echo esc_url( home_url( '/request/' ) ); ?>">Make a Request</a>
 		</div>
 	</div>
 
