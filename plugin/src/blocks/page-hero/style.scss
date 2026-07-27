@@ -78,12 +78,21 @@
 		width: 100%;
 		height: clamp(360px, 58vh, 680px);
 		background-size: cover;
-		background-position: center;
+		background-position: center top; // keep heads in frame
 		background-color: #2c2a26;
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: rgba(0, 0, 0, 0.38); // dark overlay
+			pointer-events: none;
+		}
 	}
 
 	.wl-page-hero__badge {
 		position: absolute;
+		z-index: 2; // above the overlay
 		right: clamp(1rem, 3vw, 3rem);
 		bottom: clamp(1rem, 3vw, 3rem);
 		width: clamp(96px, 9vw, 150px);
