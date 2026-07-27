@@ -9,11 +9,23 @@
 	&__inner {
 		max-width: var(--wl-content-max, 1200px);
 		margin-inline: auto;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
+		display: flex;
+		flex-wrap: wrap;
 		gap: clamp(2rem, 5vw, 4.5rem);
-		align-items: start;
+		align-items: flex-start;
 	}
+
+	&__intro {
+		flex: 1 1 22rem;
+		// The intro column stays with the reader while the long request form scrolls.
+		position: sticky;
+		top: calc(var(--wl-header-h, 5rem) + 2rem);
+	}
+
+	&__form { flex: 1 1 28rem; }
+
+	// The request form is the point of the page — give it the wider share.
+	&--request &__form { flex: 1.4 1 32rem; }
 
 	&__title {
 		margin: 0 0 1.25rem;
@@ -28,6 +40,19 @@
 		line-height: 1.7;
 		color: rgba(0, 0, 0, 0.75);
 		p { margin: 0 0 1rem; }
+	}
+
+	// Small, wide crop under the intro copy — a glimpse, not a gallery.
+	&__image {
+		margin: 2rem 0 0;
+
+		img {
+			width: 100%;
+			max-width: 26rem;
+			aspect-ratio: 3 / 2;
+			object-fit: cover;
+			display: block;
+		}
 	}
 
 	&__details {
@@ -45,6 +70,7 @@
 	&__social {
 		margin-top: 1.25rem;
 		display: flex;
+		flex-wrap: wrap;
 		gap: 1.25rem;
 		font-family: var(--wl-font-label, sans-serif);
 		font-size: 0.78rem;
@@ -53,20 +79,61 @@
 		a { color: inherit; text-decoration: none; }
 		a:hover { color: var(--wl-coral, #efa58f); }
 	}
+
+	&__note {
+		margin: 2rem 0 0;
+		padding-top: 1.25rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.15);
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.85rem;
+		line-height: 1.6;
+		color: rgba(0, 0, 0, 0.6);
+	}
+
+	// Boxy on mobile — drop the sticky column and stack.
+	@media (max-width: 860px) {
+		&__intro { position: static; flex-basis: 100%; }
+		&__form,
+		&--request &__form { flex-basis: 100%; }
+	}
 }
 
 /* Form (shared markup from wonderland_render_form) */
 .wl-form {
-	display: grid;
-	gap: 1rem;
 	background: #fff;
 	padding: clamp(1.5rem, 3vw, 2.5rem);
 
-	&__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+	// Half/full fields mixed in one wrapping row — flex basis handles both.
+	&__grid {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
 
-	label {
+	&__field {
+		flex: 1 1 100%;
+		margin: 0;
 		display: grid;
 		gap: 0.35rem;
+
+		&.is-half { flex: 1 1 calc(50% - 0.5rem); }
+	}
+
+	// Section legend inside the request form.
+	&__group {
+		flex: 1 1 100%;
+		margin: 1rem 0 0;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.72rem;
+		font-weight: 400;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--wl-ink, #000);
+
+		&:first-child { margin-top: 0; }
+	}
+
+	label {
 		font-family: var(--wl-font-label, sans-serif);
 		font-size: 0.72rem;
 		letter-spacing: 0.14em;
@@ -74,9 +141,12 @@
 		color: rgba(0, 0, 0, 0.7);
 	}
 
-	input, textarea {
+	&__req { color: var(--wl-coral, #efa58f); margin-left: 0.15em; }
+
+	input, textarea, select {
 		font: inherit;
 		font-family: var(--wl-font-body, sans-serif);
+		width: 100%;
 		text-transform: none;
 		letter-spacing: normal;
 		color: var(--wl-ink, #000);
@@ -84,15 +154,39 @@
 		border: 1px solid rgba(0, 0, 0, 0.25);
 		background: #fff;
 		border-radius: 0;
+		appearance: none;
 
 		&:focus { outline: none; border-color: var(--wl-coral, #efa58f); }
 	}
 
+	textarea { resize: vertical; }
+
+	select {
+		// Chevron drawn in CSS so the control needs no icon request.
+		background-image:
+			linear-gradient(45deg, transparent 50%, currentColor 50%),
+			linear-gradient(135deg, currentColor 50%, transparent 50%);
+		background-position: calc(100% - 1.1rem) 55%, calc(100% - 0.75rem) 55%;
+		background-size: 0.35rem 0.35rem, 0.35rem 0.35rem;
+		background-repeat: no-repeat;
+		padding-right: 2.25rem;
+	}
+
 	&__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
+	&__legal {
+		margin: 1.25rem 0 0;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.72rem;
+		line-height: 1.5;
+		color: rgba(0, 0, 0, 0.5);
+
+		a { color: inherit; }
+	}
+
+
 	&__submit {
-		justify-self: start;
-		margin-top: 0.25rem;
+		margin-top: 1.5rem;
 		padding: 0.9rem 2.2rem;
 		border: 1px solid var(--wl-ink, #000);
 		background: var(--wl-ink, #000);
@@ -108,7 +202,7 @@
 	}
 
 	&__notice {
-		margin: 0;
+		margin: 0 0 1.5rem;
 		padding: 0.85rem 1rem;
 		font-family: var(--wl-font-body, sans-serif);
 		&.is-success { background: #e8f5e9; color: #1b5e20; }
@@ -116,6 +210,10 @@
 	}
 
 	@media (max-width: 560px) {
-		&__row { grid-template-columns: 1fr; }
+		&__field.is-half { flex-basis: 100%; }
 	}
 }
+
+// Google appends the v3 badge to <body>; we show the required legal line inside
+// the form instead, which Google's terms explicitly permit.
+.grecaptcha-badge { visibility: hidden; }

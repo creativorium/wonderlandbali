@@ -121,3 +121,12 @@
 	.wl-page-hero__split-title.is-single { margin-top: -0.5em; }
 }
 
+// The split title sits on the page background, so it needs breathing room below
+// it — except when a tinted full-bleed section follows, where that padding reads
+// as a stray white gap. The next section's own top padding covers the spacing.
+.wl-page-hero--split:has(+ .wl-contact),
+.wl-page-hero--split:has(+ .wl-cta),
+.wl-page-hero--split:has(+ .wl-divider) {
+	padding-bottom: 0;
+}
+

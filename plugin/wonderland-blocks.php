@@ -22,4 +22,6 @@ define( 'WONDERLAND_BLOCKS_URL', plugin_dir_url( __FILE__ ) );
 
 require_once WONDERLAND_BLOCKS_DIR . 'inc/helpers.php';
 require_once WONDERLAND_BLOCKS_DIR . 'inc/registration.php';
+require_once WONDERLAND_BLOCKS_DIR . 'inc/forms-settings.php';
+require_once WONDERLAND_BLOCKS_DIR . 'inc/forms-submissions.php';
 require_once WONDERLAND_BLOCKS_DIR . 'inc/contact.php';
