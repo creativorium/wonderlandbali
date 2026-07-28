@@ -48,11 +48,26 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-services' ) );
 						<article class="wl-services__card">
 							<a class="wl-services__media" href="<?php echo esc_url( $url ); ?>">
 								<?php if ( $video ) : ?>
-									<video autoplay muted loop playsinline preload="metadata"<?php echo $img ? ' poster="' . esc_url( $img ) . '"' : ''; ?>>
-										<source src="<?php echo esc_url( $video ); ?>" type="video/mp4" />
-									</video>
+									<?php
+									// The source is withheld until the card scrolls into view
+									// (see initLazyVideo in frontend.js). `autoplay` alone makes
+									// the browser fetch the whole file on load, which on a
+									// decorative loop is the single heaviest thing on the page.
+									?>
+									<video muted loop playsinline preload="none" data-lazy-video="<?php echo esc_url( $video ); ?>"<?php echo $img ? ' poster="' . esc_url( $img ) . '"' : ''; ?>></video>
 								<?php elseif ( $img ) : ?>
-									<img src="<?php echo esc_url( $img ); ?>" alt="<?php echo esc_attr( wp_strip_all_tags( $title ) ); ?>" loading="lazy" decoding="async" />
+									<?php
+									// Through the helper so the browser gets srcset/sizes and
+									// intrinsic dimensions instead of the full-size original.
+									echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										$img,
+										array(
+											'alt'   => wp_strip_all_tags( $title ),
+											'size'  => 'large',
+											'sizes' => '(max-width: 900px) 100vw, 50vw',
+										)
+									);
+									?>
 								<?php endif; ?>
 							</a>
 							<div class="wl-services__body">

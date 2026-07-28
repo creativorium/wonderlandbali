@@ -162,16 +162,19 @@ body.lb-open { overflow: hidden; }
 	padding-block: 0;
 
 	.wl-portfolio__grid {
-		// A flat row, not multicol — every frame shares one height and the
-		// row spans the full viewport edge to edge. The base grid is capped at
+		// A flat row, not columns — every frame shares one height and the row
+		// spans the full viewport edge to edge. The base grid is capped at
 		// min(1600px, 96vw) and centred; both have to be undone here.
-		column-count: initial;
 		display: flex;
 		gap: 0;
 		width: 100%;
 		max-width: none;
 		margin-inline: 0;
 	}
+
+	// The masonry's column wrappers have no job in a single row — they step
+	// aside so the frames are direct flex children again.
+	.wl-portfolio__col { display: contents; }
 
 	.wl-portfolio__item {
 		flex: 1 1 0;
@@ -189,9 +192,11 @@ body.lb-open { overflow: hidden; }
 	.wl-portfolio__title { padding-inline: var(--wl-gutter, 1.5rem); }
 
 	// Two per row on tablets, stacked pairs on phones — never a squashed sliver.
+	// `display` is restated because the masonry's own small-screen rule turns
+	// the grid into a two-column CSS grid, which this layout never wants.
 	@media (max-width: 900px) {
-		.wl-portfolio__grid { flex-wrap: wrap; }
-		.wl-portfolio__item { flex: 1 1 50%; }
+		.wl-portfolio__grid { display: flex; flex-wrap: wrap; }
+		.wl-portfolio__item { flex: 1 1 50%; margin-bottom: 0; }
 	}
 	@media (max-width: 560px) {
 		.wl-portfolio__item { flex: 1 1 100%; }

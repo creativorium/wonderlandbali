@@ -40,7 +40,18 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-follow' ) );
 				}
 				?>
 				<a class="wl-follow__item" href="<?php echo esc_url( $btn_url ); ?>" target="_blank" rel="noopener">
-					<img src="<?php echo esc_url( $url ); ?>" alt="" loading="lazy" decoding="async" />
+					<?php
+					// Placeholder tiles are decorative — the feed itself carries the
+					// meaning — but they still deserve a right-sized file.
+					echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						$url,
+						array(
+							'size'       => 'medium_large',
+							'sizes'      => '(max-width: 700px) 50vw, 25vw',
+							'decorative' => true,
+						)
+					);
+					?>
 					<span class="wl-follow__play" aria-hidden="true"><?php echo $play_icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 				</a>
 			<?php endforeach; ?>

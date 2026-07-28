@@ -111,8 +111,10 @@
 		color: rgba(0, 0, 0, 0.6);
 	}
 
-	/* Core prints the pagination inside .navigation.pagination */
-	.navigation.pagination {
+	/* Core's pagination wrapper. Matching on `.navigation` alone because passing
+	   a `class` arg to the_posts_pagination() replaces the default `pagination`
+	   class rather than adding to it. */
+	.navigation {
 		max-width: var(--wl-content-max, 1200px);
 		margin: clamp(2.5rem, 5vw, 4rem) auto 0;
 

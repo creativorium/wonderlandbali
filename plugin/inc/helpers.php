@@ -75,6 +75,32 @@ if ( ! function_exists( 'wonderland_attachment_id_from_url' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wonderland_bg_url' ) ) {
+	/**
+	 * A right-sized URL for a decorative CSS background.
+	 *
+	 * Full-bleed bands were pointing straight at the original upload — often
+	 * several megabytes for something displayed at banner size. A CSS background
+	 * cannot carry a srcset, so pick a sensible derivative instead. Falls back to
+	 * the given URL when the file is not a library item.
+	 *
+	 * @param string $url  Image URL.
+	 * @param string $size Registered image size to prefer.
+	 * @return string
+	 */
+	function wonderland_bg_url( $url, $size = '1536x1536' ) {
+		if ( ! $url ) {
+			return '';
+		}
+		$id = wonderland_attachment_id_from_url( $url );
+		if ( ! $id ) {
+			return $url;
+		}
+		$sized = wp_get_attachment_image_url( $id, $size );
+		return $sized ? $sized : $url;
+	}
+}
+
 if ( ! function_exists( 'wonderland_image' ) ) {
 	/**
 	 * Responsive <img> for an uploads URL.

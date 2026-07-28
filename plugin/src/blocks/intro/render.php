@@ -25,7 +25,15 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-intro' ) );
 		<div class="wl-intro__col wl-intro__col--left">
 			<figure class="wl-intro__media wl-intro__media--main">
 				<?php if ( $img_main ) : ?>
-					<img src="<?php echo esc_url( $img_main ); ?>" alt="" loading="lazy" decoding="async" />
+					<?php
+					echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						$img_main,
+						array(
+							'size'  => 'large',
+							'sizes' => '(max-width: 900px) 100vw, 45vw',
+						)
+					);
+					?>
 				<?php endif; ?>
 			</figure>
 			<div class="wl-intro__story">
@@ -47,7 +55,15 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-intro' ) );
 			<?php endif; ?>
 			<figure class="wl-intro__media wl-intro__media--sub">
 				<?php if ( $img_sub ) : ?>
-					<img src="<?php echo esc_url( $img_sub ); ?>" alt="" loading="lazy" decoding="async" />
+					<?php
+					echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						$img_sub,
+						array(
+							'size'  => 'large',
+							'sizes' => '(max-width: 900px) 100vw, 35vw',
+						)
+					);
+					?>
 				<?php endif; ?>
 			</figure>
 		</div>

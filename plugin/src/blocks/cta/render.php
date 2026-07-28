@@ -20,7 +20,7 @@ if ( $bg_url ) {
 }
 $args = array( 'class' => $classes );
 if ( $bg_url ) {
-	$args['style'] = 'background-image:url(' . esc_url( $bg_url ) . ');';
+	$args['style'] = 'background-image:url(' . esc_url( wonderland_bg_url( $bg_url ) ) . ');';
 }
 $wrapper = get_block_wrapper_attributes( $args );
 ?>

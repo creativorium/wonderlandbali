@@ -23,9 +23,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function wonderland_legacy_redirects() {
 	return array(
-		'contact-2'     => 'contact',
-		'request-2'     => 'request',
-		'portfolio-lp'  => 'portfolio',
+		'contact-2'              => 'contact',
+		'request-2'              => 'request',
+		'portfolio-lp'           => 'portfolio',
+
+		// Elementor-era pages deleted with the plugin. Their URLs may still be
+		// indexed or linked from elsewhere, so they land somewhere sensible
+		// instead of a 404.
+		'home-old'               => '',
+		'portfolio-full-gallery' => 'portfolio',
+		'promo'                  => '',
 	);
 }
 
@@ -48,7 +55,8 @@ add_action(
 			return;
 		}
 
-		wp_safe_redirect( home_url( '/' . $map[ $slug ] . '/' ), 301 );
+		$target = $map[ $slug ];
+		wp_safe_redirect( home_url( '' === $target ? '/' : '/' . $target . '/' ), 301 );
 		exit;
 	}
 );
