@@ -11,6 +11,7 @@
 	&__inner { @include iw.iw-container; }
 
 	&__eyebrow { @include iw.iw-eyebrow; }
+	&.is-greige &__eyebrow { color: var(--wl-ink, #000); }
 	&__title { @include iw.iw-heading; }
 
 	&__intro {
@@ -30,6 +31,7 @@
 	}
 
 	&__tier {
+		position: relative; // anchors the featured badge
 		flex: 1 1 16rem;
 		display: flex;
 		flex-direction: column;
@@ -43,9 +45,15 @@
 		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 	}
 
+	// A true badge, straddling the top edge — in the flow it would push the
+	// featured tier's heading down and break the row of names across the cards.
 	&__badge {
-		align-self: flex-start;
-		margin: 0 0 1rem;
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		margin: 0;
+		white-space: nowrap;
 		padding: 0.35rem 0.8rem;
 		background: var(--wl-coral, #efa58f);
 		font-family: var(--wl-font-label, sans-serif);
@@ -69,7 +77,7 @@
 	}
 
 	&__list {
-		margin: 1.35rem 0 0;
+		margin: 1.35rem 0 1.75rem;
 		padding: 1.35rem 0 0;
 		border-top: 1px solid rgba(0, 0, 0, 0.12);
 		list-style: none;
@@ -91,17 +99,15 @@
 		}
 	}
 
+	// Pinned to the foot of the card whatever the list length, so the three
+	// buttons line up as one row across the tiers.
 	&__btn {
 		@include iw.iw-btn;
-		// Sits flush at the foot of the card whatever the list length.
 		margin-top: auto;
-		align-self: flex-start;
+		align-self: stretch;
 		padding-top: 0.85rem;
 		padding-bottom: 0.85rem;
 	}
-
-	// The list is the last thing above the button, so give it breathing room.
-	&__list + &__btn { margin-top: 1.5rem; }
 
 	&__note {
 		margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
@@ -113,6 +119,5 @@
 
 	@media (max-width: 900px) {
 		&__tier { flex-basis: 100%; }
-		&__btn { align-self: stretch; }
 	}
 }

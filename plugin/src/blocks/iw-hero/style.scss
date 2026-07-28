@@ -125,8 +125,11 @@
 
 		&__actions { flex-direction: column; align-items: stretch; }
 
+		// Back in the flow, but still edge to edge — cancel the section's gutter
+		// so the band spans the full width rather than sitting inset.
 		&__stats {
 			position: static;
+			margin-inline: calc(var(--wl-gutter, 1.5rem) * -1);
 			gap: 0.55rem 1.75rem;
 			font-size: 0.64rem;
 			letter-spacing: 0.18em;

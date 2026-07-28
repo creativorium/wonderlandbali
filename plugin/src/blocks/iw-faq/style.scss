@@ -11,6 +11,7 @@
 	&__inner { @include iw.iw-container; }
 
 	&__eyebrow { @include iw.iw-eyebrow; }
+	&.is-greige &__eyebrow { color: var(--wl-ink, #000); }
 	&__title { @include iw.iw-heading; }
 
 	// Multicol balances the pairs and keeps each Q with its A.

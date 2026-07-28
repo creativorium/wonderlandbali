@@ -17,6 +17,8 @@
 	color: var(--wl-ink, #000);
 }
 
+// Coral reads as a highlight on white and on black, but goes muddy on the cream
+// backgrounds — those sections switch the eyebrow to ink via `is-greige`.
 @mixin iw-eyebrow($color: var(--wl-coral, #efa58f)) {
 	margin: 0 0 0.9rem;
 	font-family: var(--wl-font-label, sans-serif);
