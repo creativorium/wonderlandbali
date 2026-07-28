@@ -28,7 +28,7 @@ $rabbit_svg = function_exists( 'wonderland_mark_svg' ) ? wonderland_mark_svg( 'w
 	<div class="wl-testi__bg" aria-hidden="true">
 		<?php foreach ( $items as $i => $item ) : ?>
 			<?php $img = is_array( $item ) ? ( $item['image'] ?? '' ) : ''; ?>
-			<div class="wl-testi__slide js-testi-bg<?php echo 0 === $i ? ' is-active' : ''; ?>"<?php echo $img ? ' style="background-image:url(' . esc_url( $img ) . ')"' : ''; ?>></div>
+			<div class="wl-testi__slide js-testi-bg<?php echo 0 === $i ? ' is-active' : ''; ?>"<?php echo $img ? ' style="background-image:url(' . esc_url( wonderland_bg_url( $img ) ) . ')"' : ''; ?>></div>
 		<?php endforeach; ?>
 	</div>
 

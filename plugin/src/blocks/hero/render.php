@@ -49,7 +49,38 @@ $mark_svg = '<svg viewBox="0 0 582.892 582.893" fill="currentColor" aria-hidden=
 			<?php foreach ( $slides as $i => $slide ) : ?>
 				<?php $url = is_array( $slide ) ? ( $slide['url'] ?? '' ) : (string) $slide; ?>
 				<?php if ( $url ) : ?>
-					<div class="wl-hero__slide js-slide<?php echo 0 === $i ? ' is-active' : ''; ?>" style="background-image:url(<?php echo esc_url( $url ); ?>)"></div>
+					<?php
+					// An <img> rather than a CSS background so the browser can pick a
+					// size from srcset and skip the slides that are not showing yet —
+					// six full-size backgrounds were most of this page's weight.
+					?>
+					<div class="wl-hero__slide js-slide<?php echo 0 === $i ? ' is-active' : ''; ?>">
+						<?php if ( 0 === $i ) : ?>
+							<?php
+							echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								$url,
+								array(
+									'size'       => 'full',
+									'sizes'      => '100vw',
+									'decorative' => true,
+									'priority'   => true, // the opening slide is the LCP
+								)
+							);
+							?>
+						<?php else : ?>
+							<?php
+							// Every slide is stacked inside the viewport, so `loading="lazy"`
+							// would not hold any of them back — the browser fetches all of
+							// them at once. The URLs are handed over instead, and the
+							// slideshow hydrates each slide just before its turn.
+							$att_id = function_exists( 'wonderland_attachment_id_from_url' ) ? wonderland_attachment_id_from_url( $url ) : 0;
+							$srcset = $att_id ? wp_get_attachment_image_srcset( $att_id, 'full' ) : '';
+							?>
+							<img class="js-slide-img" alt="" decoding="async"
+								data-src="<?php echo esc_url( $url ); ?>"
+								<?php echo $srcset ? 'data-srcset="' . esc_attr( $srcset ) . '" data-sizes="100vw"' : ''; ?> />
+						<?php endif; ?>
+					</div>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</div>

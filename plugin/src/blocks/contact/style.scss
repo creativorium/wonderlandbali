@@ -103,6 +103,10 @@
 		}
 
 		a:hover { color: var(--wl-coral, #efa58f); }
+
+		@media (max-width: 900px) {
+			a { min-height: 44px; }
+		}
 	}
 
 	// Shared icon sizing for details + socials.
@@ -131,6 +135,11 @@
 		}
 
 		a:hover { color: var(--wl-coral, #efa58f); }
+
+		// A row of small caps is only ~20px tall — too fine a target on a phone.
+		@media (max-width: 900px) {
+			a { min-height: 44px; }
+		}
 	}
 
 	&__note {

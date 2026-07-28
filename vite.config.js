@@ -8,6 +8,7 @@ const root = fileURLToPath(new URL('.', import.meta.url));
  * Three independent build targets, each selected with `--mode <name>`.
  *
  *  theme    -> theme/build/main.js  + main.css      (site-wide frontend CSS/JS, no WP deps)
+ *  login    -> theme/build/login.css                (branded wp-login screen)
  *  editor   -> plugin/build/editor.js + editor.css  (block editor: registers blocks; @wordpress/* externalized to wp.* globals)
  *  frontend -> plugin/build/frontend.css            (front-end styles for the blocks)
  *
@@ -44,6 +45,14 @@ const TARGETS = {
       '@wordpress/i18n': 'wp.i18n',
       '@wordpress/data': 'wp.data',
     },
+  },
+  login: {
+    entry: resolve(root, 'theme/src/login.js'),
+    name: 'wonderlandLogin',
+    outDir: resolve(root, 'theme/build'),
+    fileBase: 'login',
+    external: [],
+    globals: {},
   },
   frontend: {
     entry: resolve(root, 'plugin/src/frontend.js'),

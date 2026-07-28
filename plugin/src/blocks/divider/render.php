@@ -32,7 +32,7 @@ $title_html = $heading ? '<h2 class="wl-divider__title">' . wp_kses_post( $headi
 		<?php foreach ( $slides as $i => $slide ) : ?>
 			<?php $url = is_array( $slide ) ? ( $slide['url'] ?? '' ) : (string) $slide; ?>
 			<?php if ( $url ) : ?>
-				<div class="wl-divider__slide js-slide<?php echo 0 === $i ? ' is-active' : ''; ?>" style="background-image:url(<?php echo esc_url( $url ); ?>)"></div>
+				<div class="wl-divider__slide js-slide<?php echo 0 === $i ? ' is-active' : ''; ?>" style="background-image:url(<?php echo esc_url( wonderland_bg_url( $url ) ); ?>)"></div>
 			<?php endif; ?>
 		<?php endforeach; ?>
 	</div>

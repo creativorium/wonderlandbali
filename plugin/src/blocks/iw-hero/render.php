@@ -28,9 +28,10 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-iw-hero' . ( $bg_
 			echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				$bg_url,
 				array(
-					'size'     => 'full',
-					'sizes'    => '100vw',
-					'priority' => true, // opener image: the likely LCP element
+					'size'       => 'full',
+					'sizes'      => '100vw',
+					'priority'   => true, // opener image: the likely LCP element
+					'decorative' => true, // the heading carries the meaning
 				)
 			);
 			?>

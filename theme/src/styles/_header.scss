@@ -38,7 +38,9 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.7rem;
-		padding: 0;
+		// The label is only ~16px tall on its own; the block padding lifts the
+		// hit area to a comfortable touch target without moving the label.
+		padding: 0.85rem 0;
 		background: none;
 		border: 0;
 		cursor: pointer;
@@ -151,7 +153,6 @@ body:not(.has-hero) .site-main { padding-top: 84px; }
 		display: flex;
 		gap: 1.25rem;
 		padding-top: 1.25rem;
-		border-top: 1px solid rgba(255, 255, 255, 0.15);
 		font-family: var(--wl-font-label, sans-serif);
 		font-size: 0.72rem;
 		letter-spacing: 0.16em;

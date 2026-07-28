@@ -1,0 +1,207 @@
+@use 'tokens';
+
+/* ---------------------------------------------------------------------------
+   Branded wp-login screen — replaces LoginPress.
+
+   Everything is scoped to WordPress' own login markup, so it styles the login,
+   lost-password, reset and register screens alike without touching the admin.
+   The logo is set as a background on #login h1 a, which is how WordPress
+   expects it to be replaced.
+--------------------------------------------------------------------------- */
+
+body.login {
+	min-height: 100vh;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background: var(--wl-greige, #e3deda);
+	color: var(--wl-ink, #000);
+	font-family: var(--wl-font-body, sans-serif);
+
+	/* A soft brand wash rather than a photograph — nothing extra to download. */
+	&::before {
+		content: '';
+		position: fixed;
+		inset: 0;
+		z-index: 0;
+		background:
+			radial-gradient(120% 90% at 15% 0%, rgba(239, 165, 143, 0.5), transparent 60%),
+			radial-gradient(110% 80% at 100% 100%, rgba(226, 185, 201, 0.55), transparent 62%);
+		pointer-events: none;
+	}
+
+	#login {
+		position: relative;
+		z-index: 1;
+		width: min(420px, 92vw);
+		padding: 0 0 2rem;
+		margin-inline: auto;
+
+		/* ---------- Logo ----------
+		   Nested under #login so it outweighs core's `.login h1 a`, which
+		   otherwise wins on source order and puts the WordPress mark back. */
+		h1 {
+			margin-bottom: 1.5rem;
+
+			a {
+				display: block;
+				width: 100%;
+				height: 96px;
+				margin: 0 auto 1.25rem;
+				background-image: var(--wl-login-logo);
+				background-size: contain;
+				background-position: center;
+				background-repeat: no-repeat;
+				text-indent: -9999px; // keeps the accessible name, hides the text
+				overflow: hidden;
+			}
+		}
+	}
+
+	/* ---------- The card ---------- */
+	form {
+		margin-top: 0;
+		padding: 2rem 1.9rem 2rem !important; // core sets its own bottom padding
+		background: #fff;
+		border: 0;
+		border-radius: 2px;
+		box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
+	}
+
+	label {
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.72rem;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.65);
+	}
+
+	input[type='text'],
+	input[type='password'],
+	input[type='email'] {
+		padding: 0.75rem 0.85rem;
+		border: 1px solid rgba(0, 0, 0, 0.18);
+		border-radius: 0;
+		background: #fff;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 1rem;
+		box-shadow: none;
+		transition: border-color 0.2s ease;
+
+		&:focus {
+			border-color: var(--wl-ink, #000);
+			outline: 2px solid transparent; // keep a visible ring for keyboard users
+			outline-offset: 2px;
+			box-shadow: 0 0 0 2px rgba(239, 165, 143, 0.55);
+		}
+	}
+
+	/* WP renders the show/hide password toggle inside the field wrapper. */
+	.wp-pwd .button.wp-hide-pw {
+		color: rgba(0, 0, 0, 0.55);
+
+		&:hover { color: var(--wl-ink, #000); }
+		&:focus { box-shadow: 0 0 0 2px rgba(239, 165, 143, 0.55); }
+	}
+
+	/* Core floats "Remember Me" left and the button right; stack them instead so
+	   the button can run the full width of the card. */
+	.forgetmenot {
+		float: none;
+		margin: 0 0 1.25rem;
+
+		label {
+			letter-spacing: 0.06em;
+			text-transform: none;
+			font-size: 0.85rem;
+			color: rgba(0, 0, 0, 0.7);
+		}
+	}
+
+	/* The one-time-code launcher the login-URL plugin adds above the submit row. */
+	.aio-login-otp-launcher {
+		width: 100%;
+		justify-content: center;
+		border-radius: 0;
+		border-color: rgba(0, 0, 0, 0.2);
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.72rem;
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	/* ---------- Submit ----------
+	   Under #login so it outweighs core's `.wp-core-ui .button-primary`. */
+	#login .button-primary {
+		width: 100%;
+		float: none;
+		height: auto;
+		min-height: 0; // core sets 40px, which fights our own padding
+		line-height: 1.2;
+		padding: 0.9rem 1.5rem;
+		border: 1px solid var(--wl-ink, #000);
+		border-radius: 0;
+		background: var(--wl-ink, #000);
+		color: #fff;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.78rem;
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		text-shadow: none;
+		box-shadow: none;
+		transition: background-color 0.2s ease, color 0.2s ease;
+
+		&:hover,
+		&:focus {
+			background: transparent;
+			color: var(--wl-ink, #000);
+		}
+	}
+
+	.submit {
+		clear: both;
+		margin-bottom: 0;
+	}
+
+	/* ---------- Links below the card ---------- */
+	#nav,
+	#backtoblog {
+		padding: 0;
+		margin: 1rem 0 0;
+		text-align: center;
+
+		a {
+			color: rgba(0, 0, 0, 0.7);
+			font-family: var(--wl-font-label, sans-serif);
+			font-size: 0.72rem;
+			letter-spacing: 0.16em;
+			text-transform: uppercase;
+			text-decoration: none;
+
+			&:hover { color: var(--wl-ink, #000); text-decoration: underline; }
+		}
+	}
+
+	/* ---------- Notices ---------- */
+	#login_error,
+	.message,
+	.notice {
+		border-left: 3px solid var(--wl-coral, #efa58f);
+		border-radius: 0;
+		background: #fff;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+		font-size: 0.9rem;
+	}
+
+	.privacy-policy-page-link { display: none; }
+
+	/* Language switcher, when the install offers one. */
+	.language-switcher { margin-top: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.login * { transition: none !important; }
+}

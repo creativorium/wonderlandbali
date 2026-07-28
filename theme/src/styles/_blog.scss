@@ -1,0 +1,269 @@
+@use 'tokens';
+
+/* ---------------------------------------------------------------------------
+   Journal — blog index + single post.
+
+   Deliberately calmer than the marketing pages: one column of reading, uniform
+   cards, no async overlaps. Grid is right here — the cards are a uniform repeat.
+--------------------------------------------------------------------------- */
+
+.wl-blog {
+	padding: clamp(2.5rem, 6vw, 4.5rem) var(--wl-gutter, 1.5rem) clamp(4rem, 8vw, 6rem);
+	background: #fff;
+	color: var(--wl-ink, #000);
+
+	&__head {
+		max-width: var(--wl-content-max, 1200px);
+		margin: 0 auto clamp(2rem, 4vw, 3rem);
+		text-align: center;
+	}
+
+	&__eyebrow {
+		margin: 0 0 0.9rem;
+		font-family: var(--wl-font-label, sans-serif);
+		font-weight: 500;
+		font-size: 0.72rem;
+		letter-spacing: 0.28em;
+		text-transform: uppercase;
+		color: var(--wl-coral, #efa58f);
+	}
+
+	&__title {
+		margin: 0;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(2.75rem, 8vw, 6rem);
+		line-height: 1;
+		text-transform: uppercase;
+	}
+
+	&__intro {
+		margin: 1.25rem auto 0;
+		max-width: 60ch;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 1rem;
+		line-height: 1.7;
+		color: rgba(0, 0, 0, 0.72);
+	}
+
+	&__grid {
+		max-width: var(--wl-content-max, 1200px);
+		margin-inline: auto;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: clamp(1.5rem, 3vw, 2.5rem);
+	}
+
+	&__card { margin: 0; }
+
+	&__link {
+		display: block;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	&__media {
+		margin: 0 0 1rem;
+		overflow: hidden;
+		background: var(--wl-greige, #e3deda);
+
+		img {
+			width: 100%;
+			aspect-ratio: 4 / 3;
+			object-fit: cover;
+			display: block;
+			transition: transform 0.6s ease;
+		}
+	}
+
+	&__link:hover &__media img { transform: scale(1.04); }
+
+	&__date {
+		margin: 0 0 0.5rem;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.68rem;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.5);
+	}
+
+	&__name {
+		margin: 0;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: 1.35rem;
+		line-height: 1.25;
+	}
+
+	&__link:hover &__name { color: var(--wl-coral, #efa58f); }
+
+	&__excerpt {
+		margin: 0.6rem 0 0;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.92rem;
+		line-height: 1.7;
+		color: rgba(0, 0, 0, 0.7);
+	}
+
+	&__empty {
+		text-align: center;
+		font-family: var(--wl-font-body, sans-serif);
+		color: rgba(0, 0, 0, 0.6);
+	}
+
+	/* Core's pagination wrapper. Matching on `.navigation` alone because passing
+	   a `class` arg to the_posts_pagination() replaces the default `pagination`
+	   class rather than adding to it. */
+	.navigation {
+		max-width: var(--wl-content-max, 1200px);
+		margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+
+		.nav-links {
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+			gap: 0.5rem;
+		}
+
+		.page-numbers {
+			min-width: 44px;
+			min-height: 44px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding-inline: 0.75rem;
+			border: 1px solid rgba(0, 0, 0, 0.18);
+			color: var(--wl-ink, #000);
+			font-family: var(--wl-font-label, sans-serif);
+			font-size: 0.75rem;
+			letter-spacing: 0.14em;
+			text-transform: uppercase;
+			text-decoration: none;
+
+			&:hover,
+			&.current {
+				background: var(--wl-ink, #000);
+				border-color: var(--wl-ink, #000);
+				color: #fff;
+			}
+		}
+
+		.screen-reader-text { position: absolute !important; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		&__media img,
+		&__link:hover &__media img { transition: none; transform: none; }
+	}
+
+	@media (max-width: 1000px) {
+		&__grid { grid-template-columns: repeat(2, 1fr); }
+	}
+
+	@media (max-width: 620px) {
+		&__grid { grid-template-columns: 1fr; }
+	}
+}
+
+/* ---------- Single post ---------- */
+.wl-post {
+	padding-bottom: clamp(4rem, 8vw, 6rem);
+	background: #fff;
+	color: var(--wl-ink, #000);
+
+	&__media {
+		margin: 0;
+
+		img {
+			width: 100%;
+			height: clamp(280px, 52vh, 620px);
+			object-fit: cover;
+			display: block;
+		}
+	}
+
+	&__head {
+		max-width: 72ch;
+		margin-inline: auto;
+		padding: clamp(2.5rem, 5vw, 4rem) var(--wl-gutter, 1.5rem) 0;
+	}
+
+	&__meta {
+		margin: 0 0 1rem;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.7rem;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.5);
+	}
+
+	&__title {
+		margin: 0;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(2.25rem, 5vw, 3.75rem);
+		line-height: 1.08;
+	}
+
+	&__content {
+		max-width: 72ch;
+		margin-inline: auto;
+		padding: clamp(1.75rem, 3vw, 2.5rem) var(--wl-gutter, 1.5rem) 0;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 1.02rem;
+		line-height: 1.8;
+		color: rgba(0, 0, 0, 0.82);
+
+		p { margin: 0 0 1.25rem; }
+
+		h2,
+		h3 {
+			font-family: var(--wl-font-head, serif);
+			font-weight: 400;
+			line-height: 1.2;
+			margin: 2rem 0 0.75rem;
+		}
+
+		img { height: auto; margin-block: 1.5rem; }
+		a { color: var(--wl-ink, #000); text-decoration: underline; }
+	}
+
+	&__foot {
+		max-width: 72ch;
+		margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+		padding-inline: var(--wl-gutter, 1.5rem);
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	&__back,
+	&__cta {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 0.6rem 1.6rem;
+		font-family: var(--wl-font-label, sans-serif);
+		font-weight: 500;
+		font-size: 0.75rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		text-decoration: none;
+		transition: background-color 0.2s ease, color 0.2s ease;
+	}
+
+	&__back {
+		border: 1px solid rgba(0, 0, 0, 0.25);
+		color: var(--wl-ink, #000);
+		&:hover { background: var(--wl-ink, #000); border-color: var(--wl-ink, #000); color: #fff; }
+	}
+
+	&__cta {
+		border: 1px solid var(--wl-ink, #000);
+		background: var(--wl-ink, #000);
+		color: #fff;
+		&:hover { background: transparent; color: var(--wl-ink, #000); }
+	}
+}

@@ -6,8 +6,9 @@
   "description": "Wonderland Bali — WordPress rebuild (classic theme + native Gutenberg blocks, Vite-built, server-rendered).",
   "scripts": {
     "clean": "node --input-type=commonjs -e \"const{rmSync}=require('fs');for(const d of ['theme/build','plugin/build'])rmSync(d,{recursive:true,force:true})\"",
-    "build": "npm run clean && npm run build:theme && npm run build:editor && npm run build:frontend",
+    "build": "npm run clean && npm run build:theme && npm run build:login && npm run build:editor && npm run build:frontend",
     "build:theme": "vite build --mode theme",
+    "build:login": "vite build --mode login",
     "build:editor": "vite build --mode editor",
     "build:frontend": "vite build --mode frontend",
     "dev": "vite build --mode theme --watch",

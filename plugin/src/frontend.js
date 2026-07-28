@@ -40,11 +40,30 @@ function initSlideshows() {
 			return;
 		}
 		const duration = parseInt( root.dataset.slideDuration || '4000', 10 );
+
+		// Slides after the first ship without a src (they all sit in the viewport,
+		// so the browser would otherwise fetch every one up front). Give a slide
+		// its image just before it is due.
+		const hydrate = ( slide ) => {
+			const img = slide && slide.querySelector( '.js-slide-img[data-src]' );
+			if ( ! img ) {
+				return;
+			}
+			if ( img.dataset.srcset ) {
+				img.srcset = img.dataset.srcset;
+				img.sizes = img.dataset.sizes || '100vw';
+			}
+			img.src = img.dataset.src;
+			img.removeAttribute( 'data-src' );
+		};
+
 		let current = 0;
+		hydrate( slides[ 1 ] ); // queue the one that comes next
 		setInterval( () => {
 			slides[ current ].classList.remove( 'is-active' );
 			current = ( current + 1 ) % slides.length;
 			slides[ current ].classList.add( 'is-active' );
+			hydrate( slides[ ( current + 1 ) % slides.length ] );
 		}, duration );
 	} );
 }
@@ -118,7 +137,12 @@ function initLightbox() {
 	};
 
 	containers.forEach( ( c ) => {
-		const links = Array.from( c.querySelectorAll( '[data-lb]' ) );
+		// The masonry renders column by column, so DOM order is not the order the
+		// frames were authored in — data-i carries that, and the overlay steps
+		// through the gallery the way it reads.
+		const links = Array.from( c.querySelectorAll( '[data-lb]' ) ).sort(
+			( a, b ) => ( +a.dataset.i || 0 ) - ( +b.dataset.i || 0 )
+		);
 		const urls = links.map( ( a ) => a.getAttribute( 'href' ) );
 		links.forEach( ( a, i ) =>
 			a.addEventListener( 'click', ( e ) => {
@@ -164,8 +188,12 @@ function initReveal() {
 		}
 
 		btn.addEventListener( 'click', function () {
-			const hidden = grid.querySelectorAll( '.wl-portfolio__item.is-hidden' );
-			const next = Array.prototype.slice.call( hidden, 0, batch );
+			// Reveal in authored order, not column order, so each batch tops up
+			// the columns evenly instead of filling one of them.
+			const hidden = Array.prototype.slice
+				.call( grid.querySelectorAll( '.wl-portfolio__item.is-hidden' ) )
+				.sort( ( a, b ) => ( +a.dataset.i || 0 ) - ( +b.dataset.i || 0 ) );
+			const next = hidden.slice( 0, batch );
 
 			next.forEach( function ( el ) {
 				el.classList.remove( 'is-hidden' );
@@ -198,11 +226,61 @@ function initReveal() {
 	} );
 }
 
+/**
+ * Decorative looping videos: attach the source only once the card is near the
+ * viewport, then play it. An `autoplay` video downloads in full on page load
+ * however far down the page it sits — on the home page that was 70MB of the
+ * total. Without JS the poster image stands in, which is the same still frame.
+ */
+function initLazyVideo() {
+	const videos = document.querySelectorAll( '[data-lazy-video]' );
+	if ( ! videos.length ) {
+		return;
+	}
+
+	const start = ( video ) => {
+		if ( video.dataset.loaded ) {
+			return;
+		}
+		video.dataset.loaded = '1';
+		const source = document.createElement( 'source' );
+		source.type = 'video/mp4';
+		source.src = video.getAttribute( 'data-lazy-video' );
+		video.appendChild( source );
+		video.load();
+		// Autoplay can still be refused (data saver, reduced motion) — the
+		// poster simply stays, which is a perfectly good fallback.
+		const played = video.play();
+		if ( played && played.catch ) {
+			played.catch( () => {} );
+		}
+	};
+
+	if ( ! ( 'IntersectionObserver' in window ) ) {
+		videos.forEach( start );
+		return;
+	}
+
+	const io = new IntersectionObserver(
+		( entries ) => {
+			entries.forEach( ( e ) => {
+				if ( e.isIntersecting ) {
+					start( e.target );
+					io.unobserve( e.target );
+				}
+			} );
+		},
+		{ rootMargin: '200px' }
+	);
+	videos.forEach( ( v ) => io.observe( v ) );
+}
+
 function initAll() {
 	initSlideshows();
 	initTestimonials();
 	initLightbox();
 	initReveal();
+	initLazyVideo();
 }
 
 if ( document.readyState !== 'loading' ) {
