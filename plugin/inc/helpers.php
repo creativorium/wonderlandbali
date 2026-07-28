@@ -105,10 +105,17 @@ if ( ! function_exists( 'wonderland_image' ) ) {
 			)
 		);
 
-		$attr = array(
-			'alt'      => $args['alt'],
-			'decoding' => 'async',
-		);
+		$attr = array( 'decoding' => 'async' );
+
+		// Only force an alt when the block supplies one. Left out, WordPress
+		// falls back to the attachment's own alt text from the media library —
+		// which is where the descriptive, per-image wording lives. Blocks that
+		// mean "decorative" pass alt => '' explicitly via `decorative`.
+		if ( '' !== (string) $args['alt'] ) {
+			$attr['alt'] = $args['alt'];
+		} elseif ( ! empty( $args['decorative'] ) ) {
+			$attr['alt'] = '';
+		}
 		if ( $args['class'] ) {
 			$attr['class'] = $args['class'];
 		}
@@ -133,6 +140,12 @@ if ( ! function_exists( 'wonderland_image' ) ) {
 			if ( $markup ) {
 				return $markup;
 			}
+		}
+
+		// Not a library item, so there is no alt to fall back to — emit an empty
+		// one rather than none, which would leave screen readers reading the URL.
+		if ( ! isset( $attr['alt'] ) ) {
+			$attr['alt'] = '';
 		}
 
 		$out = '<img src="' . esc_url( $url ) . '"';
