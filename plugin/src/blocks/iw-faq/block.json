@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/iw-faq",
+	"title": "Indian Weddings — FAQ",
+	"category": "wonderland",
+	"icon": "editor-help",
+	"description": "Indian Weddings questions and answers, flowed into two columns.",
+	"keywords": [ "indian", "faq", "questions", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"background": { "type": "string", "default": "white" },
+		"columns": { "type": "number", "default": 2 },
+		"items": { "type": "array", "default": [] }
+	},
+	"render": "file:./render.php"
+}

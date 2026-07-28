@@ -32,3 +32,21 @@ import './blocks/showcase/style.scss';
 import './blocks/showcase/index.js';
 import './blocks/packages/style.scss';
 import './blocks/packages/index.js';
+
+// Indian Weddings — page-specific blocks, used only on /indian-weddings/.
+import './blocks/iw-hero/style.scss';
+import './blocks/iw-hero/index.js';
+import './blocks/iw-specialism/style.scss';
+import './blocks/iw-specialism/index.js';
+import './blocks/iw-included/style.scss';
+import './blocks/iw-included/index.js';
+import './blocks/iw-gallery/style.scss';
+import './blocks/iw-gallery/index.js';
+import './blocks/iw-quotes/style.scss';
+import './blocks/iw-quotes/index.js';
+import './blocks/iw-packages/style.scss';
+import './blocks/iw-packages/index.js';
+import './blocks/iw-faq/style.scss';
+import './blocks/iw-faq/index.js';
+import './blocks/iw-cta/style.scss';
+import './blocks/iw-cta/index.js';

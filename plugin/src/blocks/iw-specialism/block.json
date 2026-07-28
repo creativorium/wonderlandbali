@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/iw-specialism",
+	"title": "Indian Weddings — Specialism",
+	"category": "wonderland",
+	"icon": "editor-alignleft",
+	"description": "Indian Weddings statement section: eyebrow, heading, a paragraph of copy and a row of ceremony chips.",
+	"keywords": [ "indian", "ceremonies", "chips", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"background": { "type": "string", "default": "white" },
+		"chips": { "type": "array", "default": [] }
+	},
+	"render": "file:./render.php"
+}

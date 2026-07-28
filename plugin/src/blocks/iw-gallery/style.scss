@@ -1,0 +1,77 @@
+// Indian Weddings — captioned gallery grid.
+
+@use '../iw' as iw;
+
+.wl-iw-gallery {
+	@include iw.iw-section;
+
+	&.is-white { background: #fff; }
+	&.is-greige { background: var(--wl-greige, #e3deda); }
+
+	&__inner { @include iw.iw-container; }
+
+	&__eyebrow { @include iw.iw-eyebrow; }
+	&__title { @include iw.iw-heading; }
+
+	// Uniform repeat of equal tiles — grid, per the layout rules.
+	&__grid {
+		margin-top: clamp(2rem, 4vw, 3rem);
+		display: grid;
+		grid-template-columns: repeat(var(--wl-cols, 3), 1fr);
+		gap: clamp(1.25rem, 2vw, 1.75rem);
+	}
+
+	&__tile {
+		position: relative;
+		margin: 0;
+		overflow: hidden;
+		background: var(--wl-taupe, #c5b7b3);
+
+		img {
+			width: 100%;
+			height: 100%;
+			aspect-ratio: 4 / 3;
+			object-fit: cover;
+			display: block;
+			transition: transform 0.6s ease;
+		}
+
+		&:hover img { transform: scale(1.04); }
+	}
+
+	&__cap {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		padding: 0.65rem 1rem;
+		background: var(--wl-ink, #000);
+		color: #fff;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.7rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	&__more {
+		margin-top: clamp(2rem, 3vw, 2.75rem);
+		text-align: center;
+	}
+
+	&__btn {
+		@include iw.iw-btn;
+		@include iw.iw-btn-ghost;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		&__tile img,
+		&__tile:hover img { transition: none; transform: none; }
+	}
+
+	@media (max-width: 1000px) {
+		&__grid { grid-template-columns: repeat(min(var(--wl-cols, 3), 2), 1fr); }
+	}
+
+	@media (max-width: 700px) {
+		&__grid { grid-template-columns: 1fr; }
+	}
+}

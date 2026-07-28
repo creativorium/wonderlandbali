@@ -1,0 +1,109 @@
+// Shared bits for the Indian Weddings blocks (wl-iw-*).
+//
+// These blocks exist only for /indian-weddings/, which follows its own
+// conversion-led layout: every section opens with a small coral eyebrow above a
+// serif heading, set flush left inside a boxed column. Mixins rather than
+// classes so nothing here leaks into the site-wide stylesheet — each block
+// still owns its own selectors.
+
+// Boxed column shared by every section on the page.
+@mixin iw-container {
+	max-width: var(--wl-content-max, 1200px);
+	margin-inline: auto;
+}
+
+@mixin iw-section($pad-top: clamp(3rem, 6vw, 5.5rem), $pad-bottom: clamp(3rem, 6vw, 5.5rem)) {
+	padding: $pad-top var(--wl-gutter, 1.5rem) $pad-bottom;
+	color: var(--wl-ink, #000);
+}
+
+@mixin iw-eyebrow($color: var(--wl-coral, #efa58f)) {
+	margin: 0 0 0.9rem;
+	font-family: var(--wl-font-label, sans-serif);
+	font-weight: 500;
+	font-size: 0.72rem;
+	letter-spacing: 0.28em;
+	text-transform: uppercase;
+	color: $color;
+}
+
+@mixin iw-heading {
+	margin: 0;
+	font-family: var(--wl-font-head, serif);
+	font-weight: 400;
+	font-size: clamp(2rem, 4vw, 3.1rem);
+	line-height: 1.1;
+}
+
+@mixin iw-body {
+	font-family: var(--wl-font-body, sans-serif);
+	font-size: 0.95rem;
+	line-height: 1.75;
+	color: rgba(0, 0, 0, 0.72);
+}
+
+// Pill buttons used by the hero and the closing CTA.
+@mixin iw-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6rem;
+	padding: 0.95rem 2.1rem;
+	border: 1px solid var(--wl-ink, #000);
+	background: var(--wl-ink, #000);
+	color: #fff;
+	font-family: var(--wl-font-label, sans-serif);
+	font-weight: 500;
+	font-size: 0.78rem;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	text-decoration: none;
+	transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+	&:hover {
+		background: transparent;
+		color: var(--wl-ink, #000);
+	}
+}
+
+@mixin iw-btn-ghost {
+	background: transparent;
+	border-color: rgba(0, 0, 0, 0.55);
+	color: var(--wl-ink, #000);
+
+	&:hover {
+		background: var(--wl-ink, #000);
+		border-color: var(--wl-ink, #000);
+		color: #fff;
+	}
+}
+
+// Same pair, inverted for use over a photograph.
+@mixin iw-btn-on-dark {
+	background: #fff;
+	border-color: #fff;
+	color: var(--wl-ink, #000);
+
+	&:hover {
+		background: transparent;
+		color: #fff;
+	}
+}
+
+@mixin iw-btn-on-dark-ghost {
+	background: transparent;
+	border-color: rgba(255, 255, 255, 0.8);
+	color: #fff;
+
+	&:hover {
+		background: #fff;
+		border-color: #fff;
+		color: var(--wl-ink, #000);
+	}
+}
+
+@mixin iw-stars {
+	font-size: 0.85rem;
+	letter-spacing: 0.22em;
+	color: var(--wl-coral, #efa58f);
+}

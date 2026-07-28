@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/iw-cta",
+	"title": "Indian Weddings — Closing CTA",
+	"category": "wonderland",
+	"icon": "megaphone",
+	"description": "Indian Weddings closing band: centred heading, a line of copy, two actions and an award note.",
+	"keywords": [ "indian", "cta", "enquire", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"heading": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"background": { "type": "string", "default": "taupe" },
+		"buttons": { "type": "array", "default": [] },
+		"note": { "type": "string", "default": "" }
+	},
+	"render": "file:./render.php"
+}

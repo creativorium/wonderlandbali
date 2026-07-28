@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/iw-packages",
+	"title": "Indian Weddings — Packages",
+	"category": "wonderland",
+	"icon": "money-alt",
+	"description": "Indian Weddings tiers: side-by-side package cards with a ticked inclusion list, an optional highlight badge and a quote request button.",
+	"keywords": [ "indian", "packages", "tiers", "pricing", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"intro": { "type": "string", "default": "" },
+		"background": { "type": "string", "default": "greige" },
+		"tiers": { "type": "array", "default": [] },
+		"note": { "type": "string", "default": "" }
+	},
+	"render": "file:./render.php"
+}

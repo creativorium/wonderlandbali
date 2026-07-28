@@ -1,0 +1,53 @@
+// Indian Weddings — what's included, as a card grid.
+
+@use '../iw' as iw;
+
+.wl-iw-included {
+	@include iw.iw-section;
+
+	&.is-white { background: #fff; }
+	&.is-greige { background: var(--wl-greige, #e3deda); }
+
+	&__inner { @include iw.iw-container; }
+
+	&__eyebrow { @include iw.iw-eyebrow; }
+	&__title { @include iw.iw-heading; }
+
+	// Uniform, equal-weight cards — the one place a grid beats flex here.
+	&__grid {
+		margin-top: clamp(2rem, 4vw, 3rem);
+		display: grid;
+		grid-template-columns: repeat(var(--wl-cols, 3), 1fr);
+		gap: clamp(1.25rem, 2vw, 1.75rem);
+	}
+
+	&__card {
+		padding: clamp(1.5rem, 2.4vw, 1.9rem);
+		background: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.08);
+	}
+
+	&__name {
+		margin: 0 0 0.75rem;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: 1.3rem;
+		line-height: 1.25;
+	}
+
+	&__text {
+		@include iw.iw-body;
+		margin: 0;
+	}
+
+	// White-on-white would lose the card edges, so lift them off the page.
+	&.is-white &__card { background: var(--wl-greige, #e3deda); border-color: transparent; }
+
+	@media (max-width: 1000px) {
+		&__grid { grid-template-columns: repeat(min(var(--wl-cols, 3), 2), 1fr); }
+	}
+
+	@media (max-width: 700px) {
+		&__grid { grid-template-columns: 1fr; }
+	}
+}
