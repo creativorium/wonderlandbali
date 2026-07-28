@@ -122,3 +122,16 @@
 		&__title { font-size: clamp(3.5rem, 20vw, 6rem); margin-top: clamp(-4rem, -14vw, -7rem); }
 	}
 }
+
+/* When the block sits directly under a hero, the title's straddle runs into the
+   hero's call-to-action. Ease it back by 100px there only — on the homepage the
+   block follows the testimonial slider and the full overlap is wanted. */
+.wl-hero + .wl-services .wl-services__title {
+	margin-top: calc(clamp(-8rem, -11vw, -13rem) + 100px);
+}
+
+@media (max-width: 560px) {
+	.wl-hero + .wl-services .wl-services__title {
+		margin-top: calc(clamp(-4rem, -14vw, -7rem) + 60px);
+	}
+}
