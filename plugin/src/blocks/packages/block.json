@@ -12,6 +12,7 @@
 	"attributes": {
 		"heading": { "type": "string", "default": "Packages and Prices" },
 		"background": { "type": "string", "default": "greige" },
+		"straddle": { "type": "boolean", "default": false },
 		"groups": { "type": "array", "default": [] },
 		"buttonText": { "type": "string", "default": "" },
 		"buttonUrl": { "type": "string", "default": "" },

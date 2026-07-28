@@ -1,10 +1,10 @@
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, RichText, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, TextControl, TextareaControl, SelectControl } from '@wordpress/components';
+import { PanelBody, TextControl, TextareaControl, SelectControl, ToggleControl } from '@wordpress/components';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { heading, background, groups, buttonText, buttonUrl, note } = attributes;
-	const blockProps = useBlockProps( { className: `wl-packages is-${ background }` } );
+	const { heading, background, straddle, groups, buttonText, buttonUrl, note } = attributes;
+	const blockProps = useBlockProps( { className: `wl-packages is-${ background }${ straddle ? ' is-straddle' : '' }` } );
 
 	const update = ( i, key, value ) => {
 		const next = ( groups || [] ).map( ( g, n ) => ( n === i ? { ...g, [ key ]: value } : g ) );
@@ -23,6 +23,12 @@ export default function Edit( { attributes, setAttributes } ) {
 							{ label: __( 'White', 'wonderland-blocks' ), value: 'white' },
 						] }
 						onChange={ ( v ) => setAttributes( { background: v } ) }
+					/>
+					<ToggleControl
+						label={ __( 'Straddle the section above', 'wonderland-blocks' ) }
+						checked={ !! straddle }
+						onChange={ ( v ) => setAttributes( { straddle: v } ) }
+						help={ __( 'Lifts the heading so the background change lands mid-title.', 'wonderland-blocks' ) }
 					/>
 					<TextControl label={ __( 'Button text', 'wonderland-blocks' ) } value={ buttonText }
 						onChange={ ( v ) => setAttributes( { buttonText: v } ) } />

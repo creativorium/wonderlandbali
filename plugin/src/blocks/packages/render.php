@@ -16,12 +16,13 @@ $groups   = isset( $attributes['groups'] ) && is_array( $attributes['groups'] ) 
 $btn_text = $attributes['buttonText'] ?? '';
 $btn_url  = $attributes['buttonUrl'] ?? '';
 $note     = $attributes['note'] ?? '';
+$straddle = ! empty( $attributes['straddle'] ) ? ' is-straddle' : '';
 
 if ( ! $groups ) {
 	return;
 }
 
-$wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-packages ' . $bg ) );
+$wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-packages ' . $bg . $straddle ) );
 ?>
 <section <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<?php if ( $heading ) : ?>

@@ -19,6 +19,20 @@
 		text-transform: uppercase;
 	}
 
+	// The title lifts up out of this section so its first line sits on the
+	// section above — the colour change lands mid-heading, as in the reference.
+	// flow-root gives the negative margin a block formatting context to escape.
+	&.is-straddle {
+		display: flow-root;
+		padding-top: 0;
+
+		.wl-packages__title {
+			position: relative;
+			z-index: 2;
+			margin-top: clamp(-4rem, -6.5vw, -7rem);
+		}
+	}
+
 	&__inner {
 		max-width: var(--wl-content-max, 1200px);
 		margin-inline: auto;
@@ -127,6 +141,7 @@
 	// Stacked and left-aligned on phones — right-aligned prices lose their
 	// anchor once the photo is no longer beside them.
 	@media (max-width: 900px) {
+		&.is-straddle .wl-packages__title { margin-top: clamp(-2rem, -6vw, -3.5rem); }
 		&__copy { flex-basis: 100%; text-align: left; }
 		&__figure { flex-basis: 100%; }
 		&__list, &__rows { text-align: left; }
