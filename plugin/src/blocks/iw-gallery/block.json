@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/iw-gallery",
+	"title": "Indian Weddings — Gallery",
+	"category": "wonderland",
+	"icon": "format-gallery",
+	"description": "Indian Weddings work: a uniform grid of photographs, each with a caption tag in its corner.",
+	"keywords": [ "indian", "gallery", "portfolio", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"background": { "type": "string", "default": "white" },
+		"columns": { "type": "number", "default": 3 },
+		"items": { "type": "array", "default": [] },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" }
+	},
+	"render": "file:./render.php"
+}

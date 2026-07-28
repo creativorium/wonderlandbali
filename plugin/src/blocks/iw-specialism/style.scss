@@ -1,0 +1,43 @@
+// Indian Weddings — "why us" statement with ceremony chips.
+
+@use '../iw' as iw;
+
+.wl-iw-specialism {
+	@include iw.iw-section;
+
+	&.is-white { background: #fff; }
+	&.is-greige { background: var(--wl-greige, #e3deda); }
+
+	&__inner { @include iw.iw-container; }
+
+	&__eyebrow { @include iw.iw-eyebrow; }
+	&__title { @include iw.iw-heading; }
+
+	&__text {
+		@include iw.iw-body;
+		margin-top: 1.5rem;
+		max-width: 74ch;
+
+		p { margin: 0 0 1rem; }
+		p:last-child { margin-bottom: 0; }
+	}
+
+	&__chips {
+		margin: clamp(1.75rem, 3vw, 2.5rem) 0 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.85rem;
+
+		li {
+			padding: 0.6rem 1.25rem;
+			border: 1px solid var(--wl-taupe, #c5b7b3);
+			border-radius: 999px;
+			font-family: var(--wl-font-label, sans-serif);
+			font-size: 0.82rem;
+			letter-spacing: 0.06em;
+			color: var(--wl-ink, #000);
+		}
+	}
+}

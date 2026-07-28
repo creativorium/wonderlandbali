@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/iw-hero",
+	"title": "Indian Weddings — Hero",
+	"category": "wonderland",
+	"icon": "cover-image",
+	"description": "Indian Weddings opener: centred title over a photograph with two actions, an award line and a strip of credentials beneath.",
+	"keywords": [ "indian", "hero", "banner", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"subtitle": { "type": "string", "default": "" },
+		"backgroundUrl": { "type": "string", "default": "" },
+		"overlayOpacity": { "type": "number", "default": 50 },
+		"buttons": { "type": "array", "default": [] },
+		"note": { "type": "string", "default": "" },
+		"stats": { "type": "array", "default": [] }
+	},
+	"render": "file:./render.php"
+}

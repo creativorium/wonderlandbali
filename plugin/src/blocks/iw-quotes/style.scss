@@ -1,0 +1,61 @@
+// Indian Weddings — review cards on a dark band.
+
+@use '../iw' as iw;
+
+.wl-iw-quotes {
+	@include iw.iw-section;
+	background: var(--wl-ink, #000);
+	color: #fff;
+
+	&__inner { @include iw.iw-container; }
+
+	&__eyebrow { @include iw.iw-eyebrow; }
+
+	&__title {
+		@include iw.iw-heading;
+		color: #fff;
+	}
+
+	&__grid {
+		margin-top: clamp(2rem, 4vw, 3rem);
+		display: grid;
+		grid-template-columns: repeat(var(--wl-cols, 3), 1fr);
+		gap: clamp(1.25rem, 2vw, 1.75rem);
+		align-items: start;
+	}
+
+	&__item {
+		margin: 0;
+		padding: clamp(1.5rem, 2.4vw, 1.9rem);
+		border: 1px solid rgba(255, 255, 255, 0.18);
+	}
+
+	&__stars {
+		margin: 0 0 1rem;
+		@include iw.iw-stars;
+	}
+
+	&__quote {
+		margin: 0;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.98rem;
+		line-height: 1.8;
+		color: rgba(255, 255, 255, 0.86);
+	}
+
+	&__name {
+		margin-top: 1.25rem;
+		font-family: var(--wl-font-head, serif);
+		font-style: italic;
+		font-size: 1.05rem;
+		color: var(--wl-coral, #efa58f);
+	}
+
+	@media (max-width: 1000px) {
+		&__grid { grid-template-columns: repeat(min(var(--wl-cols, 3), 2), 1fr); }
+	}
+
+	@media (max-width: 700px) {
+		&__grid { grid-template-columns: 1fr; }
+	}
+}

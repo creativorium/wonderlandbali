@@ -1,0 +1,19 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/iw-quotes",
+	"title": "Indian Weddings — Quotes",
+	"category": "wonderland",
+	"icon": "format-quote",
+	"description": "Indian Weddings reviews: three rated quote cards on a dark band.",
+	"keywords": [ "indian", "reviews", "quotes", "testimonials", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"columns": { "type": "number", "default": 3 },
+		"items": { "type": "array", "default": [] }
+	},
+	"render": "file:./render.php"
+}

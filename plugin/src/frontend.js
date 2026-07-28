@@ -18,6 +18,16 @@ import './blocks/testimonials/style.scss';
 import './blocks/showcase/style.scss';
 import './blocks/packages/style.scss';
 
+// Indian Weddings — page-specific blocks, used only on /indian-weddings/.
+import './blocks/iw-hero/style.scss';
+import './blocks/iw-specialism/style.scss';
+import './blocks/iw-included/style.scss';
+import './blocks/iw-gallery/style.scss';
+import './blocks/iw-quotes/style.scss';
+import './blocks/iw-packages/style.scss';
+import './blocks/iw-faq/style.scss';
+import './blocks/iw-cta/style.scss';
+
 /**
  * Generic crossfade slideshow: any element with [data-slideshow] cycles the
  * .is-active class across its `.js-slide` children. Used by the hero + divider.

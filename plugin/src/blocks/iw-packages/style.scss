@@ -1,0 +1,118 @@
+// Indian Weddings — package tiers.
+
+@use '../iw' as iw;
+
+.wl-iw-packages {
+	@include iw.iw-section;
+
+	&.is-greige { background: var(--wl-greige-deep, #d6cac6); }
+	&.is-white { background: #fff; }
+
+	&__inner { @include iw.iw-container; }
+
+	&__eyebrow { @include iw.iw-eyebrow; }
+	&__title { @include iw.iw-heading; }
+
+	&__intro {
+		@include iw.iw-body;
+		margin: 1.25rem 0 0;
+		max-width: 68ch;
+	}
+
+	// Equal columns that all stretch to the tallest card — flex keeps the
+	// featured tier free to sit a little prouder than its neighbours.
+	&__tiers {
+		margin-top: clamp(2rem, 4vw, 3rem);
+		display: flex;
+		flex-wrap: wrap;
+		gap: clamp(1.25rem, 2vw, 1.75rem);
+		align-items: stretch;
+	}
+
+	&__tier {
+		flex: 1 1 16rem;
+		display: flex;
+		flex-direction: column;
+		padding: clamp(1.6rem, 2.6vw, 2.1rem);
+		background: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+	}
+
+	&__tier.is-featured {
+		border: 1px solid var(--wl-coral, #efa58f);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+	}
+
+	&__badge {
+		align-self: flex-start;
+		margin: 0 0 1rem;
+		padding: 0.35rem 0.8rem;
+		background: var(--wl-coral, #efa58f);
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.62rem;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--wl-ink, #000);
+	}
+
+	&__name {
+		margin: 0;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+		line-height: 1.15;
+	}
+
+	&__blurb {
+		@include iw.iw-body;
+		margin: 0.75rem 0 0;
+	}
+
+	&__list {
+		margin: 1.35rem 0 0;
+		padding: 1.35rem 0 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.12);
+		list-style: none;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.9rem;
+		line-height: 1.5;
+
+		li {
+			position: relative;
+			margin-bottom: 0.7rem;
+			padding-left: 1.4rem;
+
+			&::before {
+				content: '✓';
+				position: absolute;
+				left: 0;
+				color: var(--wl-coral, #efa58f);
+			}
+		}
+	}
+
+	&__btn {
+		@include iw.iw-btn;
+		// Sits flush at the foot of the card whatever the list length.
+		margin-top: auto;
+		align-self: flex-start;
+		padding-top: 0.85rem;
+		padding-bottom: 0.85rem;
+	}
+
+	// The list is the last thing above the button, so give it breathing room.
+	&__list + &__btn { margin-top: 1.5rem; }
+
+	&__note {
+		margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.75rem;
+		letter-spacing: 0.06em;
+		color: rgba(0, 0, 0, 0.7);
+	}
+
+	@media (max-width: 900px) {
+		&__tier { flex-basis: 100%; }
+		&__btn { align-self: stretch; }
+	}
+}

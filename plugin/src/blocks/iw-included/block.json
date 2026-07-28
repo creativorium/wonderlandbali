@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/iw-included",
+	"title": "Indian Weddings — What's Included",
+	"category": "wonderland",
+	"icon": "grid-view",
+	"description": "Indian Weddings inclusions: a grid of titled cards under an eyebrow and heading.",
+	"keywords": [ "indian", "included", "cards", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"background": { "type": "string", "default": "greige" },
+		"columns": { "type": "number", "default": 3 },
+		"items": { "type": "array", "default": [] }
+	},
+	"render": "file:./render.php"
+}
