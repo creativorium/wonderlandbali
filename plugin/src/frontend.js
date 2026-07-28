@@ -15,6 +15,8 @@ import './blocks/profile/style.scss';
 import './blocks/contact/style.scss';
 import './blocks/features/style.scss';
 import './blocks/testimonials/style.scss';
+import './blocks/showcase/style.scss';
+import './blocks/packages/style.scss';
 
 /**
  * Generic crossfade slideshow: any element with [data-slideshow] cycles the

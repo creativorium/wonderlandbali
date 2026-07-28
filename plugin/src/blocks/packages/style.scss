@@ -1,0 +1,134 @@
+// Wonderland Packages & Prices — priced tiers beside a photograph.
+
+.wl-packages {
+	padding-block: clamp(3rem, 7vw, 6rem) clamp(3.5rem, 8vw, 7rem);
+	padding-inline: var(--wl-gutter, 1.5rem);
+	color: var(--wl-ink, #000);
+
+	&.is-greige { background: var(--wl-greige-deep, #d6cac6); }
+	&.is-white { background: #fff; }
+
+	&__title {
+		max-width: var(--wl-content-max, 1200px);
+		margin: 0 auto clamp(2rem, 4vw, 3.5rem);
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(2.75rem, 9vw, 7rem);
+		line-height: 0.92;
+		letter-spacing: 0.01em;
+		text-transform: uppercase;
+	}
+
+	&__inner {
+		max-width: var(--wl-content-max, 1200px);
+		margin-inline: auto;
+	}
+
+	&__group {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: clamp(1.5rem, 4vw, 3.5rem);
+
+		& + & { margin-top: clamp(2.5rem, 5vw, 4rem); }
+	}
+
+	// Copy is flush right so name, price and inclusions line up against the photo.
+	&__copy {
+		flex: 1 1 22rem;
+		min-width: 0;
+		text-align: right;
+	}
+
+	&__figure {
+		flex: 1 1 20rem;
+		min-width: 0;
+		margin: 0;
+
+		img { width: 100%; height: auto; display: block; }
+	}
+
+	&__name {
+		margin: 0 0 1.5rem;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(1.5rem, 3vw, 2.25rem);
+		line-height: 1.15;
+		text-align: left;
+	}
+
+	&__price { display: block; }
+
+	&__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.78rem;
+		letter-spacing: 0.06em;
+		line-height: 2;
+		text-transform: uppercase;
+	}
+
+	// Add-ons: a small label above a large price, repeated.
+	&__rows {
+		margin: 0;
+
+		dt {
+			font-family: var(--wl-font-label, sans-serif);
+			font-size: 0.72rem;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+			color: rgba(0, 0, 0, 0.7);
+		}
+
+		dd {
+			margin: 0 0 1.25rem;
+			font-family: var(--wl-font-head, serif);
+			font-size: clamp(1.5rem, 3vw, 2.25rem);
+			line-height: 1.2;
+		}
+
+		dd:last-child { margin-bottom: 0; }
+	}
+
+	&__cta {
+		margin-top: clamp(2rem, 4vw, 3rem);
+		text-align: center;
+	}
+
+	&__btn {
+		display: inline-block;
+		padding: 0.85rem 1.9rem;
+		background: var(--wl-ink, #000);
+		color: #fff;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.78rem;
+		letter-spacing: 0.08em;
+		text-decoration: none;
+		transition: background-color 0.2s ease, color 0.2s ease;
+
+		&:hover { background: var(--wl-coral, #efa58f); color: var(--wl-ink, #000); }
+	}
+
+	&__note {
+		margin-top: clamp(1.5rem, 3vw, 2.25rem);
+		text-align: center;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.72rem;
+		letter-spacing: 0.06em;
+		line-height: 1.9;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.75);
+
+		p { margin: 0; }
+	}
+
+	// Stacked and left-aligned on phones — right-aligned prices lose their
+	// anchor once the photo is no longer beside them.
+	@media (max-width: 900px) {
+		&__copy { flex-basis: 100%; text-align: left; }
+		&__figure { flex-basis: 100%; }
+		&__list, &__rows { text-align: left; }
+	}
+}

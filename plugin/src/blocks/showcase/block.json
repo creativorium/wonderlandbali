@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/showcase",
+	"title": "Wonderland Showcase",
+	"category": "wonderland",
+	"icon": "align-pull-left",
+	"description": "Editorial section: heading, copy and a cluster of photographs in two columns, with a call to action.",
+	"keywords": [ "showcase", "editorial", "services", "gallery", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"heading": { "type": "string", "default": "" },
+		"headingSize": { "type": "string", "default": "giant" },
+		"straddle": { "type": "boolean", "default": false },
+		"background": { "type": "string", "default": "greige" },
+		"text": { "type": "string", "default": "" },
+		"leadImageUrl": { "type": "string", "default": "" },
+		"sideImages": { "type": "array", "default": [] },
+		"bottomImages": { "type": "array", "default": [] },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" }
+	},
+	"render": "file:./render.php"
+}

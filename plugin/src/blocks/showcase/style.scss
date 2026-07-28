@@ -1,0 +1,115 @@
+// Wonderland Showcase — editorial two-column section (copy + photo cluster).
+
+.wl-showcase {
+	padding-block: clamp(3rem, 7vw, 6rem) clamp(3.5rem, 8vw, 7rem);
+	padding-inline: var(--wl-gutter, 1.5rem);
+	color: var(--wl-ink, #000);
+
+	&.is-greige { background: var(--wl-greige-deep, #d6cac6); }
+	&.is-white { background: #fff; }
+
+	&__title {
+		max-width: var(--wl-content-max, 1200px);
+		margin: 0 auto clamp(1.5rem, 3vw, 2.5rem);
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		line-height: 0.92;
+		text-transform: uppercase;
+	}
+
+	&.heading-giant &__title {
+		font-size: clamp(3rem, 11vw, 9rem);
+		letter-spacing: 0.01em;
+	}
+
+	// The giant title lifts up over the section above it — one negative margin,
+	// so the overlap is tuned in a single place.
+	&.is-straddle {
+		padding-top: 0;
+
+		.wl-showcase__title {
+			position: relative;
+			z-index: 2;
+			margin-top: clamp(-5rem, -8vw, -9rem);
+		}
+	}
+
+	&.heading-normal &__title {
+		font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+		line-height: 1.15;
+		text-transform: none;
+		letter-spacing: 0;
+	}
+
+	&__inner {
+		max-width: var(--wl-content-max, 1200px);
+		margin-inline: auto;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: clamp(1.5rem, 3vw, 2.5rem);
+	}
+
+	&__main { flex: 1 1 30rem; min-width: 0; }
+	&__aside {
+		flex: 1 1 18rem;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: clamp(1.5rem, 3vw, 2.5rem);
+	}
+
+	&__figure {
+		margin: 0;
+
+		img {
+			width: 100%;
+			height: auto;
+			display: block;
+		}
+	}
+
+	&__text {
+		margin-top: clamp(1.5rem, 3vw, 2.25rem);
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.95rem;
+		line-height: 1.75;
+		color: rgba(0, 0, 0, 0.78);
+
+		p { margin: 0 0 1.1rem; }
+		p:last-child { margin-bottom: 0; }
+	}
+
+	// A pair of images sitting under the copy.
+	&__row {
+		margin-top: clamp(1.5rem, 3vw, 2.25rem);
+		display: flex;
+		gap: clamp(1rem, 2vw, 1.75rem);
+
+		.wl-showcase__figure { flex: 1 1 0; min-width: 0; }
+	}
+
+	&__cta { text-align: center; }
+
+	&__btn {
+		display: inline-block;
+		padding: 0.85rem 1.9rem;
+		background: var(--wl-ink, #000);
+		color: #fff;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.78rem;
+		letter-spacing: 0.08em;
+		text-decoration: none;
+		transition: background-color 0.2s ease, color 0.2s ease;
+
+		&:hover { background: var(--wl-coral, #efa58f); color: var(--wl-ink, #000); }
+	}
+
+	// Boxy on mobile: one column, images full width, CTA left-aligned.
+	@media (max-width: 900px) {
+		&__main,
+		&__aside { flex-basis: 100%; }
+
+		&.is-straddle .wl-showcase__title { margin-top: clamp(-2.5rem, -7vw, -4rem); }
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/packages",
+	"title": "Wonderland Packages & Prices",
+	"category": "wonderland",
+	"icon": "money-alt",
+	"description": "Package tiers with prices, inclusions and a photograph, plus an optional brochure download and footnote.",
+	"keywords": [ "packages", "prices", "pricing", "rates", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"heading": { "type": "string", "default": "Packages and Prices" },
+		"background": { "type": "string", "default": "greige" },
+		"groups": { "type": "array", "default": [] },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" },
+		"note": { "type": "string", "default": "" }
+	},
+	"render": "file:./render.php"
+}

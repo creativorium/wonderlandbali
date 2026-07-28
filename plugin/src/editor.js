@@ -28,3 +28,7 @@ import './blocks/features/style.scss';
 import './blocks/features/index.js';
 import './blocks/testimonials/style.scss';
 import './blocks/testimonials/index.js';
+import './blocks/showcase/style.scss';
+import './blocks/showcase/index.js';
+import './blocks/packages/style.scss';
+import './blocks/packages/index.js';
