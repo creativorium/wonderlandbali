@@ -40,34 +40,72 @@ $grid_style = '--wl-cols:' . $columns . ';--wl-gap:' . $gap . 'px;';
 	<?php endif; ?>
 
 	<?php if ( ! empty( $images ) ) : ?>
-		<div class="wl-portfolio__grid" style="<?php echo esc_attr( $grid_style ); ?>"<?php echo $lightbox ? ' data-lightbox="1"' : ''; ?><?php echo $reveal ? ' data-reveal="' . esc_attr( (string) $batch ) . '"' : ''; ?>>
-			<?php
-			$index = -1;
-			foreach ( $images as $img ) :
-				$url = is_array( $img ) ? ( $img['url'] ?? '' ) : (string) $img;
-				if ( ! $url ) {
-					continue;
+		<?php
+		// Masonry is built as real columns rather than CSS multicol. Multicol
+		// re-balances every frame each time the gallery grows, so "Show More"
+		// reshuffled the whole grid; assigning each frame to the shortest column
+		// up front means revealing more only ever appends to the bottom.
+		$assigned  = array();
+		$col_count = 'strip' === $layout ? 1 : $columns;
+		$heights   = array_fill( 0, $col_count, 0.0 );
+		$index     = -1;
+
+		foreach ( $images as $img ) {
+			$url = is_array( $img ) ? ( $img['url'] ?? '' ) : (string) $img;
+			if ( ! $url ) {
+				continue;
+			}
+			++$index;
+
+			// Column height is tracked in aspect ratios, which is all that is
+			// needed to keep equal-width columns level.
+			$ratio = 1.33;
+			$att   = function_exists( 'wonderland_attachment_id_from_url' ) ? wonderland_attachment_id_from_url( $url ) : 0;
+			if ( $att ) {
+				$meta = wp_get_attachment_metadata( $att );
+				if ( ! empty( $meta['width'] ) && ! empty( $meta['height'] ) ) {
+					$ratio = (float) $meta['height'] / (float) $meta['width'];
 				}
-				++$index;
-				$href   = $lightbox ? $url : $btn_url;
-				$hidden = $reveal && $index >= $initial;
-				?>
-				<a class="wl-portfolio__item<?php echo $hidden ? ' is-hidden' : ''; ?>" href="<?php echo esc_url( $href ); ?>"<?php echo $lightbox ? ' data-lb' : ''; ?><?php echo $hidden ? ' hidden aria-hidden="true" tabindex="-1"' : ''; ?>>
-					<?php
-					// The strip is one row of N, the masonry grid is columns of N.
-					$img_sizes = 'strip' === $layout
-						? '(max-width: 560px) 100vw, (max-width: 900px) 50vw, ' . round( 100 / max( 1, count( $images ) ) ) . 'vw'
-						: '(max-width: 900px) 50vw, ' . round( 100 / $columns ) . 'vw';
-					echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						$url,
-						array(
-							'alt'   => is_array( $img ) ? ( $img['alt'] ?? '' ) : '',
-							'size'  => 'large',
-							'sizes' => $img_sizes,
-						)
-					);
-					?>
-				</a>
+			}
+
+			$shortest = array_search( min( $heights ), $heights, true );
+			$heights[ $shortest ] += $ratio;
+
+			$assigned[ $shortest ][] = array(
+				'url'   => $url,
+				'alt'   => is_array( $img ) ? ( $img['alt'] ?? '' ) : '',
+				'index' => $index,
+			);
+		}
+
+		// The strip is one row of N, the masonry grid is columns of N.
+		$img_sizes = 'strip' === $layout
+			? '(max-width: 560px) 100vw, (max-width: 900px) 50vw, ' . round( 100 / max( 1, count( $images ) ) ) . 'vw'
+			: '(max-width: 900px) 50vw, ' . round( 100 / $columns ) . 'vw';
+		?>
+		<div class="wl-portfolio__grid" style="<?php echo esc_attr( $grid_style ); ?>"<?php echo $lightbox ? ' data-lightbox="1"' : ''; ?><?php echo $reveal ? ' data-reveal="' . esc_attr( (string) $batch ) . '"' : ''; ?>>
+			<?php foreach ( $assigned as $column ) : ?>
+				<div class="wl-portfolio__col">
+					<?php foreach ( $column as $item ) : ?>
+						<?php
+						$href   = $lightbox ? $item['url'] : $btn_url;
+						$hidden = $reveal && $item['index'] >= $initial;
+						?>
+						<?php // --i restores the original sequence once the column wrappers step aside on small screens. ?>
+						<a class="wl-portfolio__item<?php echo $hidden ? ' is-hidden' : ''; ?>" href="<?php echo esc_url( $href ); ?>" data-i="<?php echo esc_attr( (string) $item['index'] ); ?>" style="--i:<?php echo esc_attr( (string) $item['index'] ); ?>"<?php echo $lightbox ? ' data-lb' : ''; ?><?php echo $hidden ? ' hidden aria-hidden="true" tabindex="-1"' : ''; ?>>
+							<?php
+							echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								$item['url'],
+								array(
+									'alt'   => $item['alt'],
+									'size'  => 'large',
+									'sizes' => $img_sizes,
+								)
+							);
+							?>
+						</a>
+					<?php endforeach; ?>
+				</div>
 			<?php endforeach; ?>
 		</div>
 	<?php endif; ?>

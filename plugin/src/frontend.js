@@ -118,7 +118,12 @@ function initLightbox() {
 	};
 
 	containers.forEach( ( c ) => {
-		const links = Array.from( c.querySelectorAll( '[data-lb]' ) );
+		// The masonry renders column by column, so DOM order is not the order the
+		// frames were authored in — data-i carries that, and the overlay steps
+		// through the gallery the way it reads.
+		const links = Array.from( c.querySelectorAll( '[data-lb]' ) ).sort(
+			( a, b ) => ( +a.dataset.i || 0 ) - ( +b.dataset.i || 0 )
+		);
 		const urls = links.map( ( a ) => a.getAttribute( 'href' ) );
 		links.forEach( ( a, i ) =>
 			a.addEventListener( 'click', ( e ) => {
@@ -164,8 +169,12 @@ function initReveal() {
 		}
 
 		btn.addEventListener( 'click', function () {
-			const hidden = grid.querySelectorAll( '.wl-portfolio__item.is-hidden' );
-			const next = Array.prototype.slice.call( hidden, 0, batch );
+			// Reveal in authored order, not column order, so each batch tops up
+			// the columns evenly instead of filling one of them.
+			const hidden = Array.prototype.slice
+				.call( grid.querySelectorAll( '.wl-portfolio__item.is-hidden' ) )
+				.sort( ( a, b ) => ( +a.dataset.i || 0 ) - ( +b.dataset.i || 0 ) );
+			const next = hidden.slice( 0, batch );
 
 			next.forEach( function ( el ) {
 				el.classList.remove( 'is-hidden' );

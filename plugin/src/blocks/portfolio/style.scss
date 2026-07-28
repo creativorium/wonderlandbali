@@ -20,14 +20,22 @@
 		text-transform: uppercase;
 	}
 
-	/* Async masonry — varied heights & placement via CSS multicol. */
+	/* Async masonry — real columns, filled shortest-first in render.php.
+	   Multicol would re-flow every frame whenever the gallery grows, which made
+	   "Show More" reshuffle the whole grid; columns only ever grow downwards. */
 	&__grid {
 		position: relative;
 		z-index: 1;
 		max-width: min(1600px, 96vw);
 		margin-inline: auto;
-		column-count: var(--wl-cols, 3);
-		column-gap: var(--wl-gap, 6px);
+		display: flex;
+		align-items: flex-start;
+		gap: var(--wl-gap, 6px);
+	}
+
+	&__col {
+		flex: 1 1 0;
+		min-width: 0;
 	}
 
 	&__item {
@@ -74,9 +82,23 @@
 	// When lightbox is on, hint clickability.
 	&__grid[data-lightbox] &__item { cursor: zoom-in; }
 
-	@media (max-width: 900px) { &__grid { column-count: 2 !important; } }
+	// Below the desktop breakpoint the server's column split is the wrong shape,
+	// so the wrappers step out of the way (display:contents) and the frames flow
+	// as a two-up grid — boxy, per the mobile rules.
+	@media (max-width: 900px) {
+		&__grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			align-items: start;
+		}
+		&__col { display: contents; }
+		&__item {
+			margin-bottom: 0;
+			order: var(--i, 0); // back into the authored sequence
+		}
+	}
+
 	@media (max-width: 560px) {
-		&__grid { column-count: 2 !important; }
 		&__title { font-size: clamp(3rem, 18vw, 6rem); margin-bottom: clamp(-2rem, -6vw, -3.5rem); }
 	}
 }
