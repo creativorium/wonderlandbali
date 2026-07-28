@@ -127,11 +127,11 @@
    hero's call-to-action. Ease it back by 100px there only — on the homepage the
    block follows the testimonial slider and the full overlap is wanted. */
 .wl-hero + .wl-services .wl-services__title {
-	margin-top: calc(clamp(-8rem, -11vw, -13rem) + 100px);
+	margin-top: calc(clamp(-8rem, -11vw, -13rem) + 60px);
 }
 
 @media (max-width: 560px) {
 	.wl-hero + .wl-services .wl-services__title {
-		margin-top: calc(clamp(-4rem, -14vw, -7rem) + 60px);
+		margin-top: calc(clamp(-4rem, -14vw, -7rem) + 40px);
 	}
 }
