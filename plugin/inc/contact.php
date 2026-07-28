@@ -77,6 +77,13 @@ function wonderland_form_fields( $preset = 'contact' ) {
 			'required' => true,
 			'options'  => wonderland_form_services(),
 		),
+		'region'       => array(
+			'label'    => 'Region',
+			'type'     => 'select',
+			'required' => true,
+			'options'  => wonderland_form_regions(),
+			'half'     => true,
+		),
 		'country'      => array(
 			'label'   => 'Select Your Country',
 			'type'    => 'select',
@@ -84,19 +91,22 @@ function wonderland_form_fields( $preset = 'contact' ) {
 			'half'    => true,
 		),
 		'event_date'   => array(
-			'label' => 'Preferred Date',
-			'type'  => 'date',
-			'half'  => true,
+			'label'    => 'Preferred Date',
+			'type'     => 'date',
+			'required' => true,
+			'half'     => true,
 		),
 		'guest_count'  => array(
 			'label'       => 'Guest Count',
 			'type'        => 'number',
+			'required'    => true,
 			'placeholder' => 'e.g. 80',
 			'half'        => true,
 		),
 		'budget'       => array(
 			'label'       => 'Budget',
 			'type'        => 'text',
+			'required'    => true,
 			'placeholder' => 'e.g. USD 20,000',
 			'half'        => true,
 		),
@@ -104,6 +114,7 @@ function wonderland_form_fields( $preset = 'contact' ) {
 			'label'       => 'Venue Preferences',
 			'type'        => 'text',
 			'placeholder' => 'Cliffside, beachfront, jungle…',
+			'half'        => true,
 		),
 		'g_contact'    => array(
 			'label' => 'Contact Information',
@@ -169,6 +180,22 @@ function wonderland_form_services() {
 }
 
 /**
+ * Regions we plan in — the destinations that have their own pages.
+ *
+ * @return string[]
+ */
+function wonderland_form_regions() {
+	return apply_filters(
+		'wonderland_form_regions',
+		array(
+			'Bali',
+			'Portugal',
+			'Italy',
+		)
+	);
+}
+
+/**
  * Country list for the request form. Bali/destination markets first, then A–Z.
  *
  * @return string[]
@@ -222,6 +249,7 @@ function wonderland_handle_form() {
 
 	$lines      = array();
 	$values     = array();
+	$missing    = array();
 	$reply_name = '';
 	$reply_mail = '';
 
@@ -248,6 +276,11 @@ function wonderland_handle_form() {
 		}
 
 		if ( '' === $value ) {
+			// `required` in the markup only holds while the browser plays along;
+			// a direct POST has to be turned away here too.
+			if ( ! empty( $field['required'] ) ) {
+				$missing[] = $field['label'];
+			}
 			continue;
 		}
 
@@ -260,6 +293,11 @@ function wonderland_handle_form() {
 		if ( ! $reply_name && in_array( $key, array( 'first_name', 'bride_name' ), true ) ) {
 			$reply_name = $value;
 		}
+	}
+
+	if ( $missing ) {
+		wp_safe_redirect( add_query_arg( 'wl_sent', 'required', $back ) . '#form' );
+		exit;
 	}
 
 	// Store first: a DB record survives a bouncing mail server.
@@ -448,6 +486,8 @@ function wonderland_render_form( $args = array() ) {
 			<p class="wl-form__notice is-success" role="status">Thank you! Your message has been sent — we'll be in touch soon.</p>
 		<?php elseif ( 'captcha' === $sent ) : ?>
 			<p class="wl-form__notice is-error" role="alert">We couldn't verify that you're human. Please reload the page and try again.</p>
+		<?php elseif ( 'required' === $sent ) : ?>
+			<p class="wl-form__notice is-error" role="alert">Please fill in every field marked with an asterisk and send again.</p>
 		<?php elseif ( 'error' === $sent ) : ?>
 			<p class="wl-form__notice is-error" role="alert">Sorry, something went wrong. Please try again.</p>
 		<?php endif; ?>

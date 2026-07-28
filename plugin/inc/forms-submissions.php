@@ -205,7 +205,7 @@ add_action(
 
 			case 'wl_extra':
 				$bits = array();
-				foreach ( array( 'service', 'event_date', 'guest_count' ) as $key ) {
+				foreach ( array( 'service', 'region', 'event_date', 'guest_count' ) as $key ) {
 					$v = get_post_meta( $post_id, '_wl_' . $key, true );
 					if ( $v ) {
 						$bits[] = esc_html( $v );
