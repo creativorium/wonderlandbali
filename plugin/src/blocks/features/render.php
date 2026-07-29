@@ -16,7 +16,7 @@ $items   = isset( $attributes['items'] ) && is_array( $attributes['items'] ) ? $
 $cols    = isset( $attributes['columns'] ) ? max( 1, min( 4, (int) $attributes['columns'] ) ) : 2;
 $bg      = ( $attributes['background'] ?? 'white' ) === 'greige' ? 'is-greige' : 'is-white';
 $variant = $attributes['variant'] ?? '';
-$variant = in_array( $variant, array( 'list', 'stats' ), true ) ? $variant : 'cards';
+$variant = in_array( $variant, array( 'list', 'stats', 'links' ), true ) ? $variant : 'cards';
 $intro   = $attributes['intro'] ?? '';
 $marker  = ( 'ring' === ( $attributes['marker'] ?? '' ) ) ? 'has-ring' : 'has-dot';
 
@@ -55,6 +55,31 @@ $wrapper = get_block_wrapper_attributes(
 					</li>
 				<?php endforeach; ?>
 			</ul>
+		<?php elseif ( 'links' === $variant ) : ?>
+			<?php // Cross-links: the whole card is the link, so the target is easy to hit. ?>
+			<div class="wl-features__links" style="--wl-cols:<?php echo esc_attr( (string) $cols ); ?>">
+				<?php foreach ( $items as $item ) : ?>
+					<?php
+					$title = trim( (string) ( $item['title'] ?? '' ) );
+					$copy  = trim( (string) ( $item['text'] ?? '' ) );
+					$url   = trim( (string) ( $item['url'] ?? '' ) );
+					if ( '' === $title || '' === $url ) {
+						continue;
+					}
+					?>
+					<a class="wl-features__link" href="<?php echo esc_url( $url ); ?>">
+						<span class="wl-features__link-title"><?php echo wp_kses_post( $title ); ?></span>
+						<?php if ( $copy ) : ?>
+							<span class="wl-features__link-text"><?php echo wp_kses_post( $copy ); ?></span>
+						<?php endif; ?>
+						<span class="wl-features__link-arrow" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+								<path d="M5 12h13M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</span>
+					</a>
+				<?php endforeach; ?>
+			</div>
 		<?php elseif ( 'list' === $variant ) : ?>
 			<ul class="wl-features__list <?php echo esc_attr( $marker ); ?>" style="--wl-cols:<?php echo esc_attr( (string) $cols ); ?>">
 				<?php foreach ( $items as $item ) : ?>

@@ -91,8 +91,13 @@
 	&__inner {
 		position: relative;
 		z-index: 2;
+		// 920px forced the headline into cramped lines once the viewport got
+		// wide enough for the type to hit its 4.4rem ceiling.
 		max-width: 920px;
 		padding: 6rem clamp(1.5rem, 4vw, 3rem) clamp(4.5rem, 12vh, 9rem) clamp(2.5rem, 12vw, 12rem);
+
+		@media (min-width: 1440px) { max-width: 1180px; }
+		@media (min-width: 1800px) { max-width: 1360px; }
 	}
 
 	&__title {

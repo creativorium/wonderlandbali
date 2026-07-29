@@ -176,3 +176,90 @@
 		.wl-features__stats li { min-width: 6rem; }
 	}
 }
+
+/* ---------------------------------------------------------------------------
+   Links variant — cross-link cards.
+
+   Used on the region pages to route people to the matching service and to the
+   work, instead of leaving them at the bottom of the page. The whole card is
+   the anchor, so the tap target is the card, not a "Read more" fragment.
+--------------------------------------------------------------------------- */
+.wl-features--links {
+	.wl-features__links {
+		max-width: var(--wl-content-max, 1200px);
+		margin-inline: auto;
+		display: grid;
+		grid-template-columns: repeat(var(--wl-cols, 3), 1fr);
+		gap: clamp(1rem, 2vw, 1.5rem);
+	}
+
+	.wl-features__link {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		padding: clamp(1.5rem, 2.6vw, 2rem);
+		background: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		color: var(--wl-ink, #000);
+		text-decoration: none;
+		transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+		&:hover,
+		&:focus-visible {
+			transform: translateY(-3px);
+			border-color: var(--wl-coral, #efa58f);
+			box-shadow: 0 14px 34px rgba(0, 0, 0, 0.1);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--wl-ink, #000);
+			outline-offset: 2px;
+		}
+	}
+
+	.wl-features__link-title {
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+		line-height: 1.25;
+	}
+
+	.wl-features__link-text {
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.9rem;
+		line-height: 1.65;
+		color: rgba(0, 0, 0, 0.68);
+	}
+
+	.wl-features__link-arrow {
+		margin-top: auto;
+		padding-top: 0.75rem;
+		width: 22px;
+		height: 22px;
+		color: var(--wl-coral, #efa58f);
+		transition: transform 0.25s ease;
+
+		svg { width: 22px; height: 22px; display: block; }
+	}
+
+	.wl-features__link:hover .wl-features__link-arrow { transform: translateX(4px); }
+
+	// Cards on greige need to lift off the background, not blend into it.
+	&.is-greige .wl-features__link { border-color: transparent; }
+
+	@media (prefers-reduced-motion: reduce) {
+		.wl-features__link,
+		.wl-features__link-arrow { transition: none; }
+		.wl-features__link:hover { transform: none; }
+		.wl-features__link:hover .wl-features__link-arrow { transform: none; }
+	}
+
+	@media (max-width: 900px) {
+		.wl-features__links { grid-template-columns: 1fr 1fr; }
+	}
+
+	@media (max-width: 600px) {
+		.wl-features__links { grid-template-columns: 1fr; }
+	}
+}
