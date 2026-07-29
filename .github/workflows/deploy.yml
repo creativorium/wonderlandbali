@@ -51,21 +51,47 @@ jobs:
           test -s plugin/build/frontend.css || { echo "plugin/build/frontend.css missing"; exit 1; }
           test -s plugin/build/editor.js || { echo "plugin/build/editor.js missing"; exit 1; }
 
-      - name: Open the SSH connection
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
+      # Written to a file rather than loaded into ssh-agent: agents cannot be told
+      # a passphrase non-interactively, so a protected key fails with a bare
+      # "Enter passphrase for (stdin)" and no clue as to why. This checks the key
+      # up front and says exactly what is wrong with it.
+      - name: Install the deploy key
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          if ! head -n1 ~/.ssh/deploy_key | grep -q 'BEGIN .*PRIVATE KEY'; then
+            echo "::error::SSH_KEY does not start with a BEGIN…PRIVATE KEY line."
+            echo "Paste the whole private key file, including its first and last lines."
+            exit 1
+          fi
+
+          # -P '' succeeds only when the key has no passphrase.
+          if ! ssh-keygen -y -P '' -f ~/.ssh/deploy_key > /dev/null 2>&1; then
+            echo "::error::SSH_KEY is passphrase-protected (or corrupt). A CI runner cannot type a passphrase."
+            echo "Strip it locally:  ssh-keygen -p -f <keyfile>   (leave the new passphrase empty)"
+            echo "Then update the SSH_KEY secret with that file's contents."
+            exit 1
+          fi
+
+          echo "Key OK — $(ssh-keygen -l -f ~/.ssh/deploy_key | awk '{print $1" "$4}')"
 
       - name: Trust the host
         run: |
-          mkdir -p ~/.ssh
           ssh-keyscan -p "${{ vars.SSH_PORT || 22 }}" -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Verify the connection
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "${{ vars.SSH_PORT || 22 }}" -o BatchMode=yes \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+            'echo "connected as $(whoami) on $(hostname)"'
 
       # The theme needs its PHP, assets and build output. src/ is build-time only.
       - name: Upload the theme
         run: |
           rsync -az --delete \
-            -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ vars.SSH_PORT || 22 }}" \
             --exclude '.git*' --exclude 'src/' --exclude 'node_modules/' \
             theme/ \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WP_PATH }}/wp-content/themes/wonderland/"
@@ -75,7 +101,7 @@ jobs:
       - name: Upload the blocks plugin
         run: |
           rsync -az --delete \
-            -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ vars.SSH_PORT || 22 }}" \
             --exclude '.git*' --exclude 'node_modules/' \
             plugin/ \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WP_PATH }}/wp-content/plugins/wonderland-blocks/"
@@ -83,7 +109,7 @@ jobs:
       - name: Upload the maintenance plugin
         run: |
           rsync -az --delete \
-            -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ vars.SSH_PORT || 22 }}" \
             --exclude '.git*' \
             plugin-maintenance/ \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WP_PATH }}/wp-content/plugins/wonderland-maintenance/"
@@ -91,13 +117,13 @@ jobs:
       - name: Upload the content records and deploy script
         run: |
           rsync -az \
-            -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ vars.SSH_PORT || 22 }}" \
             content/ scripts/ \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/"
 
       - name: Activate, sync content, purge cache
         run: |
-          ssh -p "${{ vars.SSH_PORT || 22 }}" \
+          ssh -i ~/.ssh/deploy_key -p "${{ vars.SSH_PORT || 22 }}" \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
             "WP_PATH='${{ secrets.WP_PATH }}' \
              DEPLOY_PATH='${{ secrets.DEPLOY_PATH }}' \
