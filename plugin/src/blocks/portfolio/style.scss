@@ -9,7 +9,9 @@
 	&__title {
 		position: relative;
 		z-index: 2;
-		max-width: min(1500px, 94vw);
+		// 100%, not a vw figure: the section already has padding-inline, and
+		// vw units ignore it — the sum overflowed the viewport on phones.
+		max-width: min(1500px, 100%);
 		margin: 0 auto clamp(-4rem, -6vw, -7rem); // pull the collage up behind it
 		text-align: center;
 		font-family: var(--wl-font-head, serif);
@@ -26,7 +28,7 @@
 	&__grid {
 		position: relative;
 		z-index: 1;
-		max-width: min(1600px, 96vw);
+		max-width: min(1600px, 100%);
 		margin-inline: auto;
 		display: flex;
 		align-items: flex-start;
@@ -99,7 +101,9 @@
 	}
 
 	@media (max-width: 560px) {
-		&__title { font-size: clamp(3rem, 18vw, 6rem); margin-bottom: clamp(-2rem, -6vw, -3.5rem); }
+		// 18vw made "PORTFOLIO" wider than the padded column, and a single word
+		// cannot wrap — the spill widened the whole document.
+		&__title { font-size: clamp(2.25rem, 14.5vw, 6rem); margin-bottom: clamp(-2rem, -6vw, -3.5rem); }
 	}
 }
 

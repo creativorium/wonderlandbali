@@ -118,3 +118,61 @@
 		.wl-features__list { column-count: 1; }
 	}
 }
+
+/* ---------------------------------------------------------------------------
+   Stats variant — a band of proof (years, weddings delivered, rating).
+
+   Used directly under the home hero and on About, where the strategy review
+   found the credibility was all buried in the footer.
+--------------------------------------------------------------------------- */
+.wl-features--stats {
+	padding-block: clamp(1.75rem, 3.5vw, 3rem);
+
+	.wl-features__title {
+		margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+		font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+	}
+
+	.wl-features__stats {
+		max-width: var(--wl-content-max, 1200px);
+		margin: 0 auto;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: clamp(1.5rem, 5vw, 4.5rem);
+		text-align: center;
+
+		li {
+			display: flex;
+			flex-direction: column;
+			gap: 0.35rem;
+			min-width: 7rem;
+		}
+	}
+
+	.wl-features__stat-figure {
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+		line-height: 1;
+		color: var(--wl-ink, #000);
+	}
+
+	.wl-features__stat-label {
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.7rem;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.6);
+	}
+
+	// On the deeper greige the labels need a touch more contrast.
+	&.is-greige .wl-features__stat-label { color: rgba(0, 0, 0, 0.7); }
+
+	@media (max-width: 560px) {
+		.wl-features__stats { gap: 1.5rem 2rem; }
+		.wl-features__stats li { min-width: 6rem; }
+	}
+}

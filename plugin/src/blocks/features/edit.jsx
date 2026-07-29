@@ -17,6 +17,13 @@ export default function Edit( { attributes, setAttributes } ) {
 				<PanelBody title={ __( 'Layout', 'wonderland-blocks' ) }>
 					<RangeControl label={ __( 'Columns', 'wonderland-blocks' ) } value={ columns } min={ 1 } max={ 3 }
 						onChange={ ( v ) => setAttributes( { columns: v } ) } />
+					<SelectControl label={ __( 'Variant', 'wonderland-blocks' ) } value={ attributes.variant || 'cards' }
+						options={ [
+							{ label: __( 'Cards', 'wonderland-blocks' ), value: 'cards' },
+							{ label: __( 'List', 'wonderland-blocks' ), value: 'list' },
+							{ label: __( 'Stats strip', 'wonderland-blocks' ), value: 'stats' },
+						] }
+						onChange={ ( v ) => setAttributes( { variant: v } ) } />
 					<SelectControl label={ __( 'Background', 'wonderland-blocks' ) } value={ background }
 						options={ [ { label: 'White', value: 'white' }, { label: 'Greige', value: 'greige' } ] }
 						onChange={ ( v ) => setAttributes( { background: v } ) } />

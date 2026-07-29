@@ -15,7 +15,8 @@ $heading = $attributes['heading'] ?? '';
 $items   = isset( $attributes['items'] ) && is_array( $attributes['items'] ) ? $attributes['items'] : array();
 $cols    = isset( $attributes['columns'] ) ? max( 1, min( 4, (int) $attributes['columns'] ) ) : 2;
 $bg      = ( $attributes['background'] ?? 'white' ) === 'greige' ? 'is-greige' : 'is-white';
-$variant = ( 'list' === ( $attributes['variant'] ?? '' ) ) ? 'list' : 'cards';
+$variant = $attributes['variant'] ?? '';
+$variant = in_array( $variant, array( 'list', 'stats' ), true ) ? $variant : 'cards';
 $intro   = $attributes['intro'] ?? '';
 $marker  = ( 'ring' === ( $attributes['marker'] ?? '' ) ) ? 'has-ring' : 'has-dot';
 
@@ -33,7 +34,28 @@ $wrapper = get_block_wrapper_attributes(
 	<?php endif; ?>
 
 	<?php if ( ! empty( $items ) ) : ?>
-		<?php if ( 'list' === $variant ) : ?>
+		<?php if ( 'stats' === $variant ) : ?>
+			<?php // A thin band of proof — the figure leads, its label sits under it. ?>
+			<ul class="wl-features__stats">
+				<?php foreach ( $items as $item ) : ?>
+					<?php
+					$figure = trim( (string) ( $item['title'] ?? '' ) );
+					$label  = trim( (string) ( $item['text'] ?? '' ) );
+					if ( '' === $figure && '' === $label ) {
+						continue;
+					}
+					?>
+					<li>
+						<?php if ( $figure ) : ?>
+							<span class="wl-features__stat-figure"><?php echo wp_kses_post( $figure ); ?></span>
+						<?php endif; ?>
+						<?php if ( $label ) : ?>
+							<span class="wl-features__stat-label"><?php echo wp_kses_post( $label ); ?></span>
+						<?php endif; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		<?php elseif ( 'list' === $variant ) : ?>
 			<ul class="wl-features__list <?php echo esc_attr( $marker ); ?>" style="--wl-cols:<?php echo esc_attr( (string) $cols ); ?>">
 				<?php foreach ( $items as $item ) : ?>
 					<?php

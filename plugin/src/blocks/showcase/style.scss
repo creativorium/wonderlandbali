@@ -20,7 +20,7 @@
 	// Matches the homepage "About Us" title so the giant headings read as one
 	// family across the site.
 	&.heading-giant &__title {
-		font-size: clamp(4.5rem, 10vw, 10rem);
+		font-size: clamp(2.75rem, 10vw, 10rem);
 		letter-spacing: 0.01em;
 	}
 
