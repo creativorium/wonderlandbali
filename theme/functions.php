@@ -19,3 +19,4 @@ require_once WONDERLAND_DIR . '/inc/redirects.php';
 require_once WONDERLAND_DIR . '/inc/login.php';
 require_once WONDERLAND_DIR . '/inc/contact-cta.php';
 require_once WONDERLAND_DIR . '/inc/analytics.php';
+require_once WONDERLAND_DIR . '/inc/brochure.php';

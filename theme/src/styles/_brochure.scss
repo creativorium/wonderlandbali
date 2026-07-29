@@ -1,0 +1,73 @@
+@use 'tokens';
+
+/* ---------------------------------------------------------------------------
+   Brochure dialog — email capture before the download.
+--------------------------------------------------------------------------- */
+
+.wl-brochure {
+	position: fixed;
+	inset: 0;
+	z-index: 400; // above the off-canvas menu, which is 300
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: clamp(1rem, 4vw, 2rem);
+
+	&[hidden] { display: none; }
+
+	&__backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.55);
+	}
+
+	&__panel {
+		position: relative;
+		width: min(480px, 100%);
+		max-height: 90vh;
+		overflow-y: auto;
+		padding: clamp(1.5rem, 4vw, 2.5rem);
+		background: var(--wl-greige, #e3deda);
+		box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+	}
+
+	&__close {
+		position: absolute;
+		top: 0.5rem;
+		right: 0.75rem;
+		width: 44px;
+		height: 44px;
+		background: none;
+		border: 0;
+		color: var(--wl-ink, #000);
+		font-size: 1.9rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	&__title {
+		margin: 0 0 0.75rem;
+		padding-right: 2rem;
+		font-family: var(--wl-font-head, serif);
+		font-weight: 400;
+		font-size: clamp(1.5rem, 3vw, 2rem);
+		line-height: 1.2;
+	}
+
+	&__text {
+		margin: 0 0 1.5rem;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.92rem;
+		line-height: 1.65;
+		color: rgba(0, 0, 0, 0.72);
+	}
+
+	// The shared form styling applies; only the framing differs in here.
+	.wl-form { padding: 0; background: transparent; }
+	.wl-form__submit { width: 100%; }
+
+	// Award badge and reply promise are already on the page around this dialog.
+	.wl-form__reassure { border-top-color: rgba(0, 0, 0, 0.15); }
+}
+
+body.wl-brochure-open { overflow: hidden; }

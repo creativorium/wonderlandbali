@@ -115,3 +115,70 @@ if (toggle && overlay) {
     true
   );
 })();
+
+/* ---------------------------------------------------------------------------
+   Brochure lead magnet.
+
+   Any link to the brochure PDF opens the dialog instead of downloading it. If
+   this script never runs, the link still works as a plain download — the ask is
+   an enhancement, not a gate we can accidentally lock.
+--------------------------------------------------------------------------- */
+(function () {
+  // Looked up on demand rather than at parse time: script and markup order in
+  // the footer has bitten this once already.
+  const getModal = () => document.getElementById('wl-brochure');
+
+  {
+    let lastFocus = null;
+
+    const open = () => {
+      const modal = getModal();
+      if (!modal) return false;
+      lastFocus = document.activeElement;
+      modal.hidden = false;
+      document.body.classList.add('wl-brochure-open');
+      const field = modal.querySelector('input:not([type="hidden"]):not([tabindex="-1"])');
+      if (field) field.focus();
+      return true;
+    };
+
+    const close = () => {
+      const modal = getModal();
+      if (!modal) return;
+      modal.hidden = true;
+      document.body.classList.remove('wl-brochure-open');
+      if (lastFocus) lastFocus.focus();
+    };
+
+    document.addEventListener('click', (e) => {
+      if (e.target.closest && e.target.closest('[data-brochure-close]')) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      const modal = getModal();
+      if (e.key === 'Escape' && modal && !modal.hidden) close();
+    });
+
+    // Intercept anything that points at the brochure, or opts in explicitly.
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest && e.target.closest('a[href], [data-brochure]');
+      if (!a) return;
+      const href = a.getAttribute('href') || '';
+      const wants = a.hasAttribute('data-brochure') || /brochure[^/]*\.pdf($|\?)/i.test(href);
+      if (!wants) return;
+      // Only swallow the click if the dialog actually opened; otherwise let the
+      // plain download through.
+      if (open()) e.preventDefault();
+    });
+  }
+
+  // Came back from a successful brochure submission: start the download.
+  if (window.wlBrochureDownload) {
+    const a = document.createElement('a');
+    a.href = window.wlBrochureDownload;
+    a.download = '';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+})();

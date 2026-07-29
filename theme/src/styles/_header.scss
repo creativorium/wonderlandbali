@@ -362,3 +362,79 @@ body.wl-inline-nav .site-main { padding-top: 0; }
     transform: translateY(0);
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Header "Enquire" button.
+
+   The primary action, kept within reach at every scroll position. Sits after
+   the last nav item on the service pages (inline nav) and beside the Menu
+   button everywhere else.
+--------------------------------------------------------------------------- */
+.site-header__cta {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 44px;
+	margin-left: auto;
+	margin-right: clamp(0.75rem, 2vw, 1.5rem);
+	padding: 0.6rem 1.4rem;
+	border: 1px solid currentColor;
+	color: inherit;
+	font-family: var(--wl-font-label, sans-serif);
+	font-weight: 500;
+	font-size: 0.72rem;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		background: currentColor;
+		border-color: currentColor;
+	}
+
+	// `currentColor` on both fill and text would be invisible, so the label
+	// flips to the header's own background at hover time.
+	&:hover span,
+	&:focus-visible span { color: inherit; }
+}
+
+/* Over the hero the header is transparent: a solid fill reads better there. */
+.site-header--transparent .site-header__cta {
+	border-color: rgba(255, 255, 255, 0.85);
+	color: #fff;
+
+	&:hover,
+	&:focus-visible {
+		background: #fff;
+		color: var(--wl-ink, #000);
+	}
+}
+
+/* Solid header (inner pages, and the front page once scrolled). */
+.site-header--solid .site-header__cta,
+.site-header.is-scrolled .site-header__cta,
+.site-header--inline .site-header__cta {
+	border-color: var(--wl-ink, #000);
+	color: var(--wl-ink, #000);
+
+	&:hover,
+	&:focus-visible {
+		background: var(--wl-ink, #000);
+		color: #fff;
+	}
+}
+
+/* The inline nav already pushes right, so the button follows the last item
+   rather than claiming the free space itself. */
+.site-header--inline .site-header__cta { margin-left: clamp(1rem, 2.5vw, 2rem); }
+
+@media (max-width: 560px) {
+	.site-header__cta {
+		padding: 0.5rem 0.9rem;
+		font-size: 0.65rem;
+		letter-spacing: 0.12em;
+	}
+}

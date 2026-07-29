@@ -24,7 +24,8 @@ define( 'WONDERLAND_SUBMISSION_CPT', 'wl_submission' );
 function wonderland_form_label( $preset ) {
 	$labels = array(
 		'contact' => __( 'Contact', 'wonderland-blocks' ),
-		'request' => __( 'Make a Request', 'wonderland-blocks' ),
+		'request'  => __( 'Make a Request', 'wonderland-blocks' ),
+		'brochure' => __( 'Brochure Download', 'wonderland-blocks' ),
 	);
 	return $labels[ $preset ] ?? ucfirst( $preset );
 }
@@ -232,7 +233,7 @@ add_action(
 		?>
 		<select name="wl_form">
 			<option value=""><?php esc_html_e( 'All forms', 'wonderland-blocks' ); ?></option>
-			<?php foreach ( array( 'contact', 'request' ) as $preset ) : ?>
+			<?php foreach ( array( 'contact', 'request', 'brochure' ) as $preset ) : ?>
 				<option value="<?php echo esc_attr( $preset ); ?>" <?php selected( $current, $preset ); ?>>
 					<?php echo esc_html( wonderland_form_label( $preset ) ); ?>
 				</option>

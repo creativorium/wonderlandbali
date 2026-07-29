@@ -149,7 +149,26 @@ function wonderland_form_fields( $preset = 'contact' ) {
 		),
 	);
 
-	$fields = ( 'request' === $preset ) ? $request : $contact;
+	// The lead magnet: the least we can ask for and still have a lead.
+	$brochure = array(
+		'first_name' => array(
+			'label'    => 'First Name',
+			'type'     => 'text',
+			'required' => true,
+		),
+		'email'      => array(
+			'label'    => 'Email',
+			'type'     => 'email',
+			'required' => true,
+		),
+	);
+
+	$sets   = array(
+		'request'  => $request,
+		'brochure' => $brochure,
+		'contact'  => $contact,
+	);
+	$fields = $sets[ $preset ] ?? $contact;
 
 	/**
 	 * Filters the field set for a form preset.
@@ -336,7 +355,18 @@ function wonderland_handle_form() {
 		$headers
 	);
 
-	wp_safe_redirect( add_query_arg( 'wl_sent', '1', $back ) . '#form' );
+	/**
+	 * Filters where a successful submission lands.
+	 *
+	 * The brochure form uses this to append a download flag, so the file can
+	 * start on the page the visitor comes back to.
+	 *
+	 * @param string $url    Redirect target.
+	 * @param string $preset Form preset.
+	 */
+	$redirect = apply_filters( 'wonderland_form_redirect', add_query_arg( 'wl_sent', '1', $back ), $preset );
+
+	wp_safe_redirect( $redirect . '#form' );
 	exit;
 }
 
@@ -475,7 +505,7 @@ function wonderland_render_form( $args = array() ) {
 		)
 	);
 
-	$preset = in_array( $args['preset'], array( 'contact', 'request' ), true ) ? $args['preset'] : 'contact';
+	$preset = in_array( $args['preset'], array( 'contact', 'request', 'brochure' ), true ) ? $args['preset'] : 'contact';
 	$fields = wonderland_form_fields( $preset );
 	$sent   = isset( $_GET['wl_sent'] ) ? sanitize_text_field( wp_unslash( $_GET['wl_sent'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
@@ -538,6 +568,38 @@ function wonderland_render_form( $args = array() ) {
 		<?php endif; ?>
 
 		<button type="submit" class="wl-form__submit"><?php echo esc_html( $args['button'] ); ?></button>
+
+		<?php
+		// Reassurance at the point of asking: what happens next, and why they can
+		// trust us with it. Filterable so the wording and badge can change without
+		// touching the template.
+		$reassurance = apply_filters(
+			'wonderland_form_reassurance',
+			__( 'We reply within 24 hours.', 'wonderland-blocks' ),
+			$preset
+		);
+		$badge = apply_filters(
+			'wonderland_form_badge',
+			content_url( '/uploads/2023/06/Gold-Winner-Balis-Best-Awards-2024.png' ),
+			$preset
+		);
+		?>
+		<?php if ( $reassurance || $badge ) : ?>
+			<div class="wl-form__reassure">
+				<?php if ( $badge ) : ?>
+					<img class="wl-form__reassure-badge"
+						src="<?php echo esc_url( function_exists( 'wonderland_bg_url' ) ? wonderland_bg_url( $badge, 'medium' ) : $badge ); ?>"
+						alt="<?php esc_attr_e( "Gold Winner, Bali's Best Awards 2024", 'wonderland-blocks' ); ?>"
+						loading="lazy" decoding="async" width="64" height="64" />
+				<?php endif; ?>
+				<p class="wl-form__reassure-text">
+					<?php if ( $reassurance ) : ?>
+						<strong><?php echo esc_html( $reassurance ); ?></strong>
+					<?php endif; ?>
+					<span><?php esc_html_e( '★★★★★ 5.0 from real couples · Gold Winner, Bali\'s Best Awards 2024', 'wonderland-blocks' ); ?></span>
+				</p>
+			</div>
+		<?php endif; ?>
 	</form>
 	<?php
 	return ob_get_clean();

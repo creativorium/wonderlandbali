@@ -279,3 +279,48 @@
 // Google appends the v3 badge to <body>; we show the required legal line inside
 // the form instead, which Google's terms explicitly permit.
 .grecaptcha-badge { visibility: hidden; }
+
+/* ---------------------------------------------------------------------------
+   Reassurance under the submit button.
+
+   What happens next, and why they can trust us with it — placed at the point of
+   asking rather than left in the footer.
+--------------------------------------------------------------------------- */
+.wl-form__reassure {
+	display: flex;
+	align-items: center;
+	gap: 0.9rem;
+	margin-top: 1.1rem;
+	padding-top: 1.1rem;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.wl-form__reassure-badge {
+	flex: none;
+	width: 52px;
+	height: auto;
+}
+
+.wl-form__reassure-text {
+	margin: 0;
+	font-family: var(--wl-font-label, sans-serif);
+	font-size: 0.75rem;
+	line-height: 1.6;
+	color: rgba(0, 0, 0, 0.62);
+
+	strong {
+		display: block;
+		font-weight: 500;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--wl-ink, #000);
+	}
+
+	span { letter-spacing: 0.04em; }
+}
+
+@media (max-width: 480px) {
+	.wl-form__reassure { gap: 0.7rem; }
+	.wl-form__reassure-badge { width: 44px; }
+	.wl-form__reassure-text { font-size: 0.7rem; }
+}
