@@ -69,3 +69,49 @@ if (toggle && overlay) {
     a.addEventListener('click', closeMenu);
   });
 }
+
+/* ---------------------------------------------------------------------------
+   Conversion events -> dataLayer.
+
+   GTM triggers hang off these. Deliberately tiny: our forms redirect back with
+   ?wl_sent=1, so a submission is just a page load carrying a flag (PHP sets
+   window.wlFormSubmitted). The old Elementor tracker had to patch window.fetch
+   and XMLHttpRequest and watch the DOM for a success node to do the same job.
+--------------------------------------------------------------------------- */
+(function () {
+  const push = (event, data) => {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({ event }, data || {}));
+  };
+
+  // A form was submitted successfully on the page we just landed on.
+  if (window.wlFormSubmitted) {
+    push('form_submit', {
+      form_name: window.wlFormSubmitted, // 'contact' | 'request'
+      page_url: location.href,
+      page_title: document.title,
+    });
+  }
+
+  // Outbound taps worth counting as conversions. Delegated, so it covers the
+  // floating button, footer links and anything added later.
+  document.addEventListener(
+    'click',
+    (e) => {
+      const a = e.target.closest && e.target.closest('a[href]');
+      if (!a) return;
+      const href = a.getAttribute('href') || '';
+
+      if (href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp.com') !== -1) {
+        push('whatsapp_click', { link_url: href, page_url: location.href });
+      } else if (href.indexOf('tel:') === 0) {
+        push('phone_click', { link_url: href });
+      } else if (href.indexOf('mailto:') === 0) {
+        push('email_click', { link_url: href });
+      } else if (/\.pdf($|\?)/i.test(href)) {
+        push('brochure_download', { link_url: href });
+      }
+    },
+    true
+  );
+})();
