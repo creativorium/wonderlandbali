@@ -43,7 +43,23 @@ done
 # Off by default: this overwrites whatever is in the database, so it should be a
 # deliberate choice rather than a side effect of every code deploy.
 if [ "$SYNC_CONTENT" = "true" ]; then
+	# Pages carried over from the Elementor era can still name a page template
+	# that no longer exists (elementor_header_footer). wp_update_post() warns
+	# about it and WP-CLI exits non-zero, which would abort the whole sync — so
+	# clear the stale value first. Harmless when there is nothing to clear.
+	echo "→ clearing page templates the theme no longer has"
+	wpc eval '
+		foreach ( get_posts( array( "post_type" => "page", "numberposts" => -1, "post_status" => "any" ) ) as $p ) {
+			$t = get_post_meta( $p->ID, "_wp_page_template", true );
+			if ( $t && "default" !== $t && ! locate_template( $t ) ) {
+				update_post_meta( $p->ID, "_wp_page_template", "default" );
+				echo "  reset " . $p->post_name . " (was " . $t . ")\n";
+			}
+		}
+	'
+
 	echo "→ applying page content from content/pages/"
+	failed=0
 	for file in "$DEPLOY_PATH"/pages/*.html; do
 		[ -e "$file" ] || continue
 		slug="$(basename "$file" .html)"
@@ -55,9 +71,19 @@ if [ "$SYNC_CONTENT" = "true" ]; then
 			continue
 		fi
 
-		wpc post update "$id" "$file" >/dev/null
-		echo "  ✓ $slug (ID $id)"
+		# One bad page should report itself, not take the deploy down with it.
+		if wpc post update "$id" "$file" >/dev/null 2>&1; then
+			echo "  ✓ $slug (ID $id)"
+		else
+			echo "  ✗ $slug (ID $id) — update failed"
+			failed=$((failed + 1))
+		fi
 	done
+
+	if [ "$failed" -gt 0 ]; then
+		echo "→ $failed page(s) failed to update"
+		exit 1
+	fi
 else
 	echo "→ skipping content sync (SYNC_CONTENT=$SYNC_CONTENT)"
 fi
