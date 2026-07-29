@@ -1,0 +1,94 @@
+@use 'tokens';
+
+/* ---------------------------------------------------------------------------
+   Floating WhatsApp CTA.
+
+   The radar pulse is two rings expanding out of the button on a long, offset
+   loop — present enough to catch the eye on a still page, slow enough not to
+   nag. It is decorative, so it stops entirely under prefers-reduced-motion.
+--------------------------------------------------------------------------- */
+
+.wl-wa {
+	position: fixed;
+	z-index: 250; // under the off-canvas menu (300), over page content
+	right: clamp(1rem, 3vw, 2rem);
+	bottom: clamp(1rem, 3vw, 2rem);
+	width: 56px;
+	height: 56px;
+	display: grid;
+	place-items: center;
+	border-radius: 50%;
+	background: #25d366; // WhatsApp brand green — recognised at a glance
+	color: #fff;
+	text-decoration: none;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		transform: translateY(-2px) scale(1.04);
+		box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+		color: #fff;
+	}
+
+	&:focus-visible {
+		outline: 3px solid var(--wl-ink, #000);
+		outline-offset: 3px;
+	}
+
+	&__icon {
+		position: relative;
+		z-index: 1;
+		display: block;
+		width: 30px;
+		height: 30px;
+
+		svg { width: 100%; height: 100%; display: block; }
+	}
+
+	/* ---------- Radar ---------- */
+	&__radar {
+		position: absolute;
+		inset: 0;
+		border-radius: 50%;
+		border: 2px solid #25d366;
+		opacity: 0;
+		pointer-events: none;
+		animation: wl-wa-radar 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+	}
+
+	// The second ring trails the first, so it reads as a sweep rather than a blink.
+	&__radar--2 { animation-delay: 1.4s; }
+}
+
+@keyframes wl-wa-radar {
+	0% {
+		transform: scale(1);
+		opacity: 0.55;
+	}
+	70% {
+		opacity: 0;
+	}
+	100% {
+		transform: scale(2.1);
+		opacity: 0;
+	}
+}
+
+/* Give the ring room on small screens, where the button sits near the edge. */
+@media (max-width: 600px) {
+	.wl-wa {
+		width: 52px;
+		height: 52px;
+
+		&__icon { width: 27px; height: 27px; }
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wl-wa__radar { animation: none; display: none; }
+	.wl-wa { transition: none; }
+
+	.wl-wa:hover,
+	.wl-wa:focus-visible { transform: none; }
+}

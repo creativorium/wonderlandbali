@@ -3,6 +3,7 @@
 @use 'footer';
 @use '404' as error404;
 @use 'blog';
+@use 'whatsapp';
 // Note: @font-face lives in /assets/fonts/fonts.css (enqueued separately) so the
 // .ttf files stay as cacheable external files instead of being inlined by Vite.
 

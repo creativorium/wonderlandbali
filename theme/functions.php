@@ -17,3 +17,4 @@ require_once WONDERLAND_DIR . '/inc/setup.php';
 require_once WONDERLAND_DIR . '/inc/enqueue.php';
 require_once WONDERLAND_DIR . '/inc/redirects.php';
 require_once WONDERLAND_DIR . '/inc/login.php';
+require_once WONDERLAND_DIR . '/inc/contact-cta.php';
