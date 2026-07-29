@@ -1,0 +1,113 @@
+name: Deploy
+
+# Builds the Vite bundles and ships the theme + blocks plugin to the server over
+# SSH, then optionally re-applies page content from content/pages/.
+#
+# Why a build step: theme/build and plugin/build are gitignored, so a plain
+# checkout has no CSS or JS at all. They are produced here and rsynced with the
+# rest of the code.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        type: choice
+        options: [staging, production]
+        default: staging
+      sync_content:
+        description: 'Re-apply page content from content/pages/ (overwrites edits made in wp-admin)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment || 'staging' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Fail if the build produced nothing
+        run: |
+          test -s theme/build/main.css   || { echo "theme/build/main.css missing"; exit 1; }
+          test -s theme/build/login.css  || { echo "theme/build/login.css missing"; exit 1; }
+          test -s plugin/build/frontend.css || { echo "plugin/build/frontend.css missing"; exit 1; }
+          test -s plugin/build/editor.js || { echo "plugin/build/editor.js missing"; exit 1; }
+
+      - name: Open the SSH connection
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Trust the host
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ vars.SSH_PORT || 22 }}" -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      # The theme needs its PHP, assets and build output. src/ is build-time only.
+      - name: Upload the theme
+        run: |
+          rsync -az --delete \
+            -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
+            --exclude '.git*' --exclude 'src/' --exclude 'node_modules/' \
+            theme/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.WP_PATH }}/wp-content/themes/wonderland/"
+
+      # The plugin needs src/ at runtime: inc/registration.php scans
+      # src/blocks/*/block.json and each block's render.php. Do not exclude it.
+      - name: Upload the blocks plugin
+        run: |
+          rsync -az --delete \
+            -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
+            --exclude '.git*' --exclude 'node_modules/' \
+            plugin/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.WP_PATH }}/wp-content/plugins/wonderland-blocks/"
+
+      - name: Upload the maintenance plugin
+        run: |
+          rsync -az --delete \
+            -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
+            --exclude '.git*' \
+            plugin-maintenance/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.WP_PATH }}/wp-content/plugins/wonderland-maintenance/"
+
+      - name: Upload the content records and deploy script
+        run: |
+          rsync -az \
+            -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
+            content/ scripts/ \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.DEPLOY_PATH }}/"
+
+      - name: Activate, sync content, purge cache
+        run: |
+          ssh -p "${{ vars.SSH_PORT || 22 }}" \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+            "WP_PATH='${{ vars.WP_PATH }}' \
+             DEPLOY_PATH='${{ vars.DEPLOY_PATH }}' \
+             SYNC_CONTENT='${{ inputs.sync_content || 'false' }}' \
+             bash '${{ vars.DEPLOY_PATH }}/post-deploy.sh'"
+
+      - name: Check the site still renders
+        run: |
+          url="${{ vars.SITE_URL }}"
+          body=$(curl -fsSL --retry 3 --retry-delay 5 "$url")
+          echo "$body" | grep -q 'wl-' \
+            || { echo "No Wonderland block markup on $url — is the plugin active?"; exit 1; }
+          echo "OK: $url renders block markup"
