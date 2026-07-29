@@ -134,12 +134,22 @@ jobs:
         run: |
           # Accept it as either a variable or a secret — it is only a public URL,
           # but it is easy to add under the wrong tab.
-          url="${{ vars.SITE_URL }}"
-          [ -n "$url" ] || url="${{ secrets.SITE_URL }}"
-          if [ -z "$url" ]; then
-            echo "::error::SITE_URL is not set. Add it under Settings → Secrets and variables → Actions (Variables tab), e.g. https://example.com/path/"
-            exit 1
-          fi
+          raw="${{ vars.SITE_URL }}"
+          [ -n "$raw" ] || raw="${{ secrets.SITE_URL }}"
+
+          # A pasted value often arrives with a trailing newline, or wrapped in
+          # quotes. curl rejects either as a malformed URL, so trim them here.
+          url=$(printf '%s' "$raw" | tr -d '\r\n' | sed -e 's/^[[:space:]"'"'"']*//' -e 's/[[:space:]"'"'"']*$//')
+
+          case "$url" in
+            https://*|http://*) ;;
+            "")
+              echo "::error::SITE_URL is not set. Add it under Settings → Secrets and variables → Actions (Variables tab), e.g. https://example.com/path/"
+              exit 1 ;;
+            *)
+              echo "::error::SITE_URL must begin with http:// or https:// — got ${#url} characters that do not. Check for stray quotes or spaces."
+              exit 1 ;;
+          esac
 
           body=$(curl -fsSL --retry 3 --retry-delay 5 "$url")
           echo "$body" | grep -q 'wl-' \
