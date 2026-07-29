@@ -1,6 +1,15 @@
 // Wonderland Follow / Instagram — giant title + FOLLOW NOW overlapping a
 // full-bleed row of Instagram posts (placeholder images until the feed is wired).
 
+// When a cream section runs straight into this one, the white strip behind the
+// title reads as a stray gap between the two. Carry the colour through instead —
+// the photo row below covers the rest, so only the title band changes.
+.wl-features.is-greige + .wl-follow,
+.wl-packages.is-greige + .wl-follow,
+.wl-showcase.is-greige + .wl-follow {
+	background: var(--wl-greige, #e3deda);
+}
+
 .wl-follow {
 	background: #fff;
 	color: var(--wl-ink, #000);
