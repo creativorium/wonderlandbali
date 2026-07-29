@@ -47,11 +47,14 @@
 		& + & { margin-top: clamp(2.5rem, 5vw, 4rem); }
 	}
 
-	// Copy is flush right so name, price and inclusions line up against the photo.
+	// Left-aligned. This column used to be flush right so the prices lined up
+	// against the photograph — with the rates off the page there is nothing to
+	// line up, and right-ragged inclusions read as a mistake beside a
+	// left-aligned heading.
 	&__copy {
 		flex: 1 1 22rem;
 		min-width: 0;
-		text-align: right;
+		text-align: left;
 	}
 
 	&__figure {
