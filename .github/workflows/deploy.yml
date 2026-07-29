@@ -68,7 +68,7 @@ jobs:
             -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
             --exclude '.git*' --exclude 'src/' --exclude 'node_modules/' \
             theme/ \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.WP_PATH }}/wp-content/themes/wonderland/"
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WP_PATH }}/wp-content/themes/wonderland/"
 
       # The plugin needs src/ at runtime: inc/registration.php scans
       # src/blocks/*/block.json and each block's render.php. Do not exclude it.
@@ -78,7 +78,7 @@ jobs:
             -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
             --exclude '.git*' --exclude 'node_modules/' \
             plugin/ \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.WP_PATH }}/wp-content/plugins/wonderland-blocks/"
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WP_PATH }}/wp-content/plugins/wonderland-blocks/"
 
       - name: Upload the maintenance plugin
         run: |
@@ -86,23 +86,23 @@ jobs:
             -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
             --exclude '.git*' \
             plugin-maintenance/ \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.WP_PATH }}/wp-content/plugins/wonderland-maintenance/"
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.WP_PATH }}/wp-content/plugins/wonderland-maintenance/"
 
       - name: Upload the content records and deploy script
         run: |
           rsync -az \
             -e "ssh -p ${{ vars.SSH_PORT || 22 }}" \
             content/ scripts/ \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.DEPLOY_PATH }}/"
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/"
 
       - name: Activate, sync content, purge cache
         run: |
           ssh -p "${{ vars.SSH_PORT || 22 }}" \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
-            "WP_PATH='${{ vars.WP_PATH }}' \
-             DEPLOY_PATH='${{ vars.DEPLOY_PATH }}' \
+            "WP_PATH='${{ secrets.WP_PATH }}' \
+             DEPLOY_PATH='${{ secrets.DEPLOY_PATH }}' \
              SYNC_CONTENT='${{ inputs.sync_content || 'false' }}' \
-             bash '${{ vars.DEPLOY_PATH }}/post-deploy.sh'"
+             bash '${{ secrets.DEPLOY_PATH }}/post-deploy.sh'"
 
       - name: Check the site still renders
         run: |
