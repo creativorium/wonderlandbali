@@ -68,6 +68,32 @@ if ( ! function_exists( 'wonderland_attachment_id_from_url' ) ) {
 			$id      = (int) attachment_url_to_postid( $flipped );
 		}
 
+		// Last resort: match on the filename without its extension.
+		//
+		// attachment_url_to_postid() compares against `_wp_attached_file`, which
+		// changes extension when an image is regenerated in another format —
+		// WebP conversion repoints it from `photo.jpg` to `photo.webp`. Block
+		// content still holds the URL as it was authored, so an exact match
+		// misses and the image would fall back to an unsized <img>.
+		if ( ! $id ) {
+			global $wpdb;
+
+			$path = wp_parse_url( $absolute, PHP_URL_PATH );
+			$stem = $path ? pathinfo( $path, PATHINFO_FILENAME ) : '';
+
+			if ( $stem ) {
+				$id = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT post_id FROM {$wpdb->postmeta}
+						 WHERE meta_key = '_wp_attached_file'
+						   AND meta_value LIKE %s
+						 LIMIT 1",
+						'%/' . $wpdb->esc_like( $stem ) . '.%'
+					)
+				);
+			}
+		}
+
 		wp_cache_set( $key, $id, 'wonderland', DAY_IN_SECONDS );
 		$memo[ $url ] = $id;
 
