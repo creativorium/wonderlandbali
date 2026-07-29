@@ -132,7 +132,15 @@ jobs:
 
       - name: Check the site still renders
         run: |
+          # Accept it as either a variable or a secret — it is only a public URL,
+          # but it is easy to add under the wrong tab.
           url="${{ vars.SITE_URL }}"
+          [ -n "$url" ] || url="${{ secrets.SITE_URL }}"
+          if [ -z "$url" ]; then
+            echo "::error::SITE_URL is not set. Add it under Settings → Secrets and variables → Actions (Variables tab), e.g. https://example.com/path/"
+            exit 1
+          fi
+
           body=$(curl -fsSL --retry 3 --retry-delay 5 "$url")
           echo "$body" | grep -q 'wl-' \
             || { echo "No Wonderland block markup on $url — is the plugin active?"; exit 1; }
