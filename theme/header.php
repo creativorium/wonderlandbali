@@ -50,6 +50,11 @@ $logo_uri     = WONDERLAND_URI . '/assets/img/logo.svg';
 			</nav>
 		<?php endif; ?>
 
+		<button class="site-header__toggle<?php echo $inline_nav ? ' is-compact' : ''; ?>" id="menu-toggle" aria-expanded="false" aria-controls="menu-overlay">
+			<span class="site-header__toggle-label"><?php esc_html_e( 'Menu', 'wonderland' ); ?></span>
+			<span class="site-header__burger" aria-hidden="true"><span></span><span></span><span></span></span>
+		</button>
+
 		<?php
 		// The primary action stays in reach on every page and at every scroll
 		// position: after the last nav item on the service pages, and beside the
@@ -61,11 +66,6 @@ $logo_uri     = WONDERLAND_URI . '/assets/img/logo.svg';
 				<?php esc_html_e( 'Enquire', 'wonderland' ); ?>
 			</a>
 		<?php endif; ?>
-
-		<button class="site-header__toggle<?php echo $inline_nav ? ' is-compact' : ''; ?>" id="menu-toggle" aria-expanded="false" aria-controls="menu-overlay">
-			<span class="site-header__toggle-label"><?php esc_html_e( 'Menu', 'wonderland' ); ?></span>
-			<span class="site-header__burger" aria-hidden="true"><span></span><span></span><span></span></span>
-		</button>
 	</div>
 </header>
 

@@ -37,6 +37,7 @@
 	&__toggle {
 		display: inline-flex;
 		align-items: center;
+		margin-left: auto; // pushes itself and the Enquire button to the right
 		gap: 0.7rem;
 		// The label is only ~16px tall on its own; the block padding lifts the
 		// hit area to a comfortable touch target without moving the label.
@@ -69,6 +70,12 @@
 	&--transparent {
 		background: transparent;
 		color: #fff;
+
+		// White controls over an unknown photograph: on a pale sky the Menu
+		// label all but disappears. The hero title already carries a shadow for
+		// the same reason; the controls need one too.
+		.site-header__toggle { text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55); }
+		.site-header__burger span { box-shadow: 0 1px 8px rgba(0, 0, 0, 0.45); }
 
 		.site-header__logo {
 			height: clamp(84px, 9vw, 120px); // oversized on load
@@ -366,20 +373,21 @@ body.wl-inline-nav .site-main { padding-top: 0; }
 /* ---------------------------------------------------------------------------
    Header "Enquire" button.
 
-   The primary action, kept within reach at every scroll position. Sits after
-   the last nav item on the service pages (inline nav) and beside the Menu
-   button everywhere else.
+   The primary action, kept within reach at every scroll position. Sits to the
+   right of the Menu control, and after the last nav item on the service pages.
+   Solid ink with white text in every header state — it is the one thing on the
+   bar that should read as a button rather than a link.
 --------------------------------------------------------------------------- */
 .site-header__cta {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	min-height: 44px;
-	margin-left: auto;
-	margin-right: clamp(0.75rem, 2vw, 1.5rem);
-	padding: 0.6rem 1.4rem;
-	border: 1px solid currentColor;
-	color: inherit;
+	margin-left: clamp(0.75rem, 2vw, 1.5rem);
+	padding: 0.6rem 1.5rem;
+	border: 1px solid var(--wl-ink, #000);
+	background: var(--wl-ink, #000);
+	color: #fff;
 	font-family: var(--wl-font-label, sans-serif);
 	font-weight: 500;
 	font-size: 0.72rem;
@@ -391,50 +399,59 @@ body.wl-inline-nav .site-main { padding-top: 0; }
 
 	&:hover,
 	&:focus-visible {
-		background: currentColor;
-		border-color: currentColor;
+		background: transparent;
+		color: var(--wl-ink, #000);
 	}
 
-	// `currentColor` on both fill and text would be invisible, so the label
-	// flips to the header's own background at hover time.
-	&:hover span,
-	&:focus-visible span { color: inherit; }
+	&:focus-visible {
+		outline: 2px solid var(--wl-ink, #000);
+		outline-offset: 2px;
+	}
 }
 
-/* Over the hero the header is transparent: a solid fill reads better there. */
+/* Over the hero there is no light background to invert into, so the hover state
+   goes white-on-ink rather than transparent. */
 .site-header--transparent .site-header__cta {
-	border-color: rgba(255, 255, 255, 0.85);
-	color: #fff;
+	border-color: #fff;
 
 	&:hover,
 	&:focus-visible {
 		background: #fff;
 		color: var(--wl-ink, #000);
 	}
+
+	&:focus-visible { outline-color: #fff; }
 }
-
-/* Solid header (inner pages, and the front page once scrolled). */
-.site-header--solid .site-header__cta,
-.site-header.is-scrolled .site-header__cta,
-.site-header--inline .site-header__cta {
-	border-color: var(--wl-ink, #000);
-	color: var(--wl-ink, #000);
-
-	&:hover,
-	&:focus-visible {
-		background: var(--wl-ink, #000);
-		color: #fff;
-	}
-}
-
-/* The inline nav already pushes right, so the button follows the last item
-   rather than claiming the free space itself. */
-.site-header--inline .site-header__cta { margin-left: clamp(1rem, 2.5vw, 2rem); }
 
 @media (max-width: 560px) {
 	.site-header__cta {
-		padding: 0.5rem 0.9rem;
+		padding: 0.5rem 1rem;
 		font-size: 0.65rem;
 		letter-spacing: 0.12em;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+   Phones: Enquire in the middle, Menu on the right.
+
+   The bar has three children (brand, Menu, Enquire) and `space-between`, so
+   dropping the auto margins is enough to spread them evenly — `order` then puts
+   Enquire between the two without changing the DOM, which keeps the tab order
+   sensible on desktop.
+--------------------------------------------------------------------------- */
+@media (max-width: 700px) {
+	.site-header__inner {
+		gap: 0.75rem;
+		padding-inline: clamp(1rem, 5vw, 1.75rem);
+	}
+
+	.site-header__cta {
+		order: 1;
+		margin-left: 0;
+	}
+
+	.site-header__toggle {
+		order: 2;
+		margin-left: 0;
 	}
 }
