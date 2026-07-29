@@ -77,7 +77,7 @@ $mark_svg = '<svg viewBox="0 0 582.892 582.893" fill="currentColor" aria-hidden=
 							$srcset = $att_id ? wp_get_attachment_image_srcset( $att_id, 'full' ) : '';
 							?>
 							<img class="js-slide-img" alt="" decoding="async"
-								data-src="<?php echo esc_url( $url ); ?>"
+								data-src="<?php echo esc_url( wonderland_media_url( $url ) ); ?>"
 								<?php echo $srcset ? 'data-srcset="' . esc_attr( $srcset ) . '" data-sizes="100vw"' : ''; ?> />
 						<?php endif; ?>
 					</div>
@@ -124,6 +124,6 @@ $mark_svg = '<svg viewBox="0 0 582.892 582.893" fill="currentColor" aria-hidden=
 	</div>
 
 	<?php if ( $badge_url ) : ?>
-		<img class="wl-hero__badge" src="<?php echo esc_url( $badge_url ); ?>" alt="<?php esc_attr_e( 'Award badge', 'wonderland-blocks' ); ?>" loading="lazy" decoding="async" />
+		<img class="wl-hero__badge" src="<?php echo esc_url( wonderland_media_url( $badge_url ) ); ?>" alt="<?php esc_attr_e( 'Award badge', 'wonderland-blocks' ); ?>" loading="lazy" decoding="async" />
 	<?php endif; ?>
 </section>

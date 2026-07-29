@@ -68,12 +68,12 @@ if ( 'split' === $layout ) :
 	$t_bottom = $attributes['titleBottom'] ?? '';
 	$img_pos  = $attributes['imagePosition'] ?? 'center';
 	$wrapper  = get_block_wrapper_attributes( array( 'class' => 'wl-page-hero wl-page-hero--split' ) );
-	$media_style = $bg_url ? ' style="background-image:url(' . esc_url( $bg_url ) . ');background-position:' . esc_attr( $img_pos ) . '"' : '';
+	$media_style = $bg_url ? ' style="background-image:url(' . esc_url( wonderland_bg_url( $bg_url ) ) . ');background-position:' . esc_attr( $img_pos ) . '"' : '';
 	?>
 	<section <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 		<div class="wl-page-hero__media"<?php echo $media_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 			<?php if ( $badge ) : ?>
-				<img class="wl-page-hero__badge" src="<?php echo esc_url( $badge ); ?>" alt="" loading="lazy" decoding="async" />
+				<img class="wl-page-hero__badge" src="<?php echo esc_url( wonderland_media_url( $badge ) ); ?>" alt="" loading="lazy" decoding="async" />
 			<?php endif; ?>
 		</div>
 		<?php $single = ( '' === trim( (string) $t_top ) || '' === trim( (string) $t_bottom ) ); ?>
@@ -94,7 +94,7 @@ $height  = ( $attributes['height'] ?? 'short' ) === 'tall' ? 'wl-page-hero--tall
 $classes = 'wl-page-hero ' . $height . ( $bg_url ? ' has-bg' : '' );
 $args    = array( 'class' => $classes );
 if ( $bg_url ) {
-	$args['style'] = 'background-image:url(' . esc_url( $bg_url ) . ');';
+	$args['style'] = 'background-image:url(' . esc_url( wonderland_bg_url( $bg_url ) ) . ');';
 }
 $wrapper = get_block_wrapper_attributes( $args );
 ?>

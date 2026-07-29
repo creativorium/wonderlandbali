@@ -54,7 +54,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-services' ) );
 									// the browser fetch the whole file on load, which on a
 									// decorative loop is the single heaviest thing on the page.
 									?>
-									<video muted loop playsinline preload="none" data-lazy-video="<?php echo esc_url( $video ); ?>"<?php echo $img ? ' poster="' . esc_url( $img ) . '"' : ''; ?>></video>
+									<video muted loop playsinline preload="none" data-lazy-video="<?php echo esc_url( wonderland_media_url( $video ) ); ?>"<?php echo $img ? ' poster="' . esc_url( wonderland_media_url( $img ) ) . '"' : ''; ?>></video>
 								<?php elseif ( $img ) : ?>
 									<?php
 									// Through the helper so the browser gets srcset/sizes and

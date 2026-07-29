@@ -39,7 +39,7 @@ $figure = function ( $img, $sizes ) {
 	echo '<figure class="wl-showcase__figure">';
 	echo function_exists( 'wonderland_image' )
 		? wonderland_image( $url, array( 'size' => 'large', 'sizes' => $sizes ) ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		: '<img src="' . esc_url( $url ) . '" alt="" loading="lazy" decoding="async" />';
+		: '<img src="' . esc_url( wonderland_media_url( $url ) ) . '" alt="" loading="lazy" decoding="async" />';
 	echo '</figure>';
 };
 ?>

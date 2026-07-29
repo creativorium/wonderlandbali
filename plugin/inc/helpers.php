@@ -22,6 +22,31 @@ if ( ! function_exists( 'wonderland_mark_svg' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wonderland_media_url' ) ) {
+	/**
+	 * Make a stored media URL safe to output anywhere.
+	 *
+	 * Block content holds root-relative URLs (`/wp-content/uploads/…`) so the
+	 * markup is portable between environments and never hard-codes a hostname.
+	 * A browser resolves those against the domain root, which is correct when
+	 * WordPress is installed at the root — and wrong when it lives in a
+	 * subdirectory (`example.com/wonderland/`), where every one 404s. Rebasing
+	 * onto content_url() gives the right path in both cases.
+	 *
+	 * @param string $url Stored URL, root-relative or absolute.
+	 * @return string
+	 */
+	function wonderland_media_url( $url ) {
+		$url = (string) $url;
+
+		if ( 0 !== strpos( $url, '/wp-content/' ) ) {
+			return $url; // absolute, or not ours to touch
+		}
+
+		return content_url( substr( $url, strlen( '/wp-content' ) ) );
+	}
+}
+
 if ( ! function_exists( 'wonderland_attachment_id_from_url' ) ) {
 	/**
 	 * Resolve an uploads URL to its attachment ID.
@@ -120,7 +145,7 @@ if ( ! function_exists( 'wonderland_bg_url' ) ) {
 		}
 		$id = wonderland_attachment_id_from_url( $url );
 		if ( ! $id ) {
-			return $url;
+			return wonderland_media_url( $url );
 		}
 		$sized = wp_get_attachment_image_url( $id, $size );
 		return $sized ? $sized : $url;
@@ -200,7 +225,7 @@ if ( ! function_exists( 'wonderland_image' ) ) {
 			$attr['alt'] = '';
 		}
 
-		$out = '<img src="' . esc_url( $url ) . '"';
+		$out = '<img src="' . esc_url( wonderland_media_url( $url ) ) . '"';
 		foreach ( $attr as $k => $v ) {
 			$out .= ' ' . esc_attr( $k ) . '="' . esc_attr( $v ) . '"';
 		}

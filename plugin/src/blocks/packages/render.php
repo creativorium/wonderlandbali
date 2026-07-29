@@ -72,7 +72,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-packages ' . $bg 
 						<?php
 						echo function_exists( 'wonderland_image' )
 							? wonderland_image( $image, array( 'size' => 'large', 'sizes' => '(max-width: 900px) 100vw, 40vw' ) ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							: '<img src="' . esc_url( $image ) . '" alt="" loading="lazy" decoding="async" />';
+							: '<img src="' . esc_url( wonderland_media_url( $image ) ) . '" alt="" loading="lazy" decoding="async" />';
 						?>
 					</figure>
 				<?php endif; ?>
