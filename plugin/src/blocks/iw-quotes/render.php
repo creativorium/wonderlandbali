@@ -13,6 +13,8 @@ $eyebrow = $attributes['eyebrow'] ?? '';
 $heading = $attributes['heading'] ?? '';
 $cols    = isset( $attributes['columns'] ) ? max( 1, min( 4, (int) $attributes['columns'] ) ) : 3;
 $items   = isset( $attributes['items'] ) && is_array( $attributes['items'] ) ? $attributes['items'] : array();
+$src_txt = trim( (string) ( $attributes['sourceText'] ?? '' ) );
+$src_url = trim( (string) ( $attributes['sourceUrl'] ?? '' ) );
 
 if ( ! $items ) {
 	return;
@@ -62,5 +64,18 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-iw-quotes' ) );
 				</figure>
 			<?php endforeach; ?>
 		</div>
+
+		<?php if ( $src_txt ) : ?>
+			<?php // Credit for quotes carried over from a publication. ?>
+			<p class="wl-iw-quotes__source">
+				<?php if ( $src_url ) : ?>
+					<a href="<?php echo esc_url( $src_url ); ?>" target="_blank" rel="noopener">
+						<?php echo esc_html( $src_txt ); ?>
+					</a>
+				<?php else : ?>
+					<?php echo esc_html( $src_txt ); ?>
+				<?php endif; ?>
+			</p>
+		<?php endif; ?>
 	</div>
 </section>

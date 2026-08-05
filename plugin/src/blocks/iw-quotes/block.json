@@ -13,7 +13,9 @@
 		"eyebrow": { "type": "string", "default": "" },
 		"heading": { "type": "string", "default": "" },
 		"columns": { "type": "number", "default": 3 },
-		"items": { "type": "array", "default": [] }
+		"items": { "type": "array", "default": [] },
+		"sourceText": { "type": "string", "default": "" },
+		"sourceUrl": { "type": "string", "default": "" }
 	},
 	"render": "file:./render.php"
 }

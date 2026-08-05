@@ -16,7 +16,7 @@ $items   = isset( $attributes['items'] ) && is_array( $attributes['items'] ) ? $
 $cols    = isset( $attributes['columns'] ) ? max( 1, min( 4, (int) $attributes['columns'] ) ) : 2;
 $bg      = ( $attributes['background'] ?? 'white' ) === 'greige' ? 'is-greige' : 'is-white';
 $variant = $attributes['variant'] ?? '';
-$variant = in_array( $variant, array( 'list', 'stats', 'links' ), true ) ? $variant : 'cards';
+$variant = in_array( $variant, array( 'list', 'stats', 'links', 'quotes' ), true ) ? $variant : 'cards';
 $intro   = $attributes['intro'] ?? '';
 $marker  = ( 'ring' === ( $attributes['marker'] ?? '' ) ) ? 'has-ring' : 'has-dot';
 
@@ -55,6 +55,25 @@ $wrapper = get_block_wrapper_attributes(
 					</li>
 				<?php endforeach; ?>
 			</ul>
+		<?php elseif ( 'quotes' === $variant ) : ?>
+			<?php // Pull-quotes: the words lead, the attribution follows. ?>
+			<div class="wl-features__quotes" style="--wl-cols:<?php echo esc_attr( (string) $cols ); ?>">
+				<?php foreach ( $items as $item ) : ?>
+					<?php
+					$who   = trim( (string) ( $item['title'] ?? '' ) );
+					$quote = trim( (string) ( $item['text'] ?? '' ) );
+					if ( '' === $quote ) {
+						continue;
+					}
+					?>
+					<figure class="wl-features__quote">
+						<blockquote><?php echo wp_kses_post( $quote ); ?></blockquote>
+						<?php if ( $who ) : ?>
+							<figcaption><?php echo wp_kses_post( $who ); ?></figcaption>
+						<?php endif; ?>
+					</figure>
+				<?php endforeach; ?>
+			</div>
 		<?php elseif ( 'links' === $variant ) : ?>
 			<?php // Cross-links: the whole card is the link, so the target is easy to hit. ?>
 			<div class="wl-features__links" style="--wl-cols:<?php echo esc_attr( (string) $cols ); ?>">

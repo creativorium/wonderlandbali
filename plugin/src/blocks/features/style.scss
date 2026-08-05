@@ -263,3 +263,57 @@
 		.wl-features__links { grid-template-columns: 1fr; }
 	}
 }
+
+/* ---------------------------------------------------------------------------
+   Quotes variant — pull-quote cards.
+
+   For quoting couples or press: the words carry the card, attribution sits
+   beneath in the brand's serif italic.
+--------------------------------------------------------------------------- */
+.wl-features--quotes {
+	.wl-features__quotes {
+		max-width: var(--wl-content-max, 1200px);
+		margin-inline: auto;
+		display: grid;
+		grid-template-columns: repeat(var(--wl-cols, 3), 1fr);
+		gap: clamp(1rem, 2vw, 1.75rem);
+		align-items: start;
+	}
+
+	.wl-features__quote {
+		margin: 0;
+		padding: clamp(1.5rem, 2.6vw, 2.1rem);
+		background: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+
+		blockquote {
+			margin: 0;
+			font-family: var(--wl-font-body, sans-serif);
+			font-size: 0.95rem;
+			line-height: 1.75;
+			color: rgba(0, 0, 0, 0.78);
+		}
+
+		figcaption {
+			margin-top: 1.1rem;
+			font-family: var(--wl-font-head, serif);
+			font-style: italic;
+			font-size: 1.02rem;
+			color: var(--wl-coral, #efa58f);
+		}
+	}
+
+	// On greige the hairline disappears; lift the cards with a shadow instead.
+	&.is-greige .wl-features__quote {
+		border-color: transparent;
+		box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+	}
+
+	@media (max-width: 900px) {
+		.wl-features__quotes { grid-template-columns: 1fr 1fr; }
+	}
+
+	@media (max-width: 600px) {
+		.wl-features__quotes { grid-template-columns: 1fr; }
+	}
+}
