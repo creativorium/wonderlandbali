@@ -61,7 +61,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-iw-gallery ' . $b
 
 		<?php if ( $btn_text && $btn_url ) : ?>
 			<div class="wl-iw-gallery__more">
-				<a class="wl-iw-gallery__btn" href="<?php echo esc_url( $btn_url ); ?>"><?php echo esc_html( $btn_text ); ?></a>
+				<a class="wl-iw-gallery__btn" href="<?php echo esc_url( wonderland_link_url( $btn_url ) ); ?>"><?php echo esc_html( $btn_text ); ?></a>
 			</div>
 		<?php endif; ?>
 	</div>

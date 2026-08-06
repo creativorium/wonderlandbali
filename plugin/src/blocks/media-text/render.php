@@ -44,7 +44,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => "wl-mt $pos $bg" ) );
 				<div class="wl-mt__text"><?php echo wp_kses_post( wpautop( $text ) ); ?></div>
 			<?php endif; ?>
 			<?php if ( $btn_text && $btn_url ) : ?>
-				<a class="wl-mt__cta" href="<?php echo esc_url( $btn_url ); ?>"><?php echo esc_html( $btn_text ); ?></a>
+				<a class="wl-mt__cta" href="<?php echo esc_url( wonderland_link_url( $btn_url ) ); ?>"><?php echo esc_html( $btn_text ); ?></a>
 			<?php endif; ?>
 		</div>
 	</div>

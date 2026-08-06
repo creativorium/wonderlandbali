@@ -33,7 +33,7 @@ $wrapper = get_block_wrapper_attributes( $args );
 			<div class="wl-cta__text"><?php echo wp_kses_post( wpautop( $text ) ); ?></div>
 		<?php endif; ?>
 		<?php if ( $btn_text ) : ?>
-			<a class="wl-cta__btn" href="<?php echo esc_url( $btn_url ); ?>"<?php echo $new_tab ? ' target="_blank" rel="noopener"' : ''; ?>>
+			<a class="wl-cta__btn" href="<?php echo esc_url( wonderland_link_url( $btn_url ) ); ?>"<?php echo $new_tab ? ' target="_blank" rel="noopener"' : ''; ?>>
 				<?php echo ( 'plain' !== $variant && function_exists( 'wonderland_mark_svg' ) ) ? wonderland_mark_svg( 'wl-cta__mark' ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<span><?php echo esc_html( $btn_text ); ?></span>
 			</a>

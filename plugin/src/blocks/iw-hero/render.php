@@ -64,7 +64,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-iw-hero' . ( $bg_
 					$ghost = ( 'ghost' === ( $btn['style'] ?? '' ) ) ? ' is-ghost' : '';
 					$blank = ! empty( $btn['newTab'] );
 					?>
-					<a class="wl-iw-hero__btn<?php echo esc_attr( $ghost ); ?>" href="<?php echo esc_url( $b_url ); ?>"<?php echo $blank ? ' target="_blank" rel="noopener"' : ''; ?>>
+					<a class="wl-iw-hero__btn<?php echo esc_attr( $ghost ); ?>" href="<?php echo esc_url( wonderland_link_url( $b_url ) ); ?>"<?php echo $blank ? ' target="_blank" rel="noopener"' : ''; ?>>
 						<?php echo esc_html( $b_text ); ?>
 					</a>
 				<?php endforeach; ?>

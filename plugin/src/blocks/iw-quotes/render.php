@@ -105,7 +105,7 @@ $wrapper = get_block_wrapper_attributes(
 				<p class="wl-iw-quotes__source-text">
 					<span class="wl-iw-quotes__source-stars" aria-hidden="true">★★★★★</span>
 					<?php if ( $src_url ) : ?>
-						<a href="<?php echo esc_url( $src_url ); ?>" target="_blank" rel="noopener">
+						<a href="<?php echo esc_url( wonderland_link_url( $src_url ) ); ?>" target="_blank" rel="noopener">
 							<?php echo esc_html( $src_txt ); ?>
 						</a>
 					<?php else : ?>

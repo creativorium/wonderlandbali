@@ -23,7 +23,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-follow' ) );
 			<h2 class="wl-follow__title"><?php echo wp_kses_post( $heading ); ?></h2>
 		<?php endif; ?>
 		<?php if ( $btn_text ) : ?>
-			<a class="wl-follow__btn" href="<?php echo esc_url( $btn_url ); ?>" target="_blank" rel="noopener">
+			<a class="wl-follow__btn" href="<?php echo esc_url( wonderland_link_url( $btn_url ) ); ?>" target="_blank" rel="noopener">
 				<?php echo $ig_icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<span><?php echo esc_html( $btn_text ); ?></span>
 			</a>
@@ -39,7 +39,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-follow' ) );
 					continue;
 				}
 				?>
-				<a class="wl-follow__item" href="<?php echo esc_url( $btn_url ); ?>" target="_blank" rel="noopener">
+				<a class="wl-follow__item" href="<?php echo esc_url( wonderland_link_url( $btn_url ) ); ?>" target="_blank" rel="noopener">
 					<?php
 					// Placeholder tiles are decorative — the feed itself carries the
 					// meaning — but they still deserve a right-sized file.

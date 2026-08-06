@@ -75,7 +75,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-iw-packages ' . $
 					<?php endif; ?>
 
 					<?php if ( $bt && $bu ) : ?>
-						<a class="wl-iw-packages__btn" href="<?php echo esc_url( $bu ); ?>">
+						<a class="wl-iw-packages__btn" href="<?php echo esc_url( wonderland_link_url( $bu ) ); ?>">
 							<?php echo esc_html( $bt ); ?>
 							<span class="screen-reader-text"><?php echo esc_html( ' — ' . $name ); ?></span>
 						</a>

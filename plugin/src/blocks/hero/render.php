@@ -99,7 +99,7 @@ $mark_svg = '<svg viewBox="0 0 582.892 582.893" fill="currentColor" aria-hidden=
 				}
 				?>
 				<?php if ( $i > 0 ) : ?><span class="wl-hero__side-sep" aria-hidden="true">|</span><?php endif; ?>
-				<a class="wl-hero__side-link" href="<?php echo esc_url( $lu ); ?>"><?php echo esc_html( $lt ); ?></a>
+				<a class="wl-hero__side-link" href="<?php echo esc_url( wonderland_link_url( $lu ) ); ?>"><?php echo esc_html( $lt ); ?></a>
 			<?php endforeach; ?>
 		</div>
 	<?php elseif ( $side_text ) : ?>
@@ -116,7 +116,7 @@ $mark_svg = '<svg viewBox="0 0 582.892 582.893" fill="currentColor" aria-hidden=
 		<?php endif; ?>
 
 		<?php if ( $btn_text ) : ?>
-			<a class="wl-hero__cta" href="<?php echo esc_url( $btn_url ); ?>">
+			<a class="wl-hero__cta" href="<?php echo esc_url( wonderland_link_url( $btn_url ) ); ?>">
 				<?php echo $mark_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<span><?php echo esc_html( $btn_text ); ?></span>
 			</a>

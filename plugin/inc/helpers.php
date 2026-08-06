@@ -47,6 +47,42 @@ if ( ! function_exists( 'wonderland_media_url' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wonderland_link_url' ) ) {
+	/**
+	 * Make a stored link URL safe to output anywhere.
+	 *
+	 * The link counterpart to wonderland_media_url(). Content stores internal
+	 * links root-relative (`/request/`) so nothing hard-codes a hostname, but a
+	 * browser resolves those against the domain root — so on a subdirectory
+	 * install (`example.com/wonderland/`) every internal link 404s. home_url()
+	 * rebases onto whatever the site's base actually is, and is a no-op at root.
+	 *
+	 * Anything not starting with a single slash is left alone: absolute URLs,
+	 * protocol-relative, `#anchors`, `mailto:` and `tel:`.
+	 *
+	 * @param string $url Stored URL.
+	 * @return string
+	 */
+	function wonderland_link_url( $url ) {
+		$url = (string) $url;
+
+		if ( '' === $url || '/' !== $url[0] ) {
+			return $url; // absolute, anchor, mailto:, tel:, or already relative
+		}
+
+		if ( isset( $url[1] ) && '/' === $url[1] ) {
+			return $url; // protocol-relative //cdn.example.com/…
+		}
+
+		// Uploads and other wp-content paths have their own base.
+		if ( 0 === strpos( $url, '/wp-content/' ) ) {
+			return wonderland_media_url( $url );
+		}
+
+		return home_url( $url );
+	}
+}
+
 if ( ! function_exists( 'wonderland_attachment_id_from_url' ) ) {
 	/**
 	 * Resolve an uploads URL to its attachment ID.

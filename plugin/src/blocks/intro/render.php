@@ -44,7 +44,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-intro' ) );
 					<div class="wl-intro__text"><?php echo wp_kses_post( wpautop( $text ) ); ?></div>
 				<?php endif; ?>
 				<?php if ( $btn_text ) : ?>
-					<a class="wl-intro__cta" href="<?php echo esc_url( $btn_url ); ?>"><?php echo esc_html( $btn_text ); ?></a>
+					<a class="wl-intro__cta" href="<?php echo esc_url( wonderland_link_url( $btn_url ) ); ?>"><?php echo esc_html( $btn_text ); ?></a>
 				<?php endif; ?>
 			</div>
 		</div>

@@ -90,8 +90,8 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-contact wl-contac
 
 			<?php if ( $ig || $fb || $wa ) : ?>
 				<div class="wl-contact__social">
-					<?php if ( $ig ) : ?><a href="<?php echo esc_url( $ig ); ?>" target="_blank" rel="noopener"><?php echo $icon( 'instagram' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span>Instagram</span></a><?php endif; ?>
-					<?php if ( $fb ) : ?><a href="<?php echo esc_url( $fb ); ?>" target="_blank" rel="noopener"><?php echo $icon( 'facebook' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span>Facebook</span></a><?php endif; ?>
+					<?php if ( $ig ) : ?><a href="<?php echo esc_url( wonderland_link_url( $ig ) ); ?>" target="_blank" rel="noopener"><?php echo $icon( 'instagram' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span>Instagram</span></a><?php endif; ?>
+					<?php if ( $fb ) : ?><a href="<?php echo esc_url( wonderland_link_url( $fb ) ); ?>" target="_blank" rel="noopener"><?php echo $icon( 'facebook' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span>Facebook</span></a><?php endif; ?>
 					<?php if ( $wa ) : ?><a href="https://wa.me/<?php echo esc_attr( preg_replace( '/\D/', '', $wa ) ); ?>" target="_blank" rel="noopener"><?php echo $icon( 'whatsapp' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span>WhatsApp</span></a><?php endif; ?>
 				</div>
 			<?php endif; ?>

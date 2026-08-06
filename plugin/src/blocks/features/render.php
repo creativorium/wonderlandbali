@@ -122,7 +122,7 @@ $wrapper = get_block_wrapper_attributes(
 					$rating = isset( $item['rating'] ) ? max( 0, min( 5, (int) $item['rating'] ) ) : 0;
 					$badge  = trim( (string) ( $item['badge'] ?? '' ) );
 					?>
-					<a class="wl-features__link" href="<?php echo esc_url( $url ); ?>">
+					<a class="wl-features__link" href="<?php echo esc_url( wonderland_link_url( $url ) ); ?>">
 						<?php if ( $rating || $badge ) : ?>
 							<?php // Small signal that what follows is a review, not a page. ?>
 							<span class="wl-features__link-meta">

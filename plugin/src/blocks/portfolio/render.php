@@ -92,7 +92,7 @@ $grid_style = '--wl-cols:' . $columns . ';--wl-gap:' . $gap . 'px;';
 						$hidden = $reveal && $item['index'] >= $initial;
 						?>
 						<?php // --i restores the original sequence once the column wrappers step aside on small screens. ?>
-						<a class="wl-portfolio__item<?php echo $hidden ? ' is-hidden' : ''; ?>" href="<?php echo esc_url( $href ); ?>" data-i="<?php echo esc_attr( (string) $item['index'] ); ?>" style="--i:<?php echo esc_attr( (string) $item['index'] ); ?>"<?php echo $lightbox ? ' data-lb' : ''; ?><?php echo $hidden ? ' hidden aria-hidden="true" tabindex="-1"' : ''; ?>>
+						<a class="wl-portfolio__item<?php echo $hidden ? ' is-hidden' : ''; ?>" href="<?php echo esc_url( wonderland_link_url( $href ) ); ?>" data-i="<?php echo esc_attr( (string) $item['index'] ); ?>" style="--i:<?php echo esc_attr( (string) $item['index'] ); ?>"<?php echo $lightbox ? ' data-lb' : ''; ?><?php echo $hidden ? ' hidden aria-hidden="true" tabindex="-1"' : ''; ?>>
 							<?php
 							echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								$item['url'],
@@ -132,7 +132,7 @@ $grid_style = '--wl-cols:' . $columns . ';--wl-gap:' . $gap . 'px;';
 
 	<?php if ( $btn_text ) : ?>
 		<div class="wl-portfolio__more">
-			<a class="wl-portfolio__btn" href="<?php echo esc_url( $btn_url ); ?>">
+			<a class="wl-portfolio__btn" href="<?php echo esc_url( wonderland_link_url( $btn_url ) ); ?>">
 				<span><?php echo esc_html( $btn_text ); ?></span>
 				<svg class="wl-portfolio__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
 			</a>

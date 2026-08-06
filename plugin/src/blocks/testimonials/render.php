@@ -50,7 +50,7 @@ $rabbit_svg = function_exists( 'wonderland_mark_svg' ) ? wonderland_mark_svg( 'w
 			<blockquote class="wl-testi__item js-testi-item<?php echo 0 === $i ? ' is-active' : ''; ?>">
 				<?php if ( $name ) : ?><p class="wl-testi__name"><?php echo wp_kses_post( $name ); ?></p><?php endif; ?>
 				<?php if ( $quote ) : ?><div class="wl-testi__quote"><?php echo wp_kses_post( $quote ); ?></div><?php endif; ?>
-				<?php if ( $bt && $bu ) : ?><a class="wl-testi__btn" href="<?php echo esc_url( $bu ); ?>"><?php echo $rabbit_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php echo esc_html( $bt ); ?></span></a><?php endif; ?>
+				<?php if ( $bt && $bu ) : ?><a class="wl-testi__btn" href="<?php echo esc_url( wonderland_link_url( $bu ) ); ?>"><?php echo $rabbit_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><span><?php echo esc_html( $bt ); ?></span></a><?php endif; ?>
 			</blockquote>
 		<?php endforeach; ?>
 	</div>

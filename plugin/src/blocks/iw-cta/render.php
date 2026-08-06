@@ -36,7 +36,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-iw-cta ' . $bg ) 
 					$ghost = ( 'ghost' === ( $btn['style'] ?? '' ) ) ? ' is-ghost' : '';
 					$blank = ! empty( $btn['newTab'] );
 					?>
-					<a class="wl-iw-cta__btn<?php echo esc_attr( $ghost ); ?>" href="<?php echo esc_url( $b_url ); ?>"<?php echo $blank ? ' target="_blank" rel="noopener"' : ''; ?>>
+					<a class="wl-iw-cta__btn<?php echo esc_attr( $ghost ); ?>" href="<?php echo esc_url( wonderland_link_url( $b_url ) ); ?>"<?php echo $blank ? ' target="_blank" rel="noopener"' : ''; ?>>
 						<?php echo function_exists( 'wonderland_mark_svg' ) ? wonderland_mark_svg( 'wl-iw-cta__mark' ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						<span><?php echo esc_html( $b_text ); ?></span>
 					</a>

@@ -68,7 +68,7 @@ $figure = function ( $img, $sizes ) {
 
 			<?php if ( $btn_text && $btn_url ) : ?>
 				<div class="wl-showcase__cta">
-					<a class="wl-showcase__btn" href="<?php echo esc_url( $btn_url ); ?>"><?php echo esc_html( $btn_text ); ?></a>
+					<a class="wl-showcase__btn" href="<?php echo esc_url( wonderland_link_url( $btn_url ) ); ?>"><?php echo esc_html( $btn_text ); ?></a>
 				</div>
 			<?php endif; ?>
 		</div>

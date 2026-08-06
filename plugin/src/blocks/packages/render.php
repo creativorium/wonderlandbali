@@ -81,7 +81,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-packages ' . $bg 
 
 		<?php if ( $btn_text && $btn_url ) : ?>
 			<div class="wl-packages__cta">
-				<a class="wl-packages__btn" href="<?php echo esc_url( $btn_url ); ?>" download>
+				<a class="wl-packages__btn" href="<?php echo esc_url( wonderland_link_url( $btn_url ) ); ?>" download>
 					<?php echo esc_html( $btn_text ); ?>
 				</a>
 			</div>

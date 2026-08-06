@@ -46,7 +46,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-services' ) );
 						$video = $item['video'] ?? '';
 						?>
 						<article class="wl-services__card">
-							<a class="wl-services__media" href="<?php echo esc_url( $url ); ?>">
+							<a class="wl-services__media" href="<?php echo esc_url( wonderland_link_url( $url ) ); ?>">
 								<?php if ( $video ) : ?>
 									<?php
 									// The source is withheld until the card scrolls into view
@@ -76,7 +76,7 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-services' ) );
 							<div class="wl-services__body">
 								<?php if ( $title ) : ?><h3 class="wl-services__name"><?php echo wp_kses_post( $title ); ?></h3><?php endif; ?>
 								<?php if ( $text ) : ?><p class="wl-services__text"><?php echo wp_kses_post( $text ); ?></p><?php endif; ?>
-								<?php if ( $btn && $url ) : ?><a class="wl-services__cta" href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $btn ); ?></a><?php endif; ?>
+								<?php if ( $btn && $url ) : ?><a class="wl-services__cta" href="<?php echo esc_url( wonderland_link_url( $url ) ); ?>"><?php echo esc_html( $btn ); ?></a><?php endif; ?>
 							</div>
 						</article>
 					<?php endforeach; ?>
