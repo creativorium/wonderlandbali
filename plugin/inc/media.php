@@ -61,3 +61,18 @@ add_filter(
 	10,
 	2
 );
+
+/**
+ * Stop WordPress prepending "auto," to our sizes attributes.
+ *
+ * `sizes="auto"` resolves to the element's rendered *width*. Our cards crop
+ * landscape photographs into tall frames with object-fit: cover, so a candidate
+ * chosen on width alone then gets scaled up two or three times and looks soft —
+ * the home page's service tiles were picking a 768px file for a 726x1246 box.
+ *
+ * Every image we emit passes a considered `sizes` value, so that value should
+ * stand. Note WordPress adds "auto," in two places: wp_get_attachment_image()
+ * and again when post-processing the_content, which is why this is a global
+ * filter rather than something wrapped around the helper.
+ */
+add_filter( 'wp_img_tag_add_auto_sizes', '__return_false' );

@@ -14,7 +14,8 @@
 $heading = $attributes['heading'] ?? '';
 $items   = isset( $attributes['items'] ) && is_array( $attributes['items'] ) ? $attributes['items'] : array();
 $cols    = isset( $attributes['columns'] ) ? max( 1, min( 4, (int) $attributes['columns'] ) ) : 2;
-$bg      = ( $attributes['background'] ?? 'white' ) === 'greige' ? 'is-greige' : 'is-white';
+$bg      = $attributes['background'] ?? 'white';
+$bg      = in_array( $bg, array( 'greige', 'taupe' ), true ) ? 'is-' . $bg : 'is-white';
 $variant = $attributes['variant'] ?? '';
 $variant = in_array( $variant, array( 'list', 'stats', 'links', 'quotes' ), true ) ? $variant : 'cards';
 $intro   = $attributes['intro'] ?? '';

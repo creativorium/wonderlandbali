@@ -275,12 +275,55 @@ function initLazyVideo() {
 	videos.forEach( ( v ) => io.observe( v ) );
 }
 
+
+/**
+ * Review slider: arrows nudge a snap-scrolling row.
+ *
+ * The scrolling itself is native, so touch swiping and keyboard scrolling come
+ * for free and the row still works with this script absent. The arrows only
+ * call scrollBy and reflect whether there is anything further to see.
+ */
+function initQuoteSliders() {
+	document.querySelectorAll( '[data-quotes]' ).forEach( ( root ) => {
+		const track = root.querySelector( '.wl-iw-quotes__track' );
+		const prev = root.querySelector( '[data-quotes-prev]' );
+		const next = root.querySelector( '[data-quotes-next]' );
+		if ( ! track || ! prev || ! next ) {
+			return;
+		}
+
+		// One card plus its gap — reading it from the DOM keeps this in step
+		// with whatever the CSS decides at this breakpoint.
+		const step = () => {
+			const card = track.querySelector( '.wl-iw-quotes__item' );
+			if ( ! card ) {
+				return track.clientWidth;
+			}
+			const gap = parseFloat( getComputedStyle( track ).columnGap || '0' ) || 0;
+			return card.getBoundingClientRect().width + gap;
+		};
+
+		const sync = () => {
+			const max = track.scrollWidth - track.clientWidth;
+			prev.disabled = track.scrollLeft < 4;
+			next.disabled = track.scrollLeft > max - 4;
+		};
+
+		prev.addEventListener( 'click', () => track.scrollBy( { left: -step(), behavior: 'smooth' } ) );
+		next.addEventListener( 'click', () => track.scrollBy( { left: step(), behavior: 'smooth' } ) );
+		track.addEventListener( 'scroll', sync, { passive: true } );
+		window.addEventListener( 'resize', sync );
+		sync();
+	} );
+}
+
 function initAll() {
 	initSlideshows();
 	initTestimonials();
 	initLightbox();
 	initReveal();
 	initLazyVideo();
+	initQuoteSliders();
 }
 
 if ( document.readyState !== 'loading' ) {

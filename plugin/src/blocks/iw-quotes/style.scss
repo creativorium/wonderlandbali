@@ -1,4 +1,4 @@
-// Indian Weddings — review cards on a dark band.
+// Indian Weddings — review cards on a dark band, as a snap-scrolling row.
 
 @use '../iw' as iw;
 
@@ -16,15 +16,47 @@
 		color: #fff;
 	}
 
-	&__grid {
+	&__intro {
+		margin: 1.25rem 0 0;
+		max-width: 68ch;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.98rem;
+		line-height: 1.75;
+		color: rgba(255, 255, 255, 0.72);
+	}
+
+	/* ---------- Slider ---------- */
+	&__slider {
+		position: relative;
 		margin-top: clamp(2rem, 4vw, 3rem);
-		display: grid;
-		grid-template-columns: repeat(var(--wl-cols, 3), 1fr);
+	}
+
+	// Native scrolling with snap points: swipes on touch, and the arrows only
+	// need to call scrollBy. No slider library, and it degrades to a plain
+	// scrollable row without JavaScript.
+	&__track {
+		display: flex;
+		align-items: stretch; // every card takes the tallest card's height
 		gap: clamp(1.25rem, 2vw, 1.75rem);
-		align-items: start;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scroll-behavior: smooth;
+		scrollbar-width: none;
+		// Room for the cards' focus ring, and so the last card can sit flush.
+		padding-block: 2px;
+
+		&::-webkit-scrollbar { display: none; }
 	}
 
 	&__item {
+		// Its own containing block: the visually-hidden rating text is absolutely
+		// positioned, and without this it resolves against the slider instead —
+		// escaping the scroll container and stretching the whole document.
+		position: relative;
+		flex: 0 0 calc((100% - (var(--wl-cols, 3) - 1) * clamp(1.25rem, 2vw, 1.75rem)) / var(--wl-cols, 3));
+		scroll-snap-align: start;
+		display: flex;
+		flex-direction: column;
 		margin: 0;
 		padding: clamp(1.5rem, 2.4vw, 1.9rem);
 		border: 1px solid rgba(255, 255, 255, 0.18);
@@ -44,35 +76,101 @@
 	}
 
 	&__name {
-		margin-top: 1.25rem;
+		// Pinned to the foot so the attributions line up across cards.
+		margin-top: auto;
+		padding-top: 1.25rem;
 		font-family: var(--wl-font-head, serif);
 		font-style: italic;
 		font-size: 1.05rem;
 		color: var(--wl-coral, #efa58f);
 	}
 
+	&__arrow {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		z-index: 2;
+		width: 44px;
+		height: 44px;
+		display: grid;
+		place-items: center;
+		border: 1px solid rgba(255, 255, 255, 0.35);
+		border-radius: 50%;
+		background: rgba(0, 0, 0, 0.65);
+		color: #fff;
+		font-size: 1.6rem;
+		line-height: 1;
+		cursor: pointer;
+		transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+
+		&:hover,
+		&:focus-visible {
+			background: #fff;
+			border-color: #fff;
+			color: var(--wl-ink, #000);
+		}
+
+		// Set by the slider script when there is nothing further that way.
+		&[disabled] {
+			opacity: 0.25;
+			cursor: default;
+			pointer-events: none;
+		}
+
+		&--prev { left: clamp(-0.5rem, -1vw, 0rem); }
+		&--next { right: clamp(-0.5rem, -1vw, 0rem); }
+	}
+
+	/* ---------- Source credit ---------- */
+	&__source {
+		display: flex;
+		align-items: center;
+		gap: 0.9rem;
+		margin-top: clamp(1.75rem, 3vw, 2.5rem);
+		padding-top: clamp(1.25rem, 2.5vw, 1.75rem);
+		border-top: 1px solid rgba(255, 255, 255, 0.15);
+	}
+
+	&__source-badge {
+		flex: none;
+		width: 52px;
+		height: auto;
+	}
+
+	&__source-stars {
+		display: block;
+		font-size: 0.8rem;
+		letter-spacing: 0.2em;
+		color: var(--wl-coral, #efa58f);
+	}
+
+	&__source-text {
+		margin: 0;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.72rem;
+		letter-spacing: 0.12em;
+		line-height: 1.7;
+		color: rgba(255, 255, 255, 0.6);
+
+		a {
+			color: inherit;
+			text-decoration: underline;
+			text-underline-offset: 0.25em;
+
+			&:hover { color: var(--wl-coral, #efa58f); }
+		}
+	}
+
 	@media (max-width: 1000px) {
-		&__grid { grid-template-columns: repeat(min(var(--wl-cols, 3), 2), 1fr); }
+		&__item { flex-basis: calc((100% - clamp(1.25rem, 2vw, 1.75rem)) / 2); }
 	}
 
 	@media (max-width: 700px) {
-		&__grid { grid-template-columns: 1fr; }
+		&__item { flex-basis: 100%; }
+		&__arrow { display: none; } // swiping is the obvious gesture here
 	}
-}
 
-/* Source credit for quotes carried over from a publication. */
-.wl-iw-quotes__source {
-	margin: clamp(1.75rem, 3vw, 2.5rem) 0 0;
-	font-family: var(--wl-font-label, sans-serif);
-	font-size: 0.72rem;
-	letter-spacing: 0.14em;
-	color: rgba(255, 255, 255, 0.55);
-
-	a {
-		color: inherit;
-		text-decoration: underline;
-		text-underline-offset: 0.25em;
-
-		&:hover { color: var(--wl-coral, #efa58f); }
+	@media (prefers-reduced-motion: reduce) {
+		&__track { scroll-behavior: auto; }
 	}
 }

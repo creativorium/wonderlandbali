@@ -6,16 +6,54 @@
 	"category": "wonderland",
 	"icon": "format-quote",
 	"description": "Indian Weddings reviews: three rated quote cards on a dark band.",
-	"keywords": [ "indian", "reviews", "quotes", "testimonials", "wonderland" ],
+	"keywords": [
+		"indian",
+		"reviews",
+		"quotes",
+		"testimonials",
+		"wonderland"
+	],
 	"textdomain": "wonderland-blocks",
-	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"supports": {
+		"html": false,
+		"anchor": true,
+		"align": [
+			"full"
+		]
+	},
 	"attributes": {
-		"eyebrow": { "type": "string", "default": "" },
-		"heading": { "type": "string", "default": "" },
-		"columns": { "type": "number", "default": 3 },
-		"items": { "type": "array", "default": [] },
-		"sourceText": { "type": "string", "default": "" },
-		"sourceUrl": { "type": "string", "default": "" }
+		"eyebrow": {
+			"type": "string",
+			"default": ""
+		},
+		"heading": {
+			"type": "string",
+			"default": ""
+		},
+		"columns": {
+			"type": "number",
+			"default": 3
+		},
+		"items": {
+			"type": "array",
+			"default": []
+		},
+		"sourceText": {
+			"type": "string",
+			"default": ""
+		},
+		"sourceUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"intro": {
+			"type": "string",
+			"default": ""
+		},
+		"sourceBadge": {
+			"type": "string",
+			"default": ""
+		}
 	},
 	"render": "file:./render.php"
 }

@@ -317,3 +317,9 @@
 		.wl-features__quotes { grid-template-columns: 1fr; }
 	}
 }
+
+/* Taupe, so a band can sit flush against the services section — its giant
+   title straddles upward, and a colour change mid-straddle reads as a seam. */
+.wl-features.is-taupe { background: var(--wl-taupe, #c5b7b3); }
+.wl-features.is-taupe .wl-features__link { border-color: transparent; }
+.wl-features.is-taupe .wl-features__stat-label { color: rgba(0, 0, 0, 0.7); }

@@ -64,7 +64,10 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-services' ) );
 										array(
 											'alt'   => wp_strip_all_tags( $title ),
 											'size'  => 'large',
-											'sizes' => '(max-width: 900px) 100vw, 50vw',
+											// The card crops a landscape photograph into a tall frame, so the
+											// file has to cover roughly 1.5x the box's width in height. Asking
+											// for the box width alone picks a candidate that then upscales.
+											'sizes' => '(max-width: 900px) 150vw, 75vw',
 										)
 									);
 									?>

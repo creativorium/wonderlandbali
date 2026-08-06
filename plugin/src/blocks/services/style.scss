@@ -135,3 +135,17 @@
 		margin-top: calc(clamp(-4rem, -14vw, -7rem) + 40px);
 	}
 }
+
+/* The straddle assumes the section above ends in something the title can sit
+   over — a photo band or a slider. A card row does not qualify: the title lands
+   across the cards. Where one precedes this block, the row keeps enough bottom
+   padding for the overlap to fall on empty colour instead. */
+.wl-features:has(+ .wl-services) {
+	padding-bottom: clamp(9rem, 12vw, 14rem);
+}
+
+@media (max-width: 560px) {
+	.wl-features:has(+ .wl-services) {
+		padding-bottom: clamp(5rem, 15vw, 8rem);
+	}
+}
