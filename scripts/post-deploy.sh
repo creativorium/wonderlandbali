@@ -93,6 +93,27 @@ if [ "$SYNC_CONTENT" = "true" ]; then
 		echo "→ $failed page(s) failed to update"
 		exit 1
 	fi
+
+	# Yoast keeps the title and description in postmeta, which a page created by
+	# the loop above does not have — so it would render with a slug-derived title
+	# and no description. Only the slugs listed in seo.tsv are touched.
+	if [ -f "$DEPLOY_PATH/seo.tsv" ]; then
+		echo "→ applying SEO titles and descriptions"
+		while IFS="$(printf '\t')" read -r slug title desc; do
+			# Skip comments and blank lines.
+			case "$slug" in '' | '#'*) continue ;; esac
+
+			id="$(wpc post list --post_type=page --post_status=any --name="$slug" --field=ID | head -n1)"
+			if [ -z "$id" ]; then
+				echo "  · no page '$slug' — skipped"
+				continue
+			fi
+
+			wpc post meta update "$id" _yoast_wpseo_title "$title" >/dev/null
+			wpc post meta update "$id" _yoast_wpseo_metadesc "$desc" >/dev/null
+			echo "  ✓ $slug"
+		done < "$DEPLOY_PATH/seo.tsv"
+	fi
 else
 	echo "→ skipping content sync (SYNC_CONTENT=$SYNC_CONTENT)"
 fi

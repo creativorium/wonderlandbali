@@ -1,0 +1,25 @@
+# Per-page SEO title and meta description, applied by scripts/post-deploy.sh
+# during a content sync. Yoast keeps these in postmeta, so a page created on a
+# fresh environment has none — its browser title falls back to the slug and no
+# description is emitted at all, which is how /as-featured/ shipped bare.
+#
+# Exported from the local site, which is where this copy is written. Editing a
+# description in wp-admin on a server will be overwritten by the next sync;
+# change it here instead.
+#
+# Tab-separated: slug<TAB>title<TAB>description
+# Only the slugs listed here are touched; anything else keeps what it has.
+about-us	About Us — Bali Wedding Planners | Wonderland Bali Events	Meet the team behind Wonderland Bali Events — fifteen years of planning and styling weddings and celebrations across Bali, Portugal and Italy.
+as-featured	As Featured In — Honeycombers Bali | Wonderland Bali Events	Honeycombers Bali interviewed our founder about planning Indian weddings in Bali. Read what the couples said, and the full feature.
+blog	Journal — Real Weddings & News | Wonderland Bali Events	Stories, real weddings and celebrations from Wonderland Bali Events — our work across Bali, Portugal and Italy.
+contact	Contact — Bali Wedding Planner | Wonderland Bali Events	Talk to Wonderland Bali Events about your wedding or event in Bali, Portugal or Italy. Email, WhatsApp or send us a message — we reply within 24 hours.
+decoration	Wedding Decoration & Styling in Bali | Wonderland Bali Events	Bespoke wedding and event decoration in Bali — moodboards, colour palettes, florals, tablescapes and full installation by our in-house styling team.
+elopement	Elopement Weddings in Bali | Wonderland Bali Events	Intimate elopement weddings in Bali: clifftop and beachfront ceremonies, celebrant, florals, photography and styling arranged from start to finish.
+events-planning-styling	Event Planning & Styling in Bali | Wonderland Bali Events	Birthdays, anniversaries and corporate celebrations in Bali, planned and styled end to end by Wonderland Bali Events — design, vendors and on-the-day crew.
+home	Bali Wedding Planner & Stylist | Wonderland Bali Events	Award-winning wedding and event planning in Bali, Portugal and Italy. Full planning, styling, florals and on-the-day management by Wonderland Bali Events.
+indian-weddings	Indian Weddings in Bali | Wonderland Bali Events	Multi-day Indian weddings in Bali, from Haldi to reception. Trusted Indian caterers, venues for Baraat and fire ceremonies, guest logistics handled.
+italy	Destination Weddings in Italy | Wonderland Bali Events	Destination wedding planning and styling in Italy by Wonderland Bali Events — venues, design, florals, vendors and full on-the-day coordination.
+portfolio	Portfolio — Real Weddings in Bali | Wonderland Bali Events	A gallery of real weddings and events styled by Wonderland Bali Events: clifftop ceremonies, jungle receptions, florals, tablescapes and editorial detail.
+portugal	Elopement Weddings in Portugal | Wonderland Bali Events	Elope at Praia da Ursa or Cabo da Roca. Wonderland Bali Events handles permits, styling, florals and photography for your Portugal elopement.
+request	Make a Request — Get Your Quote | Wonderland Bali Events	Tell us your date, region, guest count and budget, and Wonderland Bali Events will come back with a tailored plan and price within 24 hours.
+weddings-planning-styling	Wedding Planning & Styling in Bali | Wonderland Bali Events	Full-service wedding planning and styling in Bali: venue sourcing, design and florals, vendor management and complete day-of coordination.
