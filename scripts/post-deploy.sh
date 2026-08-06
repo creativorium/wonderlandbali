@@ -66,9 +66,18 @@ if [ "$SYNC_CONTENT" = "true" ]; then
 
 		# home.html is the front page, whose slug is 'home'.
 		id="$(wpc post list --post_type=page --post_status=any --name="$slug" --field=ID | head -n1)"
+
+		# A page in content/pages that the target does not have yet is a new page,
+		# not a mistake — create it rather than silently skipping. Title is derived
+		# from the slug; rename it in wp-admin if the wording matters.
 		if [ -z "$id" ]; then
-			echo "  ! no page with slug '$slug' — skipped"
-			continue
+			title="$(echo "$slug" | tr '-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')"
+			id="$(wpc post create --post_type=page --post_status=publish 				--post_name="$slug" --post_title="$title" --porcelain)"
+			if [ -z "$id" ]; then
+				echo "  ! could not create '$slug' — skipped"
+				continue
+			fi
+			echo "  + created $slug (ID $id)"
 		fi
 
 		# One bad page should report itself, not take the deploy down with it.
