@@ -22,9 +22,13 @@ on:
         type: boolean
         default: false
 
+# One deploy at a time, and always the newest. A superseded run is cancelled
+# rather than queued: every run rsyncs the whole tree, so a later one makes an
+# earlier one redundant, and a run that cannot get a runner should never be able
+# to block the queue behind it.
 concurrency:
   group: deploy-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
