@@ -72,7 +72,7 @@ if [ "$SYNC_CONTENT" = "true" ]; then
 		# from the slug; rename it in wp-admin if the wording matters.
 		if [ -z "$id" ]; then
 			title="$(echo "$slug" | tr '-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')"
-			id="$(wpc post create --post_type=page --post_status=publish 				--post_name="$slug" --post_title="$title" --porcelain)"
+			id="$(wpc post create --post_type=page --post_status=publish --post_name="$slug" --post_title="$title" --porcelain)"
 			if [ -z "$id" ]; then
 				echo "  ! could not create '$slug' — skipped"
 				continue
