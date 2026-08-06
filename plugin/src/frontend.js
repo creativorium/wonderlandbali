@@ -277,43 +277,120 @@ function initLazyVideo() {
 
 
 /**
- * Review slider: arrows nudge a snap-scrolling row.
+ * Review sliders: a snap-scrolling row with arrows, dots and optional autoplay.
  *
  * The scrolling itself is native, so touch swiping and keyboard scrolling come
- * for free and the row still works with this script absent. The arrows only
- * call scrollBy and reflect whether there is anything further to see.
+ * for free and the row still reads as a plain scrollable list with this script
+ * absent. Hooks are data attributes rather than block classes, so the same code
+ * drives the Indian page's reviews and the press page's pull-quotes.
  */
 function initQuoteSliders() {
 	document.querySelectorAll( '[data-quotes]' ).forEach( ( root ) => {
-		const track = root.querySelector( '.wl-iw-quotes__track' );
-		const prev = root.querySelector( '[data-quotes-prev]' );
-		const next = root.querySelector( '[data-quotes-next]' );
-		if ( ! track || ! prev || ! next ) {
+		const track = root.querySelector( '[data-quotes-track]' );
+		if ( ! track ) {
 			return;
 		}
 
-		// One card plus its gap — reading it from the DOM keeps this in step
-		// with whatever the CSS decides at this breakpoint.
+		const items = Array.from( track.querySelectorAll( '[data-quotes-item]' ) );
+		const prev = root.querySelector( '[data-quotes-prev]' );
+		const next = root.querySelector( '[data-quotes-next]' );
+		const dots = root.querySelector( '[data-quotes-dots]' );
+		if ( items.length < 2 ) {
+			return;
+		}
+
+		// One card plus its gap, read from the DOM so this stays in step with
+		// whatever the CSS decides at the current breakpoint.
 		const step = () => {
-			const card = track.querySelector( '.wl-iw-quotes__item' );
-			if ( ! card ) {
-				return track.clientWidth;
-			}
 			const gap = parseFloat( getComputedStyle( track ).columnGap || '0' ) || 0;
-			return card.getBoundingClientRect().width + gap;
+			return items[ 0 ].getBoundingClientRect().width + gap;
+		};
+
+		// How many fit at once — the dots count pages, not cards.
+		const perView = () => Math.max( 1, Math.round( track.clientWidth / step() ) );
+		const pages = () => Math.max( 1, Math.ceil( items.length / perView() ) );
+		const page = () => Math.round( track.scrollLeft / ( step() * perView() ) );
+
+		let buttons = [];
+		const buildDots = () => {
+			if ( ! dots ) {
+				return;
+			}
+			const total = pages();
+			if ( buttons.length === total ) {
+				return;
+			}
+			dots.textContent = '';
+			buttons = [];
+			for ( let i = 0; i < total; i++ ) {
+				const b = document.createElement( 'button' );
+				b.type = 'button';
+				b.className = 'wl-quotes-dot';
+				b.setAttribute( 'aria-label', 'Reviews ' + ( i + 1 ) + ' of ' + total );
+				b.addEventListener( 'click', () => {
+					stop();
+					track.scrollTo( { left: i * step() * perView(), behavior: 'smooth' } );
+				} );
+				dots.appendChild( b );
+				buttons.push( b );
+			}
 		};
 
 		const sync = () => {
 			const max = track.scrollWidth - track.clientWidth;
-			prev.disabled = track.scrollLeft < 4;
-			next.disabled = track.scrollLeft > max - 4;
+			if ( prev ) {
+				prev.disabled = track.scrollLeft < 4;
+			}
+			if ( next ) {
+				next.disabled = track.scrollLeft > max - 4;
+			}
+			buildDots();
+			const current = page();
+			buttons.forEach( ( b, i ) => b.setAttribute( 'aria-current', i === current ? 'true' : 'false' ) );
 		};
 
-		prev.addEventListener( 'click', () => track.scrollBy( { left: -step(), behavior: 'smooth' } ) );
-		next.addEventListener( 'click', () => track.scrollBy( { left: step(), behavior: 'smooth' } ) );
+		// Autoplay, when asked for and the visitor has not opted out of motion.
+		const delay = parseInt( root.getAttribute( 'data-quotes-autoplay' ) || '0', 10 );
+		const still = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+		let timer = null;
+
+		const advance = () => {
+			const max = track.scrollWidth - track.clientWidth;
+			if ( track.scrollLeft > max - 4 ) {
+				track.scrollTo( { left: 0, behavior: 'smooth' } );
+			} else {
+				track.scrollBy( { left: step() * perView(), behavior: 'smooth' } );
+			}
+		};
+		const start = () => {
+			if ( delay > 0 && ! still && ! timer ) {
+				timer = setInterval( advance, delay );
+			}
+		};
+		const stop = () => {
+			if ( timer ) {
+				clearInterval( timer );
+				timer = null;
+			}
+		};
+
+		if ( prev ) {
+			prev.addEventListener( 'click', () => { stop(); track.scrollBy( { left: -step() * perView(), behavior: 'smooth' } ); } );
+		}
+		if ( next ) {
+			next.addEventListener( 'click', () => { stop(); track.scrollBy( { left: step() * perView(), behavior: 'smooth' } ); } );
+		}
+
 		track.addEventListener( 'scroll', sync, { passive: true } );
 		window.addEventListener( 'resize', sync );
+
+		// Leave it alone while it is being read or touched.
+		root.addEventListener( 'pointerenter', stop );
+		root.addEventListener( 'pointerdown', stop );
+		root.addEventListener( 'focusin', stop );
+
 		sync();
+		start();
 	} );
 }
 

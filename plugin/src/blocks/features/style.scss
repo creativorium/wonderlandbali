@@ -271,16 +271,42 @@
    beneath in the brand's serif italic.
 --------------------------------------------------------------------------- */
 .wl-features--quotes {
-	.wl-features__quotes {
+	.wl-features__quotes-slider {
+		position: relative;
 		max-width: var(--wl-content-max, 1200px);
 		margin-inline: auto;
+	}
+
+	.wl-features__quotes {
 		display: grid;
 		grid-template-columns: repeat(var(--wl-cols, 3), 1fr);
 		gap: clamp(1rem, 2vw, 1.75rem);
-		align-items: start;
+		align-items: stretch; // every card takes the tallest card's height
+	}
+
+	// Past the column count the grid becomes a snap-scrolling row.
+	.is-sliding .wl-features__quotes {
+		display: flex;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scroll-behavior: smooth;
+		scrollbar-width: none;
+		padding-block: 2px;
+
+		&::-webkit-scrollbar { display: none; }
+	}
+
+	.is-sliding .wl-features__quote {
+		flex: 0 0 calc((100% - (var(--wl-cols, 3) - 1) * clamp(1rem, 2vw, 1.75rem)) / var(--wl-cols, 3));
+		scroll-snap-align: start;
 	}
 
 	.wl-features__quote {
+		// Its own containing block, so the visually-hidden rating text cannot
+		// escape the scroll container and stretch the page.
+		position: relative;
+		display: flex;
+		flex-direction: column;
 		margin: 0;
 		padding: clamp(1.5rem, 2.6vw, 2.1rem);
 		background: #fff;
@@ -295,7 +321,8 @@
 		}
 
 		figcaption {
-			margin-top: 1.1rem;
+			margin-top: auto;
+			padding-top: 1.1rem;
 			font-family: var(--wl-font-head, serif);
 			font-style: italic;
 			font-size: 1.02rem;
@@ -309,12 +336,48 @@
 		box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
 	}
 
+	.wl-features__quote-stars {
+		margin: 0 0 0.9rem;
+		font-size: 0.8rem;
+		letter-spacing: 0.2em;
+		color: var(--wl-coral, #efa58f);
+	}
+
+	.wl-features__quotes-arrow {
+		position: absolute;
+		top: calc(50% - 1.5rem);
+		transform: translateY(-50%);
+		z-index: 2;
+		width: 44px;
+		height: 44px;
+		display: grid;
+		place-items: center;
+		border: 1px solid rgba(0, 0, 0, 0.25);
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.95);
+		color: var(--wl-ink, #000);
+		font-size: 1.6rem;
+		line-height: 1;
+		cursor: pointer;
+		transition: background-color 0.2s ease, opacity 0.2s ease;
+
+		&:hover,
+		&:focus-visible { background: var(--wl-ink, #000); color: #fff; }
+		&[disabled] { opacity: 0.25; pointer-events: none; }
+
+		&.is-prev { left: clamp(-0.5rem, -1vw, 0rem); }
+		&.is-next { right: clamp(-0.5rem, -1vw, 0rem); }
+	}
+
 	@media (max-width: 900px) {
 		.wl-features__quotes { grid-template-columns: 1fr 1fr; }
+		.is-sliding .wl-features__quote { flex-basis: calc((100% - clamp(1rem, 2vw, 1.75rem)) / 2); }
 	}
 
 	@media (max-width: 600px) {
 		.wl-features__quotes { grid-template-columns: 1fr; }
+		.is-sliding .wl-features__quote { flex-basis: 100%; }
+		.wl-features__quotes-arrow { display: none; }
 	}
 }
 
@@ -323,3 +386,69 @@
 .wl-features.is-taupe { background: var(--wl-taupe, #c5b7b3); }
 .wl-features.is-taupe .wl-features__link { border-color: transparent; }
 .wl-features.is-taupe .wl-features__stat-label { color: rgba(0, 0, 0, 0.7); }
+
+/* ---------------------------------------------------------------------------
+   Slider dots — shared by the pull-quotes and the Indian page's reviews. The
+   arrows hide on a phone, so these carry the "there is more" signal.
+--------------------------------------------------------------------------- */
+.wl-quotes-dots {
+	display: flex;
+	justify-content: center;
+	gap: 0.5rem;
+	margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.wl-quotes-dot {
+	position: relative;
+	// Buttons do not inherit colour from their parent — without this,
+	// `currentColor` resolves to the UA default and the dots go black on the
+	// dark review band.
+	color: inherit;
+	width: 8px;
+	height: 8px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: currentColor;
+	opacity: 0.28;
+	cursor: pointer;
+	transition: opacity 0.2s ease, transform 0.2s ease;
+
+	// A finger-sized hit area without a finger-sized dot.
+	&::after {
+		content: '';
+		position: absolute;
+		inset: -14px;
+	}
+
+	&[aria-current='true'] {
+		opacity: 1;
+		transform: scale(1.35);
+	}
+
+	&:hover { opacity: 0.7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wl-quotes-dot { transition: none; }
+}
+
+/* ---------- Review signal on a link card ---------- */
+.wl-features__link-meta {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-bottom: 0.35rem;
+}
+
+.wl-features__link-badge {
+	width: 26px;
+	height: auto;
+	flex: none;
+}
+
+.wl-features__link-stars {
+	font-size: 0.72rem;
+	letter-spacing: 0.16em;
+	color: var(--wl-coral, #efa58f);
+}

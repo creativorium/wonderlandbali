@@ -47,8 +47,8 @@ $wrapper = get_block_wrapper_attributes(
 			<p class="wl-iw-quotes__intro"><?php echo wp_kses_post( $intro ); ?></p>
 		<?php endif; ?>
 
-		<div class="wl-iw-quotes__slider" data-quotes>
-			<div class="wl-iw-quotes__track" style="--wl-cols:<?php echo esc_attr( (string) $cols ); ?>">
+		<div class="wl-iw-quotes__slider" data-quotes data-quotes-autoplay="7000">
+			<div class="wl-iw-quotes__track" data-quotes-track style="--wl-cols:<?php echo esc_attr( (string) $cols ); ?>">
 				<?php foreach ( $items as $item ) : ?>
 					<?php
 					$quote  = trim( (string) ( $item['quote'] ?? '' ) );
@@ -58,7 +58,7 @@ $wrapper = get_block_wrapper_attributes(
 						continue;
 					}
 					?>
-					<figure class="wl-iw-quotes__item">
+					<figure class="wl-iw-quotes__item" data-quotes-item>
 						<?php if ( $rating ) : ?>
 							<p class="wl-iw-quotes__stars">
 								<span aria-hidden="true"><?php echo esc_html( str_repeat( '★', $rating ) ); ?></span>
@@ -86,6 +86,10 @@ $wrapper = get_block_wrapper_attributes(
 					data-quotes-prev aria-label="<?php esc_attr_e( 'Previous reviews', 'wonderland-blocks' ); ?>">&lsaquo;</button>
 				<button class="wl-iw-quotes__arrow wl-iw-quotes__arrow--next" type="button"
 					data-quotes-next aria-label="<?php esc_attr_e( 'More reviews', 'wonderland-blocks' ); ?>">&rsaquo;</button>
+			<?php endif; ?>
+
+			<?php if ( $sliding ) : ?>
+				<div class="wl-quotes-dots" data-quotes-dots aria-hidden="true"></div>
 			<?php endif; ?>
 		</div>
 

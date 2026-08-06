@@ -57,23 +57,54 @@ $wrapper = get_block_wrapper_attributes(
 				<?php endforeach; ?>
 			</ul>
 		<?php elseif ( 'quotes' === $variant ) : ?>
-			<?php // Pull-quotes: the words lead, the attribution follows. ?>
-			<div class="wl-features__quotes" style="--wl-cols:<?php echo esc_attr( (string) $cols ); ?>">
-				<?php foreach ( $items as $item ) : ?>
-					<?php
-					$who   = trim( (string) ( $item['title'] ?? '' ) );
-					$quote = trim( (string) ( $item['text'] ?? '' ) );
-					if ( '' === $quote ) {
-						continue;
-					}
-					?>
-					<figure class="wl-features__quote">
-						<blockquote><?php echo wp_kses_post( $quote ); ?></blockquote>
-						<?php if ( $who ) : ?>
-							<figcaption><?php echo wp_kses_post( $who ); ?></figcaption>
-						<?php endif; ?>
-					</figure>
-				<?php endforeach; ?>
+			<?php
+			// Pull-quotes: the words lead, the attribution follows. Past the column
+			// count it becomes the same snap-scrolling row as the Indian page's
+			// reviews — same hooks, same script.
+			$q_sliding = count( $items ) > $cols;
+			?>
+			<div class="wl-features__quotes-slider<?php echo $q_sliding ? ' is-sliding' : ''; ?>"
+				<?php echo $q_sliding ? 'data-quotes data-quotes-autoplay="7000"' : ''; ?>>
+				<div class="wl-features__quotes" data-quotes-track style="--wl-cols:<?php echo esc_attr( (string) $cols ); ?>">
+					<?php foreach ( $items as $item ) : ?>
+						<?php
+						$who    = trim( (string) ( $item['title'] ?? '' ) );
+						$quote  = trim( (string) ( $item['text'] ?? '' ) );
+						$rating = isset( $item['rating'] ) ? max( 0, min( 5, (int) $item['rating'] ) ) : 0;
+						if ( '' === $quote ) {
+							continue;
+						}
+						?>
+						<figure class="wl-features__quote" data-quotes-item>
+							<?php if ( $rating ) : ?>
+								<p class="wl-features__quote-stars">
+									<span aria-hidden="true"><?php echo esc_html( str_repeat( '★', $rating ) ); ?></span>
+									<span class="screen-reader-text">
+										<?php
+										printf(
+											/* translators: %d: star rating out of five. */
+											esc_html__( '%d out of 5 stars', 'wonderland-blocks' ),
+											(int) $rating
+										);
+										?>
+									</span>
+								</p>
+							<?php endif; ?>
+							<blockquote><?php echo wp_kses_post( $quote ); ?></blockquote>
+							<?php if ( $who ) : ?>
+								<figcaption><?php echo wp_kses_post( $who ); ?></figcaption>
+							<?php endif; ?>
+						</figure>
+					<?php endforeach; ?>
+				</div>
+
+				<?php if ( $q_sliding ) : ?>
+					<button class="wl-features__quotes-arrow is-prev" type="button" data-quotes-prev
+						aria-label="<?php esc_attr_e( 'Previous reviews', 'wonderland-blocks' ); ?>">&lsaquo;</button>
+					<button class="wl-features__quotes-arrow is-next" type="button" data-quotes-next
+						aria-label="<?php esc_attr_e( 'More reviews', 'wonderland-blocks' ); ?>">&rsaquo;</button>
+					<div class="wl-quotes-dots" data-quotes-dots aria-hidden="true"></div>
+				<?php endif; ?>
 			</div>
 		<?php elseif ( 'links' === $variant ) : ?>
 			<?php // Cross-links: the whole card is the link, so the target is easy to hit. ?>
@@ -87,7 +118,33 @@ $wrapper = get_block_wrapper_attributes(
 						continue;
 					}
 					?>
+					<?php
+					$rating = isset( $item['rating'] ) ? max( 0, min( 5, (int) $item['rating'] ) ) : 0;
+					$badge  = trim( (string) ( $item['badge'] ?? '' ) );
+					?>
 					<a class="wl-features__link" href="<?php echo esc_url( $url ); ?>">
+						<?php if ( $rating || $badge ) : ?>
+							<?php // Small signal that what follows is a review, not a page. ?>
+							<span class="wl-features__link-meta">
+								<?php if ( $badge ) : ?>
+									<img class="wl-features__link-badge"
+										src="<?php echo esc_url( function_exists( 'wonderland_bg_url' ) ? wonderland_bg_url( $badge, 'medium' ) : $badge ); ?>"
+										alt="" loading="lazy" decoding="async" width="28" height="28" />
+								<?php endif; ?>
+								<?php if ( $rating ) : ?>
+									<span class="wl-features__link-stars" aria-hidden="true"><?php echo esc_html( str_repeat( '★', $rating ) ); ?></span>
+									<span class="screen-reader-text">
+										<?php
+										printf(
+											/* translators: %d: star rating out of five. */
+											esc_html__( '%d out of 5 stars', 'wonderland-blocks' ),
+											(int) $rating
+										);
+										?>
+									</span>
+								<?php endif; ?>
+							</span>
+						<?php endif; ?>
 						<span class="wl-features__link-title"><?php echo wp_kses_post( $title ); ?></span>
 						<?php if ( $copy ) : ?>
 							<span class="wl-features__link-text"><?php echo wp_kses_post( $copy ); ?></span>
