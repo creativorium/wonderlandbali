@@ -71,12 +71,6 @@
 		background: transparent;
 		color: #fff;
 
-		// White controls over an unknown photograph: on a pale sky the Menu
-		// label all but disappears. The hero title already carries a shadow for
-		// the same reason; the controls need one too.
-		.site-header__toggle { text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55); }
-		.site-header__burger span { box-shadow: 0 1px 8px rgba(0, 0, 0, 0.45); }
-
 		.site-header__logo {
 			height: clamp(84px, 9vw, 120px); // oversized on load
 			filter: brightness(0) invert(1); // black SVG -> white
