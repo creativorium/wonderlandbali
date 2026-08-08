@@ -17,6 +17,7 @@ import './blocks/features/style.scss';
 import './blocks/testimonials/style.scss';
 import './blocks/showcase/style.scss';
 import './blocks/packages/style.scss';
+import './blocks/video/style.scss';
 
 // Indian Weddings — page-specific blocks, used only on /indian-weddings/.
 import './blocks/iw-hero/style.scss';
@@ -238,6 +239,13 @@ function initLazyVideo() {
 		return;
 	}
 
+	// Nothing is fetched under reduced motion. Browsers do not refuse autoplay
+	// for that preference on their own, so without this check the file would
+	// download and loop anyway.
+	if ( window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
+		return;
+	}
+
 	const start = ( video ) => {
 		if ( video.dataset.loaded ) {
 			return;
@@ -394,6 +402,45 @@ function initQuoteSliders() {
 	} );
 }
 
+/**
+ * The film block: a poster with our own play button over the native controls.
+ *
+ * The <video> ships with preload="none", so pressing play is what starts the
+ * download — the file is many times the weight of the rest of the page. The
+ * button is hidden in CSS until we add `is-ready`, because without this script
+ * it would cover the native controls and swallow the click.
+ */
+function initFilmPlayers() {
+	document.querySelectorAll( '[data-video]' ).forEach( ( frame ) => {
+		const video = frame.querySelector( '[data-video-el]' );
+		const button = frame.querySelector( '[data-video-play]' );
+		if ( ! video || ! button ) {
+			return;
+		}
+
+		frame.classList.add( 'is-ready' );
+
+		// The markup ships `controls` so the film is playable with this script
+		// absent. With it running our own button is the affordance, and the
+		// native bar would otherwise sit across the bottom of the poster.
+		video.removeAttribute( 'controls' );
+
+		button.addEventListener( 'click', () => {
+			video.setAttribute( 'controls', '' );
+			frame.classList.add( 'is-playing' );
+			const played = video.play();
+			// A refused play (data saver, an OS policy) should leave the button
+			// there to try again rather than a dead frame.
+			if ( played && played.catch ) {
+				played.catch( () => frame.classList.remove( 'is-playing' ) );
+			}
+		} );
+
+		// Put the button back when the film ends, so it reads as replayable.
+		video.addEventListener( 'ended', () => frame.classList.remove( 'is-playing' ) );
+	} );
+}
+
 function initAll() {
 	initSlideshows();
 	initTestimonials();
@@ -401,6 +448,7 @@ function initAll() {
 	initReveal();
 	initLazyVideo();
 	initQuoteSliders();
+	initFilmPlayers();
 }
 
 if ( document.readyState !== 'loading' ) {

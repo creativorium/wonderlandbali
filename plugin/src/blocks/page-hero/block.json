@@ -16,6 +16,7 @@
 		"text": { "type": "string", "default": "" },
 		"backgroundId": { "type": "number" },
 		"backgroundUrl": { "type": "string", "default": "" },
+		"videoUrl": { "type": "string", "default": "" },
 		"overlayOpacity": { "type": "number", "default": 40 },
 		"height": { "type": "string", "default": "short" },
 		"layout": { "type": "string", "default": "center" },

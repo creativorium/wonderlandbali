@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/video",
+	"title": "Wonderland Video",
+	"category": "wonderland",
+	"icon": "video-alt3",
+	"description": "A film on a poster frame. Nothing downloads until the visitor presses play.",
+	"keywords": [ "video", "film", "showreel", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"videoUrl": { "type": "string", "default": "" },
+		"posterUrl": { "type": "string", "default": "" },
+		"posterId": { "type": "number" },
+		"caption": { "type": "string", "default": "" },
+		"background": { "type": "string", "default": "ink" }
+	},
+	"render": "file:./render.php"
+}

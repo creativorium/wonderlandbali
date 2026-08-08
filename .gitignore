@@ -30,3 +30,8 @@ pnpm-debug.log*
 # Local-only docs (kept out of GitHub by request)
 /doc/
 
+# Camera masters dropped in content/ for encoding. The web-ready derivatives
+# live in theme/assets/video/ and are the ones that ship.
+/content/*.mp4
+/content/*.mov
+

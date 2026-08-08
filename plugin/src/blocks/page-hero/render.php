@@ -90,8 +90,9 @@ if ( 'split' === $layout ) :
 	return;
 endif;
 
+$video   = trim( (string) ( $attributes['videoUrl'] ?? '' ) );
 $height  = ( $attributes['height'] ?? 'short' ) === 'tall' ? 'wl-page-hero--tall' : 'wl-page-hero--short';
-$classes = 'wl-page-hero ' . $height . ( $bg_url ? ' has-bg' : '' );
+$classes = 'wl-page-hero ' . $height . ( $bg_url ? ' has-bg' : '' ) . ( $video ? ' has-video' : '' );
 $args    = array( 'class' => $classes );
 if ( $bg_url ) {
 	$args['style'] = 'background-image:url(' . esc_url( wonderland_bg_url( $bg_url ) ) . ');';
@@ -99,6 +100,15 @@ if ( $bg_url ) {
 $wrapper = get_block_wrapper_attributes( $args );
 ?>
 <section <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+	<?php if ( $video ) : ?>
+		<?php
+		// data-lazy-video, not a src: the script attaches the source and plays it,
+		// and skips both when the visitor asks for reduced motion. The background
+		// image stays underneath either way, so there is always something to see.
+		?>
+		<video class="wl-page-hero__video" data-lazy-video="<?php echo esc_url( wonderland_media_url( $video ) ); ?>"
+			muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+	<?php endif; ?>
 	<?php if ( $bg_url ) : ?>
 		<span class="wl-page-hero__overlay" style="opacity:<?php echo esc_attr( (string) $overlay ); ?>" aria-hidden="true"></span>
 	<?php endif; ?>
