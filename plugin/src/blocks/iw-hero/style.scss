@@ -21,6 +21,7 @@
 		position: absolute;
 		inset: 0;
 		z-index: 0;
+		overflow: hidden;
 
 		img {
 			width: 100%;
@@ -30,9 +31,21 @@
 		}
 	}
 
+	// Stacked slides, crossfaded by the shared [data-slideshow] script. With a
+	// single image there is only ever one, already active.
+	&__slide {
+		position: absolute;
+		inset: 0;
+		opacity: 0;
+		transition: opacity 1.2s ease-in-out;
+
+		&.is-active { opacity: 1; }
+	}
+
 	&__overlay {
 		position: absolute;
 		inset: 0;
+		z-index: 1; // above the slides, under the copy
 		background: #000;
 		pointer-events: none;
 	}
