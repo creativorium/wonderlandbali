@@ -12,14 +12,25 @@ const linesToButtons = ( value ) =>
 const buttonsToLines = ( buttons ) => ( buttons || [] ).map( ( b ) => `${ b.text } | ${ b.url }` ).join( '\n' );
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { eyebrow, title, subtitle, backgroundUrl, overlayOpacity, buttons, note, stats } = attributes;
-	const blockProps = useBlockProps( { className: `wl-iw-hero${ backgroundUrl ? ' has-bg' : '' }` } );
+	const { eyebrow, title, subtitle, backgroundUrl, slides, slideDuration, overlayOpacity, buttons, note, stats } = attributes;
+	const firstSlide = ( slides || [] ).map( ( s ) => s.url ).filter( Boolean )[ 0 ] || backgroundUrl;
+	const blockProps = useBlockProps( { className: `wl-iw-hero${ firstSlide ? ' has-bg' : '' }` } );
 
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody title={ __( 'Hero', 'wonderland-blocks' ) }>
-					<TextControl label={ __( 'Background image URL', 'wonderland-blocks' ) } value={ backgroundUrl }
+					<TextareaControl
+						label={ __( 'Slides — one image URL per line', 'wonderland-blocks' ) }
+						help={ __( 'Two or more crossfade; one is a still banner.', 'wonderland-blocks' ) }
+						value={ ( slides || [] ).map( ( s ) => s.url ).join( '\n' ) }
+						onChange={ ( v ) => setAttributes( {
+							slides: v.split( '\n' ).filter( ( l ) => l.trim() ).map( ( url ) => ( { url: url.trim() } ) ),
+						} ) }
+					/>
+					<RangeControl label={ __( 'Seconds per slide', 'wonderland-blocks' ) } value={ Math.round( ( slideDuration || 5000 ) / 1000 ) }
+						min={ 2 } max={ 12 } onChange={ ( v ) => setAttributes( { slideDuration: v * 1000 } ) } />
+					<TextControl label={ __( 'Background image URL (fallback)', 'wonderland-blocks' ) } value={ backgroundUrl }
 						onChange={ ( v ) => setAttributes( { backgroundUrl: v } ) } />
 					<RangeControl label={ __( 'Overlay opacity', 'wonderland-blocks' ) } value={ overlayOpacity } min={ 0 } max={ 80 }
 						onChange={ ( v ) => setAttributes( { overlayOpacity: v } ) } />
