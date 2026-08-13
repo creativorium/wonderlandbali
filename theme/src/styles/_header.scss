@@ -424,12 +424,12 @@ body.wl-inline-nav .site-main { padding-top: 0; }
 }
 
 /* ---------------------------------------------------------------------------
-   Phones: Enquire in the middle, Menu on the right.
+   Phones: brand and Menu only.
 
-   The bar has three children (brand, Menu, Enquire) and `space-between`, so
-   dropping the auto margins is enough to spread them evenly — `order` then puts
-   Enquire between the two without changing the DOM, which keeps the tab order
-   sensible on desktop.
+   Enquire sat between the two, which crowded a bar that has little room to
+   give. It comes off here rather than out of header.php so desktop keeps it
+   unchanged; the overlay menu's "Make a Request" item carries the action on
+   phones.
 --------------------------------------------------------------------------- */
 @media (max-width: 700px) {
 	.site-header__inner {
@@ -437,13 +437,7 @@ body.wl-inline-nav .site-main { padding-top: 0; }
 		padding-inline: clamp(1rem, 5vw, 1.75rem);
 	}
 
-	.site-header__cta {
-		order: 1;
-		margin-left: 0;
-	}
-
-	.site-header__toggle {
-		order: 2;
-		margin-left: 0;
-	}
+	// The base rule already pushes the toggle to the right edge with
+	// `margin-left: auto`, so Menu holds that edge on its own.
+	.site-header__cta { display: none; }
 }
