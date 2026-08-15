@@ -6,7 +6,7 @@ import {
 	MediaUpload,
 	MediaUploadCheck,
 } from '@wordpress/block-editor';
-import { PanelBody, Button, TextControl, SelectControl } from '@wordpress/components';
+import { PanelBody, Button, TextControl, SelectControl } from '@wordpress/components'; //Notes
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { eyebrow, heading, text, buttonText, buttonUrl, imageUrl, imagePosition, background } = attributes;
