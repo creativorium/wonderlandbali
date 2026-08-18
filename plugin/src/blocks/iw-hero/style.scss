@@ -6,8 +6,12 @@
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	min-height: clamp(560px, 78vh, 800px);
+	justify-content: flex-end;
+	// A full screen of photograph, less the header sitting above it, so the
+	// credentials strip lands exactly on the bottom edge of the viewport.
+	// --wl-header-h is published by the inline-nav header in the theme.
+	min-height: 640px;
+	min-height: calc(100svh - var(--wl-header-h, 0px));
 	padding: clamp(4rem, 9vw, 7rem) var(--wl-gutter, 1.5rem) 0;
 	text-align: left;
 	background: var(--wl-greige, #e3deda);
@@ -79,19 +83,40 @@
 		}
 	}
 
+	// Copy low and left, credentials low and right — the photograph keeps the
+	// whole upper half of the frame to itself.
 	&__inner {
 		position: relative;
 		z-index: 2;
 		@include iw.iw-container;
+		width: 100%;
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: clamp(2rem, 5vw, 4.5rem);
+		// The credentials strip is absolutely placed at the foot of the section,
+		// so the band keeps clear of it rather than sitting under it.
+		padding-bottom: clamp(4.5rem, 8vw, 6rem);
+	}
+
+	&__copy {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		// The container stays centred and 1200px wide, as every section below
-		// it is, so the copy starts on the same left edge as the headings
-		// further down the page rather than floating against the viewport.
-		// The credentials strip is absolutely placed at the foot of the section,
-		// so the copy keeps clear of it rather than centring against the frame.
-		padding-bottom: clamp(4.5rem, 8vw, 6rem);
+		max-width: 46rem;
+	}
+
+	// Frosted, so it reads as a panel laid over the photograph rather than a
+	// box cut out of it. The blur is progressive enhancement — without support
+	// the translucent fill alone still separates it from the image.
+	&__aside {
+		flex: 0 0 auto;
+		width: min(24rem, 32%);
+		padding: 1.4rem 1.6rem;
+		border: 1px solid rgba(255, 255, 255, 0.22);
+		border-radius: 1rem;
+		background: rgba(20, 18, 17, 0.42);
+		backdrop-filter: blur(10px);
 	}
 
 	// Type over a photograph: a wide, soft shadow lifts the copy off whatever
@@ -103,9 +128,16 @@
 		text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
 	}
 
+	// A pill rather than a bare line: over a busy photograph the border gives
+	// the label an edge to sit against.
 	&__eyebrow {
 		@include iw.iw-eyebrow;
-		margin-bottom: 1.1rem;
+		margin-bottom: 1.4rem;
+		padding: 0.55rem 1.15rem;
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		border-radius: 999px;
+		background: rgba(20, 18, 17, 0.32);
+		backdrop-filter: blur(8px);
 	}
 
 	&__title {
@@ -140,11 +172,12 @@
 	}
 
 	&__note {
-		margin: 1.75rem 0 0;
+		margin: 0;
 		font-family: var(--wl-font-label, sans-serif);
 		font-size: 0.78rem;
+		line-height: 1.9;
 		letter-spacing: 0.1em;
-		color: rgba(255, 255, 255, 0.85);
+		color: rgba(255, 255, 255, 0.88);
 	}
 
 	// Credentials: a thin dark band pinned to the bottom edge of the hero.
@@ -167,16 +200,39 @@
 		color: rgba(255, 255, 255, 0.88);
 	}
 
+	// Below this the two columns start fighting for the same room: the card
+	// goes under the copy and the pair stay left. Placed after the base rules
+	// on purpose — a media query adds no specificity, so an override written
+	// above them would simply lose.
+	@media (max-width: 1100px) {
+		&__inner {
+			flex-direction: column;
+			align-items: flex-start;
+			// The strip is absolutely placed until the phone breakpoint, so the
+			// column has to leave it room even when it takes two lines.
+			padding-bottom: clamp(5.5rem, 10vw, 7.5rem);
+		}
+
+		&__aside {
+			width: min(24rem, 100%);
+			margin-top: 0.5rem;
+		}
+
+		// Tighter, so the four credentials still make one line here rather than
+		// wrapping up into the card above them.
+		&__stats {
+			gap: 0.5rem 1.5rem;
+			font-size: 0.66rem;
+			letter-spacing: 0.18em;
+		}
+	}
+
 	// Phones: the photograph gets a full screen of its own and the copy sits in
 	// the lower third, so faces in the upper half stay clear of the type. The
 	// scrim turns to rise from the bottom to match.
 	@media (max-width: 760px) {
-		justify-content: flex-end;
-		// A near-full screen of photograph. svh rather than vh so the browser
-		// chrome collapsing on scroll does not resize the hero under the
-		// reader; the vh line is the fallback where svh is not understood.
-		min-height: 88vh;
-		min-height: min(92svh, 780px);
+		min-height: 600px;
+		min-height: calc(100svh - var(--wl-header-h, 0px));
 		padding-top: clamp(5rem, 20vh, 9rem);
 		padding-bottom: 0;
 
@@ -196,6 +252,13 @@
 			padding-bottom: clamp(2.5rem, 9vw, 3.5rem);
 		}
 
+		&__copy { max-width: none; }
+
+		&__aside {
+			width: 100%;
+			padding: 1.1rem 1.25rem;
+		}
+
 		&__title { max-width: none; }
 
 		&__actions {
@@ -209,7 +272,7 @@
 		&__stats {
 			position: static;
 			margin-inline: calc(var(--wl-gutter, 1.5rem) * -1);
-			gap: 0.55rem 1.75rem;
+			gap: 0.55rem 1.5rem;
 			font-size: 0.64rem;
 			letter-spacing: 0.18em;
 		}

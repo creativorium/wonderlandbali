@@ -88,6 +88,7 @@ $wrapper = get_block_wrapper_attributes( $wrapper_args );
 	<?php endif; ?>
 
 	<div class="wl-iw-hero__inner">
+		<div class="wl-iw-hero__copy">
 		<?php if ( $eyebrow ) : ?>
 			<p class="wl-iw-hero__eyebrow"><?php echo wp_kses_post( $eyebrow ); ?></p>
 		<?php endif; ?>
@@ -119,8 +120,13 @@ $wrapper = get_block_wrapper_attributes( $wrapper_args );
 			</div>
 		<?php endif; ?>
 
+		</div>
+
 		<?php if ( $note ) : ?>
-			<p class="wl-iw-hero__note"><?php echo wp_kses_post( $note ); ?></p>
+			<?php // The credentials, set apart as a card so the copy column keeps a clean edge. ?>
+			<aside class="wl-iw-hero__aside">
+				<p class="wl-iw-hero__note"><?php echo wp_kses_post( $note ); ?></p>
+			</aside>
 		<?php endif; ?>
 	</div>
 
