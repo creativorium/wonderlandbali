@@ -73,6 +73,15 @@
 		font-size: 0.98rem;
 		line-height: 1.8;
 		color: rgba(255, 255, 255, 0.86);
+
+		// Reviews come through as several paragraphs. Spacing them here rather
+		// than leaving the browser default keeps the first line tight under the
+		// stars and the last one tight above the name.
+		p {
+			margin: 0 0 1em;
+
+			&:last-child { margin-bottom: 0; }
+		}
 	}
 
 	&__name {

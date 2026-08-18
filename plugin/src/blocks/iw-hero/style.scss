@@ -7,10 +7,9 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	align-items: center;
-	min-height: clamp(520px, 74vh, 760px);
+	min-height: clamp(560px, 78vh, 800px);
 	padding: clamp(4rem, 9vw, 7rem) var(--wl-gutter, 1.5rem) 0;
-	text-align: center;
+	text-align: left;
 	background: var(--wl-greige, #e3deda);
 	color: var(--wl-ink, #000);
 	overflow: hidden;
@@ -42,24 +41,66 @@
 		&.is-active { opacity: 1; }
 	}
 
+	// A scrim raked in from the left rather than a flat wash: the copy sits on
+	// the dark side and the right of the frame — where the people in these
+	// photographs are — stays close to the original exposure. The inline
+	// opacity from the block scales the whole ramp.
 	&__overlay {
 		position: absolute;
 		inset: 0;
 		z-index: 1; // above the slides, under the copy
-		background: #000;
+		background:
+			linear-gradient(
+				100deg,
+				#000 0%,
+				rgba(0, 0, 0, 0.88) 34%,
+				rgba(0, 0, 0, 0.42) 62%,
+				rgba(0, 0, 0, 0) 88%
+			),
+			// A shallow wash under the ramp, so the right of the frame never
+			// falls back to bare photograph and the white buttons keep an edge.
+			linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 		pointer-events: none;
+	}
+
+	// Between the phone layout and a roomy desktop the copy takes up much more
+	// of the width, so the dark end of the ramp has to reach further across.
+	@media (max-width: 1100px) {
+		&__overlay {
+			background:
+				linear-gradient(
+					100deg,
+					#000 0%,
+					rgba(0, 0, 0, 0.92) 48%,
+					rgba(0, 0, 0, 0.55) 74%,
+					rgba(0, 0, 0, 0.15) 100%
+				),
+				linear-gradient(rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.22));
+		}
 	}
 
 	&__inner {
 		position: relative;
-		z-index: 1;
+		z-index: 2;
 		@include iw.iw-container;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		align-items: flex-start;
+		// The container stays centred and 1200px wide, as every section below
+		// it is, so the copy starts on the same left edge as the headings
+		// further down the page rather than floating against the viewport.
 		// The credentials strip is absolutely placed at the foot of the section,
 		// so the copy keeps clear of it rather than centring against the frame.
 		padding-bottom: clamp(4.5rem, 8vw, 6rem);
+	}
+
+	// Type over a photograph: a wide, soft shadow lifts the copy off whatever
+	// happens to sit behind it without reading as a drop shadow.
+	&.has-bg &__eyebrow,
+	&.has-bg &__title,
+	&.has-bg &__lead,
+	&.has-bg &__note {
+		text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
 	}
 
 	&__eyebrow {
@@ -69,16 +110,16 @@
 
 	&__title {
 		margin: 0;
-		max-width: 18ch;
+		max-width: 15ch;
 		font-family: var(--wl-font-head, serif);
 		font-weight: 400;
-		font-size: clamp(2.6rem, 6vw, 4.9rem);
+		font-size: clamp(2.6rem, 5.4vw, 4.6rem);
 		line-height: 1.04;
 	}
 
 	&__lead {
 		margin: 1.5rem 0 0;
-		max-width: 54ch;
+		max-width: 46ch;
 		font-family: var(--wl-font-body, sans-serif);
 		font-size: clamp(1rem, 1.3vw, 1.1rem);
 		line-height: 1.7;
@@ -88,7 +129,6 @@
 		margin-top: 2.25rem;
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: center;
 		gap: 1rem;
 	}
 
@@ -111,7 +151,7 @@
 	&__stats {
 		position: absolute;
 		inset: auto 0 0 0;
-		z-index: 2;
+		z-index: 3;
 		margin: 0;
 		padding: 1.15rem var(--wl-gutter, 1.5rem);
 		list-style: none;
@@ -127,16 +167,42 @@
 		color: rgba(255, 255, 255, 0.88);
 	}
 
-	// Boxy on phones: the strip stops overlaying and simply follows the copy.
+	// Phones: the photograph gets a full screen of its own and the copy sits in
+	// the lower third, so faces in the upper half stay clear of the type. The
+	// scrim turns to rise from the bottom to match.
 	@media (max-width: 760px) {
-		min-height: 0;
+		justify-content: flex-end;
+		// A near-full screen of photograph. svh rather than vh so the browser
+		// chrome collapsing on scroll does not resize the hero under the
+		// reader; the vh line is the fallback where svh is not understood.
+		min-height: 88vh;
+		min-height: min(92svh, 780px);
+		padding-top: clamp(5rem, 20vh, 9rem);
 		padding-bottom: 0;
 
-		&__inner { padding-bottom: clamp(2.5rem, 9vw, 3.5rem); }
+		&__overlay {
+			background: linear-gradient(
+				to top,
+				#000 0%,
+				rgba(0, 0, 0, 0.9) 28%,
+				rgba(0, 0, 0, 0.55) 52%,
+				rgba(0, 0, 0, 0.14) 78%,
+				rgba(0, 0, 0, 0) 100%
+			);
+		}
+
+		&__inner {
+			max-width: none;
+			padding-bottom: clamp(2.5rem, 9vw, 3.5rem);
+		}
 
 		&__title { max-width: none; }
 
-		&__actions { flex-direction: column; align-items: stretch; }
+		&__actions {
+			align-self: stretch;
+			flex-direction: column;
+			align-items: stretch;
+		}
 
 		// Back in the flow, but still edge to edge — cancel the section's gutter
 		// so the band spans the full width rather than sitting inset.
@@ -152,6 +218,8 @@
 	// The colour under a photo hero comes from the image; without one the copy
 	// must stay legible on greige.
 	&:not(.has-bg) {
+		.wl-iw-hero__overlay { display: none; }
+
 		.wl-iw-hero__note { color: rgba(0, 0, 0, 0.7); }
 
 		.wl-iw-hero__btn {
