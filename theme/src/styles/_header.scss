@@ -268,12 +268,16 @@ body:not(.has-hero) .site-main { padding-top: 84px; }
   .site-header__inner {
     align-items: center;
     gap: 2rem;
+    // Pinned rather than derived from the logo, so the hero below can subtract
+    // an exact number and still finish flush with the bottom of the screen.
+    min-height: var(--wl-header-h, 96px);
+    padding-block: 0.5rem;
   }
 
-  // Larger than the compact solid-header logo — this bar is taller and the
-  // mark is the only branding on the page, so it carries more weight.
+  // Deliberately modest. This bar sits directly above a full-height hero, and
+  // every pixel it takes is a pixel of photograph the visitor does not see.
   .site-header__logo {
-    height: clamp(76px, 7vw, 104px);
+    height: clamp(48px, 4.4vw, 62px);
     filter: none;
   }
 
@@ -289,6 +293,15 @@ body:not(.has-hero) .site-main { padding-top: 84px; }
 /* This header sits in the flow rather than fixed, so the spacer that clears the
    fixed bar would leave a gap here. */
 body.wl-inline-nav .site-main { padding-top: 0; }
+
+/* The bar's own height, published for the page below it: a full-height hero
+   has to subtract it to finish exactly at the bottom of the screen. Kept next
+   to the rules that set it so the two cannot drift apart. */
+body.wl-inline-nav {
+  --wl-header-h: 96px;
+
+  @media (max-width: 700px) { --wl-header-h: 76px; }
+}
 
 .site-nav {
   margin-left: auto;

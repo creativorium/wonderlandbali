@@ -53,6 +53,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<section { ...blockProps }>
 				<div className="wl-iw-hero__inner">
+					<div className="wl-iw-hero__copy">
 					<RichText tagName="p" className="wl-iw-hero__eyebrow" value={ eyebrow }
 						onChange={ ( v ) => setAttributes( { eyebrow: v } ) }
 						placeholder={ __( 'Eyebrow…', 'wonderland-blocks' ) } allowedFormats={ [] } />
@@ -69,7 +70,12 @@ export default function Edit( { attributes, setAttributes } ) {
 							) ) }
 						</div>
 					) }
-					{ note && <p className="wl-iw-hero__note">{ note }</p> }
+					</div>
+					{ note && (
+						<aside className="wl-iw-hero__aside">
+							<p className="wl-iw-hero__note">{ note }</p>
+						</aside>
+					) }
 				</div>
 				{ !! ( stats || [] ).length && (
 					<ul className="wl-iw-hero__stats">
