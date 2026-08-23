@@ -1,0 +1,127 @@
+// Indian Weddings — press feature band.
+//
+// Flush left in the same boxed column as every other section on the page. The
+// couples the article quotes sit in a row underneath with no card around them —
+// a hairline above each is enough to separate them.
+
+@use '../iw' as iw;
+
+.wl-iw-featured {
+	@include iw.iw-section(clamp(3.5rem, 7vw, 6rem), clamp(3.5rem, 7vw, 6rem));
+
+	&.is-taupe { background: var(--wl-taupe, #c5b7b3); }
+	&.is-greige { background: var(--wl-greige, #e3deda); }
+	&.is-white { background: #fff; }
+
+	&__inner { @include iw.iw-container; }
+
+	// Ink rather than coral: coral goes muddy on taupe, the same way it does on
+	// the cream sections.
+	&__eyebrow { @include iw.iw-eyebrow(rgba(0, 0, 0, 0.6)); }
+
+	&__quote {
+		margin: 0;
+		// The quotation marks are part of the headline copy, so the browser must
+		// not add its own on top.
+		quotes: none;
+	}
+
+	&__title {
+		@include iw.iw-heading;
+		font-size: clamp(1.9rem, 3.8vw, 3rem);
+		max-width: 24ch;
+	}
+
+	// Byline: the credit line, set small and spaced so it reads as attribution
+	// rather than as the first line of the summary.
+	&__meta {
+		margin: 1.25rem 0 0;
+		font-family: var(--wl-font-label, sans-serif);
+		font-size: 0.72rem;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: rgba(0, 0, 0, 0.65);
+	}
+
+	&__text {
+		@include iw.iw-body;
+		margin-top: 1.5rem;
+		max-width: 68ch;
+		color: rgba(0, 0, 0, 0.78);
+
+		p { margin: 0 0 0.9rem; }
+		p:last-child { margin-bottom: 0; }
+	}
+
+	/* ---------- The couples the article quotes ---------- */
+
+	&__reviews {
+		margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		gap: clamp(1.75rem, 3.5vw, 3rem);
+	}
+
+	// A hairline above each, and nothing else — the row reads as a set without
+	// three boxes competing with the packages grid further down.
+	&__review {
+		flex: 1 1 0;
+		padding-top: 1.1rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.22);
+
+		figure { margin: 0; }
+	}
+
+	&__review-text {
+		margin: 0;
+		quotes: none;
+		font-family: var(--wl-font-body, sans-serif);
+		font-size: 0.92rem;
+		line-height: 1.75;
+		color: rgba(0, 0, 0, 0.75);
+
+		p { margin: 0 0 0.8em; }
+		p:last-child { margin-bottom: 0; }
+	}
+
+	&__review-name {
+		margin-top: 0.9rem;
+		font-family: var(--wl-font-head, serif);
+		font-style: italic;
+		font-size: 1.05rem;
+		color: var(--wl-ink, #000);
+	}
+
+	&__actions { margin-top: clamp(2.25rem, 4vw, 3rem); }
+
+	// Ghost, not solid: the closing CTA further down is the page's one filled
+	// button, and this one should not compete with it.
+	&__btn {
+		@include iw.iw-btn;
+		@include iw.iw-btn-ghost;
+	}
+
+	// Three columns of long-ish reviews stop working before the phone
+	// breakpoint — pair them up, then stack.
+	@media (max-width: 1000px) {
+		&__reviews { flex-wrap: wrap; }
+		&__review { flex: 1 1 calc(50% - clamp(1.75rem, 3.5vw, 3rem)); }
+	}
+
+	@media (max-width: 640px) {
+		&__title { max-width: none; }
+
+		&__reviews {
+			flex-direction: column;
+			gap: 1.5rem;
+		}
+
+		&__review { flex: 1 1 auto; }
+
+		&__btn {
+			display: flex;
+			width: 100%;
+		}
+	}
+}
