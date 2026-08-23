@@ -25,6 +25,7 @@ import './blocks/iw-specialism/style.scss';
 import './blocks/iw-included/style.scss';
 import './blocks/iw-gallery/style.scss';
 import './blocks/iw-quotes/style.scss';
+import './blocks/iw-featured/style.scss';
 import './blocks/iw-packages/style.scss';
 import './blocks/iw-faq/style.scss';
 import './blocks/iw-cta/style.scss';
@@ -46,6 +47,16 @@ function initSlideshows() {
 		// so the browser would otherwise fetch every one up front). Give a slide
 		// its image just before it is due.
 		const hydrate = ( slide ) => {
+			// An art-directed phone crop has to get its srcset before the <img>
+			// gets a src — the browser picks a <picture>'s source at the moment
+			// the image starts loading, and an empty <source> loses that pick.
+			const source = slide && slide.querySelector( '.js-slide-source[data-srcset]' );
+			if ( source ) {
+				source.srcset = source.dataset.srcset;
+				source.sizes = source.dataset.sizes || '100vw';
+				source.removeAttribute( 'data-srcset' );
+			}
+
 			const img = slide && slide.querySelector( '.js-slide-img[data-src]' );
 			if ( ! img ) {
 				return;

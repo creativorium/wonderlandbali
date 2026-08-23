@@ -3,13 +3,38 @@ import { useBlockProps, RichText, InspectorControls } from '@wordpress/block-edi
 import { PanelBody, TextControl, TextareaControl, RangeControl } from '@wordpress/components';
 
 // Buttons are edited as "Label | URL" lines — the hero only ever carries two.
-const linesToButtons = ( value ) =>
+// Flags with no place in that shorthand (newTab, hideOnMobile) are carried over
+// from the button in the same position, so retyping a label does not quietly
+// drop them.
+const linesToButtons = ( value, existing ) =>
 	value.split( '\n' ).filter( ( l ) => l.trim() ).map( ( line, i ) => {
 		const [ text, url ] = line.split( '|' );
-		return { text: ( text || '' ).trim(), url: ( url || '' ).trim(), style: i === 0 ? 'solid' : 'ghost' };
+		const { newTab, hideOnMobile } = ( existing || [] )[ i ] || {};
+		return {
+			text: ( text || '' ).trim(),
+			url: ( url || '' ).trim(),
+			style: i === 0 ? 'solid' : 'ghost',
+			...( newTab ? { newTab: true } : {} ),
+			...( hideOnMobile ? { hideOnMobile: true } : {} ),
+		};
 	} );
 
 const buttonsToLines = ( buttons ) => ( buttons || [] ).map( ( b ) => `${ b.text } | ${ b.url }` ).join( '\n' );
+
+// Slides are "image URL" per line, optionally "image URL | phone crop URL".
+// The second is what the hero shows below 760px; without one the first serves
+// every width, which is how every slide behaved before this was added.
+const linesToSlides = ( value ) =>
+	value.split( '\n' ).filter( ( l ) => l.trim() ).map( ( line ) => {
+		const [ url, mobileUrl ] = line.split( '|' );
+		return {
+			url: ( url || '' ).trim(),
+			...( ( mobileUrl || '' ).trim() ? { mobileUrl: mobileUrl.trim() } : {} ),
+		};
+	} );
+
+const slidesToLines = ( slides ) =>
+	( slides || [] ).map( ( s ) => ( s.mobileUrl ? `${ s.url } | ${ s.mobileUrl }` : s.url ) ).join( '\n' );
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { eyebrow, title, subtitle, backgroundUrl, slides, slideDuration, overlayOpacity, buttons, note, stats } = attributes;
@@ -22,11 +47,9 @@ export default function Edit( { attributes, setAttributes } ) {
 				<PanelBody title={ __( 'Hero', 'wonderland-blocks' ) }>
 					<TextareaControl
 						label={ __( 'Slides — one image URL per line', 'wonderland-blocks' ) }
-						help={ __( 'Two or more crossfade; one is a still banner.', 'wonderland-blocks' ) }
-						value={ ( slides || [] ).map( ( s ) => s.url ).join( '\n' ) }
-						onChange={ ( v ) => setAttributes( {
-							slides: v.split( '\n' ).filter( ( l ) => l.trim() ).map( ( url ) => ( { url: url.trim() } ) ),
-						} ) }
+						help={ __( 'Two or more crossfade; one is a still banner. Add "| mobile URL" after a slide to use a portrait crop on phones — leave it off and the same image serves both.', 'wonderland-blocks' ) }
+						value={ slidesToLines( slides ) }
+						onChange={ ( v ) => setAttributes( { slides: linesToSlides( v ) } ) }
 					/>
 					<RangeControl label={ __( 'Seconds per slide', 'wonderland-blocks' ) } value={ Math.round( ( slideDuration || 5000 ) / 1000 ) }
 						min={ 2 } max={ 12 } onChange={ ( v ) => setAttributes( { slideDuration: v * 1000 } ) } />
@@ -37,7 +60,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<TextareaControl
 						label={ __( 'Buttons — "Label | URL" per line', 'wonderland-blocks' ) }
 						value={ buttonsToLines( buttons ) }
-						onChange={ ( v ) => setAttributes( { buttons: linesToButtons( v ) } ) }
+						onChange={ ( v ) => setAttributes( { buttons: linesToButtons( v, buttons ) } ) }
 					/>
 					<TextControl label={ __( 'Award line', 'wonderland-blocks' ) } value={ note }
 						onChange={ ( v ) => setAttributes( { note: v } ) } />
@@ -66,7 +89,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ !! ( buttons || [] ).length && (
 						<div className="wl-iw-hero__actions">
 							{ buttons.map( ( b, i ) => (
-								<span key={ i } className={ `wl-iw-hero__btn${ b.style === 'ghost' ? ' is-ghost' : '' }` }>{ b.text }</span>
+								<span key={ i } className={ `wl-iw-hero__btn${ b.style === 'ghost' ? ' is-ghost' : '' }${ b.hideOnMobile ? ' is-desktop-only' : '' }` }>{ b.text }</span>
 							) ) }
 						</div>
 					) }

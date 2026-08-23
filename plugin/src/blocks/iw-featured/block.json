@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/iw-featured",
+	"title": "Indian Weddings — Press Feature",
+	"category": "wonderland",
+	"icon": "megaphone",
+	"description": "Indian Weddings press band: the Honeycombers headline set as a pull-quote, the byline beneath it, a short summary and one action through to the As Featured page.",
+	"keywords": [ "indian", "press", "featured", "honeycombers", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"meta": { "type": "string", "default": "" },
+		"text": { "type": "string", "default": "" },
+		"background": { "type": "string", "default": "taupe" },
+		"quotes": { "type": "array", "default": [] },
+		"buttonText": { "type": "string", "default": "" },
+		"buttonUrl": { "type": "string", "default": "" },
+		"buttonNewTab": { "type": "boolean", "default": false }
+	},
+	"render": "file:./render.php"
+}
