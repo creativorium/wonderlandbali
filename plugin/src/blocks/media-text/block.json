@@ -18,6 +18,7 @@
 		"imageId": { "type": "number" },
 		"imageUrl": { "type": "string", "default": "" },
 		"imagePosition": { "type": "string", "default": "left" },
+		"imageFit": { "type": "string", "default": "cover" },
 		"background": { "type": "string", "default": "white" }
 	},
 	"render": "file:./render.php"

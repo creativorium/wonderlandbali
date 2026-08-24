@@ -9,8 +9,8 @@ import {
 import { PanelBody, Button, TextControl, SelectControl } from '@wordpress/components';
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { eyebrow, heading, text, buttonText, buttonUrl, imageUrl, imagePosition, background } = attributes;
-	const blockProps = useBlockProps( { className: `wl-mt is-${ imagePosition } is-${ background }` } );
+	const { eyebrow, heading, text, buttonText, buttonUrl, imageUrl, imagePosition, imageFit, background } = attributes;
+	const blockProps = useBlockProps( { className: `wl-mt is-${ imagePosition } is-${ background } is-fit-${ imageFit }` } );
 
 	return (
 		<>
@@ -21,6 +21,12 @@ export default function Edit( { attributes, setAttributes } ) {
 						value={ imagePosition }
 						options={ [ { label: 'Left', value: 'left' }, { label: 'Right', value: 'right' } ] }
 						onChange={ ( v ) => setAttributes( { imagePosition: v } ) }
+					/>
+					<SelectControl
+						label={ __( 'Image fit', 'wonderland-blocks' ) }
+						value={ imageFit }
+						options={ [ { label: 'Crop to row', value: 'cover' }, { label: 'Full image', value: 'natural' } ] }
+						onChange={ ( v ) => setAttributes( { imageFit: v } ) }
 					/>
 					<SelectControl
 						label={ __( 'Background', 'wonderland-blocks' ) }

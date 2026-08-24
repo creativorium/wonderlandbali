@@ -14,8 +14,10 @@ $btn_url  = $attributes['buttonUrl'] ?? '';
 $img      = $attributes['imageUrl'] ?? '';
 $pos      = ( $attributes['imagePosition'] ?? 'left' ) === 'right' ? 'is-right' : 'is-left';
 $bg       = ( $attributes['background'] ?? 'white' ) === 'greige' ? 'is-greige' : 'is-white';
+// 'natural' lets the picture keep its own proportions instead of being cropped to the row.
+$fit      = ( $attributes['imageFit'] ?? 'cover' ) === 'natural' ? 'is-fit-natural' : 'is-fit-cover';
 
-$wrapper = get_block_wrapper_attributes( array( 'class' => "wl-mt $pos $bg" ) );
+$wrapper = get_block_wrapper_attributes( array( 'class' => "wl-mt $pos $bg $fit" ) );
 ?>
 <section <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="wl-mt__grid">
