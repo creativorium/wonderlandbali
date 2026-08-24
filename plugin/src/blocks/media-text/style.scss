@@ -28,6 +28,14 @@
 		display: block;
 	}
 
+	// Portraits that should not lose their top or bottom: the image keeps its
+	// own ratio and the row grows to it instead of cropping.
+	&.is-fit-natural &__media img {
+		height: auto;
+		max-height: none;
+		object-fit: contain;
+	}
+
 	&__body { max-width: 40rem; }
 
 	&__eyebrow {
@@ -76,5 +84,6 @@
 		&__grid { grid-template-columns: 1fr; gap: 2rem; }
 		&.is-right &__media, &.is-right &__body { order: initial; }
 		&__media img { max-height: 420px; }
+		&.is-fit-natural &__media img { max-height: none; }
 	}
 }

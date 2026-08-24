@@ -24,6 +24,7 @@ import './blocks/iw-hero/style.scss';
 import './blocks/iw-specialism/style.scss';
 import './blocks/iw-included/style.scss';
 import './blocks/iw-gallery/style.scss';
+import './blocks/iw-moments/style.scss';
 import './blocks/iw-quotes/style.scss';
 import './blocks/iw-featured/style.scss';
 import './blocks/iw-packages/style.scss';
@@ -192,6 +193,7 @@ function initLightbox() {
 function initReveal() {
 	document.querySelectorAll( '[data-reveal]' ).forEach( function ( grid ) {
 		const batch = parseInt( grid.getAttribute( 'data-reveal' ), 10 ) || 12;
+		const sel = grid.getAttribute( 'data-reveal-item' ) || '.wl-portfolio__item';
 		const wrap = grid.parentElement;
 		const btn = wrap ? wrap.querySelector( '[data-reveal-btn]' ) : null;
 		const shown = wrap ? wrap.querySelector( '[data-shown]' ) : null;
@@ -203,7 +205,7 @@ function initReveal() {
 			// Reveal in authored order, not column order, so each batch tops up
 			// the columns evenly instead of filling one of them.
 			const hidden = Array.prototype.slice
-				.call( grid.querySelectorAll( '.wl-portfolio__item.is-hidden' ) )
+				.call( grid.querySelectorAll( sel + '.is-hidden' ) )
 				.sort( ( a, b ) => ( +a.dataset.i || 0 ) - ( +b.dataset.i || 0 ) );
 			const next = hidden.slice( 0, batch );
 
@@ -216,13 +218,13 @@ function initReveal() {
 
 			if ( shown ) {
 				shown.textContent = String(
-					grid.querySelectorAll( '.wl-portfolio__item:not(.is-hidden)' ).length
+					grid.querySelectorAll( sel + ':not(.is-hidden)' ).length
 				);
 			}
 
 			// Nothing left to reveal — retire the control.
-			if ( ! grid.querySelector( '.wl-portfolio__item.is-hidden' ) ) {
-				const more = btn.closest( '.wl-portfolio__more' );
+			if ( ! grid.querySelector( sel + '.is-hidden' ) ) {
+				const more = btn.closest( '.wl-portfolio__more, .wl-iw-moments__more' );
 				if ( more ) {
 					more.remove();
 				}
