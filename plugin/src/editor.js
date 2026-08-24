@@ -44,6 +44,8 @@ import './blocks/iw-included/style.scss';
 import './blocks/iw-included/index.js';
 import './blocks/iw-gallery/style.scss';
 import './blocks/iw-gallery/index.js';
+import './blocks/iw-moments/style.scss';
+import './blocks/iw-moments/index.js';
 import './blocks/iw-quotes/style.scss';
 import './blocks/iw-quotes/index.js';
 import './blocks/iw-featured/style.scss';

@@ -3,7 +3,9 @@
 @use '../iw' as iw;
 
 .wl-iw-specialism {
-	@include iw.iw-section;
+	// The gallery follows straight on, so this one stops short at the bottom —
+	// the two sections read as one run rather than two boxed bands.
+	@include iw.iw-section($pad-bottom: clamp(1.5rem, 3vw, 2.5rem));
 
 	&.is-white { background: #fff; }
 	&.is-greige { background: var(--wl-greige, #e3deda); }

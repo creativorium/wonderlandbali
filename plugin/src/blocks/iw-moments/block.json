@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wonderland/iw-moments",
+	"title": "Indian Weddings — Moments Gallery",
+	"category": "wonderland",
+	"icon": "format-image",
+	"description": "Indian Weddings gallery: the wedding film followed by a justified grid of photographs, revealed a batch at a time.",
+	"keywords": [ "indian", "gallery", "justified", "film", "wonderland" ],
+	"textdomain": "wonderland-blocks",
+	"supports": { "html": false, "anchor": true, "align": [ "full" ] },
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"heading": { "type": "string", "default": "" },
+		"intro": { "type": "string", "default": "" },
+		"background": { "type": "string", "default": "white" },
+		"videoUrl": { "type": "string", "default": "" },
+		"videoPoster": { "type": "string", "default": "" },
+		"videoCaption": { "type": "string", "default": "" },
+		"items": { "type": "array", "default": [] },
+		"initial": { "type": "number", "default": 12 },
+		"batch": { "type": "number", "default": 6 },
+		"buttonText": { "type": "string", "default": "Load More" }
+	},
+	"render": "file:./render.php"
+}
