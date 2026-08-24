@@ -19,8 +19,10 @@ $eyebrow  = $attributes['eyebrow'] ?? '';
 $heading  = $attributes['heading'] ?? '';
 $intro    = $attributes['intro'] ?? '';
 $bg       = ( 'greige' === ( $attributes['background'] ?? '' ) ) ? 'is-greige' : 'is-white';
-$video    = trim( (string) ( $attributes['videoUrl'] ?? '' ) );
-$poster   = trim( (string) ( $attributes['videoPoster'] ?? '' ) );
+// Stored root-relative, like every other media URL in the content — rebased so
+// a subdirectory install (dev.cularcreative.com/wonderland/) resolves them.
+$video    = wonderland_media_url( trim( (string) ( $attributes['videoUrl'] ?? '' ) ) );
+$poster   = wonderland_media_url( trim( (string) ( $attributes['videoPoster'] ?? '' ) ) );
 $vcaption = trim( (string) ( $attributes['videoCaption'] ?? '' ) );
 $items    = isset( $attributes['items'] ) && is_array( $attributes['items'] ) ? $attributes['items'] : array();
 $initial  = max( 1, (int) ( $attributes['initial'] ?? 12 ) );
@@ -102,7 +104,8 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-iw-moments ' . $b
 							style="--wl-ar:<?php echo esc_attr( (string) $ar ); ?>"
 							data-i="<?php echo esc_attr( (string) $index ); ?>"
 							<?php echo $hidden ? ' hidden' : ''; ?>>
-							<a class="wl-iw-moments__link" href="<?php echo esc_url( $url ); ?>" data-lb data-i="<?php echo esc_attr( (string) $index ); ?>">
+							<?php // The lightbox opens the full file, so its href needs rebasing too. ?>
+						<a class="wl-iw-moments__link" href="<?php echo esc_url( wonderland_media_url( $url ) ); ?>" data-lb data-i="<?php echo esc_attr( (string) $index ); ?>">
 								<?php
 								echo wonderland_image( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									$url,
