@@ -410,7 +410,10 @@ add_action(
 			MINUTE_IN_SECONDS
 		);
 
-		wp_safe_redirect( admin_url( 'admin.php?page=wonderland-forms-settings&wl_test=1' ) );
+		// The settings screen is the menu page itself — `wonderland-forms`, not a
+		// separate slug. Anything else lands on "you are not allowed to access
+		// this page", which reads like the test was refused when it was not.
+		wp_safe_redirect( admin_url( 'admin.php?page=wonderland-forms&wl_test=1' ) );
 		exit;
 	}
 );
