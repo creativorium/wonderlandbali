@@ -256,3 +256,201 @@ add_action(
 		);
 	}
 );
+
+/* -------------------------------------------------------------------------
+ * Test send — proves the whole path, without a real enquiry.
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Plausible values for a preset's fields, so a test email reads like the real
+ * thing rather than a row of "test test test".
+ *
+ * Built from the field definitions, so a field added to the form appears here
+ * with no second list to update: a select takes one of its own options, and
+ * anything unrecognised falls back to a generic string.
+ *
+ * @param string $preset Form preset.
+ * @return array<string,string>
+ */
+function wonderland_sample_submission( $preset = 'contact' ) {
+	$people  = array(
+		array( 'Amara', 'Sethi', 'amara.sethi@example.com' ),
+		array( 'Priya', 'Raman', 'priya.raman@example.com' ),
+		array( 'Nadia', 'Kusuma', 'nadia.kusuma@example.com' ),
+		array( 'Elena', 'Marchetti', 'elena.marchetti@example.com' ),
+	);
+	$partners = array( 'Rohan', 'Arjun', 'Wayan', 'Luca' );
+	$notes    = array(
+		'We are thinking of a three-day celebration next year and would love to hear what you would suggest.',
+		'A friend was married in Bali last season and recommended you — could we start with a call?',
+		'Still deciding between two venues. Any advice on which suits a larger guest list?',
+	);
+
+	$person = $people[ wp_rand( 0, count( $people ) - 1 ) ];
+	$fields = wonderland_form_fields( $preset );
+	$values = array();
+
+	foreach ( $fields as $key => $field ) {
+		if ( 'group' === $field['type'] ) {
+			continue;
+		}
+
+		switch ( true ) {
+			case 'select' === $field['type']:
+				$options        = array_values( (array) $field['options'] );
+				$values[ $key ] = $options ? $options[ wp_rand( 0, count( $options ) - 1 ) ] : '';
+				break;
+			case 'email' === $field['type']:
+				$values[ $key ] = $person[2];
+				break;
+			case 'tel' === $field['type']:
+				$values[ $key ] = '+62 812 ' . wp_rand( 1000, 9999 ) . ' ' . wp_rand( 1000, 9999 );
+				break;
+			case 'date' === $field['type']:
+				$values[ $key ] = gmdate( 'Y-m-d', time() + wp_rand( 90, 400 ) * DAY_IN_SECONDS );
+				break;
+			case 'number' === $field['type']:
+				$values[ $key ] = (string) ( wp_rand( 4, 30 ) * 10 );
+				break;
+			case 'textarea' === $field['type']:
+				$values[ $key ] = $notes[ wp_rand( 0, count( $notes ) - 1 ) ];
+				break;
+			case in_array( $key, array( 'first_name', 'bride_name' ), true ):
+				$values[ $key ] = $person[0];
+				break;
+			case 'last_name' === $key:
+				$values[ $key ] = $person[1];
+				break;
+			case 'groom_name' === $key || false !== strpos( $key, 'partner' ):
+				$values[ $key ] = $partners[ wp_rand( 0, count( $partners ) - 1 ) ];
+				break;
+			default:
+				$values[ $key ] = 'Sample ' . strtolower( $field['label'] );
+		}
+	}
+
+	return $values;
+}
+
+add_action(
+	'admin_post_wonderland_test_email',
+	function () {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You cannot send a test email.', 'wonderland-blocks' ) );
+		}
+		check_admin_referer( 'wonderland_test_email' );
+
+		$preset = isset( $_POST['preset'] ) ? sanitize_key( wp_unslash( $_POST['preset'] ) ) : 'contact';
+		$preset = in_array( $preset, array( 'contact', 'request', 'brochure' ), true ) ? $preset : 'contact';
+
+		$fields = wonderland_form_fields( $preset );
+		$values = wonderland_sample_submission( $preset );
+		$lines  = array( __( 'This is a test. Nobody sent this enquiry.', 'wonderland-blocks' ), '' );
+
+		foreach ( $fields as $key => $field ) {
+			if ( 'group' === $field['type'] ) {
+				$lines[] = '';
+				$lines[] = strtoupper( $field['label'] );
+				continue;
+			}
+			if ( ! empty( $values[ $key ] ) ) {
+				$lines[] = $field['label'] . ': ' . $values[ $key ];
+			}
+		}
+
+		$lines[] = '';
+		$lines[] = '—';
+		$lines[] = __( 'Sent from', 'wonderland-blocks' ) . ' ' . home_url( '/' );
+
+		// An address typed into the box is a spot check — it goes there and only
+		// there. Left empty, the test is a dress rehearsal: the real recipient
+		// with the real Cc and Bcc.
+		$to        = isset( $_POST['to'] ) ? sanitize_email( wp_unslash( $_POST['to'] ) ) : '';
+		$custom    = is_email( $to );
+		$recipient = $custom ? $to : wonderland_forms_recipient_for( $preset );
+		$headers   = $custom
+			? array( 'Content-Type: text/plain; charset=UTF-8' )
+			: wonderland_form_mail_headers( $preset );
+
+		// Straight to wp_mail(): a test is not a submission, so it is not stored
+		// and never enters the retry queue.
+		$error = '';
+		$catch = function ( $wp_error ) use ( &$error ) {
+			$error = $wp_error->get_error_message();
+		};
+		add_action( 'wp_mail_failed', $catch );
+
+		$ok = (bool) wp_mail(
+			$recipient,
+			sprintf( '[Wonderland] %s — %s', wonderland_form_label( $preset ), __( 'Test email', 'wonderland-blocks' ) ),
+			implode( "\n", $lines ),
+			$headers
+		);
+
+		remove_action( 'wp_mail_failed', $catch );
+
+		$copies = array();
+		foreach ( $headers as $header ) {
+			if ( 0 === stripos( $header, 'Cc:' ) || 0 === stripos( $header, 'Bcc:' ) ) {
+				$copies[] = $header;
+			}
+		}
+
+		// A transient rather than the URL: the mailer's error can be long, and it
+		// has no business being in the address bar.
+		set_transient(
+			'wonderland_test_email_result',
+			array(
+				'ok'     => $ok,
+				'to'     => $recipient,
+				'custom' => $custom,
+				'copies' => implode( ' · ', $copies ),
+				'error'  => $error,
+			),
+			MINUTE_IN_SECONDS
+		);
+
+		wp_safe_redirect( admin_url( 'admin.php?page=wonderland-forms-settings&wl_test=1' ) );
+		exit;
+	}
+);
+
+add_action(
+	'admin_notices',
+	function () {
+		if ( ! isset( $_GET['wl_test'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return;
+		}
+		$result = get_transient( 'wonderland_test_email_result' );
+		if ( ! is_array( $result ) ) {
+			return;
+		}
+		delete_transient( 'wonderland_test_email_result' );
+
+		if ( $result['ok'] ) {
+			$message = sprintf(
+				/* translators: %s: recipient address. */
+				__( 'Test email handed to the mailer for %s. If it never arrives, the address is right but delivery is not — check WP Mail SMTP and the spam folder.', 'wonderland-blocks' ),
+				$result['to']
+			);
+			if ( ! empty( $result['copies'] ) ) {
+				$message .= ' — ' . $result['copies'];
+			}
+			if ( ! empty( $result['custom'] ) ) {
+				$message .= ' ' . __( 'Copies were skipped: a one-off test address is sent on its own.', 'wonderland-blocks' );
+			}
+		} else {
+			$message = sprintf(
+				/* translators: %s: error reported by the mailer. */
+				__( 'The test email could not be sent: %s', 'wonderland-blocks' ),
+				$result['error'] ? $result['error'] : __( 'the mailer refused the message.', 'wonderland-blocks' )
+			);
+		}
+
+		printf(
+			'<div class="notice notice-%s is-dismissible"><p>%s</p></div>',
+			$result['ok'] ? 'success' : 'error',
+			esc_html( $message )
+		);
+	}
+);

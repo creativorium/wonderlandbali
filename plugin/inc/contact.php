@@ -339,7 +339,11 @@ function wonderland_handle_form() {
 	}
 	$body .= "\n\n—\n" . __( 'Sent from', 'wonderland-blocks' ) . ' ' . home_url( '/' );
 
-	$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+	// Content type plus any Cc/Bcc configured in settings.
+	$headers = function_exists( 'wonderland_form_mail_headers' )
+		? wonderland_form_mail_headers( $preset )
+		: array( 'Content-Type: text/plain; charset=UTF-8' );
+
 	if ( is_email( $reply_mail ) ) {
 		$headers[] = 'Reply-To: ' . ( $reply_name ? $reply_name . ' <' . $reply_mail . '>' : $reply_mail );
 	}
