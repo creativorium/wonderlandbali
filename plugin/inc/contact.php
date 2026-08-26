@@ -234,6 +234,69 @@ function wonderland_form_countries() {
 /**
  * Handle a submitted form: validate, email, redirect back.
  */
+/**
+ * How many submissions one address may send, and over what window.
+ *
+ * The honeypot catches the crude bots and reCAPTCHA scores the rest, but
+ * neither stops a script that solves both and simply keeps posting. Both
+ * numbers are filterable: a wedding party filling in the Request form from one
+ * hotel's wifi shares an IP, so the limit is generous on purpose.
+ *
+ * @return array{limit:int,window:int}
+ */
+function wonderland_form_rate_limit() {
+	return array(
+		'limit'  => (int) apply_filters( 'wonderland_form_rate_limit', 5 ),
+		'window' => (int) apply_filters( 'wonderland_form_rate_window', 10 * MINUTE_IN_SECONDS ),
+	);
+}
+
+/**
+ * The rate-limit key for the submitting address.
+ *
+ * The address is hashed: this is a spam counter, and there is no reason for a
+ * transient to hold a visitor's IP in the clear.
+ *
+ * @return string Transient key, or '' when the address is unknown.
+ */
+function wonderland_form_rate_key() {
+	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+	if ( ! $ip ) {
+		return '';
+	}
+	return 'wl_rate_' . md5( $ip . '|' . wp_salt() );
+}
+
+/**
+ * Whether this address has already had its allowance.
+ *
+ * @return bool
+ */
+function wonderland_form_rate_limited() {
+	$key = wonderland_form_rate_key();
+	if ( ! $key ) {
+		return false;
+	}
+	$limits = wonderland_form_rate_limit();
+	return (int) get_transient( $key ) >= $limits['limit'];
+}
+
+/**
+ * Count a submission against the address that sent it.
+ */
+function wonderland_form_rate_record() {
+	$key = wonderland_form_rate_key();
+	if ( ! $key ) {
+		return;
+	}
+	$limits = wonderland_form_rate_limit();
+	$count  = (int) get_transient( $key );
+
+	// The window runs from the first submission, so a flood cannot keep pushing
+	// its own expiry forward and stay under the limit for ever.
+	set_transient( $key, $count + 1, $limits['window'] );
+}
+
 function wonderland_handle_form() {
 	$nonce = isset( $_POST['wl_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['wl_nonce'] ) ) : '';
 	$back  = isset( $_POST['wl_redirect'] ) ? esc_url_raw( wp_unslash( $_POST['wl_redirect'] ) ) : home_url( '/' );
@@ -246,6 +309,13 @@ function wonderland_handle_form() {
 	// Honeypot — bots fill this hidden field. Pretend success.
 	if ( ! empty( $_POST['wl_website'] ) ) {
 		wp_safe_redirect( add_query_arg( 'wl_sent', '1', $back ) );
+		exit;
+	}
+
+	// Flood protection. Checked before any work is done, and before reCAPTCHA,
+	// so a script cannot make us call Google on its behalf either.
+	if ( wonderland_form_rate_limited() ) {
+		wp_safe_redirect( add_query_arg( 'wl_sent', 'slowdown', $back ) . '#form' );
 		exit;
 	}
 
@@ -318,6 +388,8 @@ function wonderland_handle_form() {
 		wp_safe_redirect( add_query_arg( 'wl_sent', 'required', $back ) . '#form' );
 		exit;
 	}
+
+	wonderland_form_rate_record();
 
 	// Store first: a DB record survives a bouncing mail server.
 	$submission_id = 0;
@@ -527,6 +599,8 @@ function wonderland_render_form( $args = array() ) {
 			<p class="wl-form__notice is-error" role="alert">We couldn't verify that you're human. Please reload the page and try again.</p>
 		<?php elseif ( 'required' === $sent ) : ?>
 			<p class="wl-form__notice is-error" role="alert">Please fill in every field marked with an asterisk and send again.</p>
+		<?php elseif ( 'slowdown' === $sent ) : ?>
+			<p class="wl-form__notice is-error" role="alert">We've already had a few messages from you — please give it a few minutes before sending another, or email us directly.</p>
 		<?php elseif ( 'error' === $sent ) : ?>
 			<p class="wl-form__notice is-error" role="alert">Sorry, something went wrong. Please try again.</p>
 		<?php endif; ?>
