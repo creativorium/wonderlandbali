@@ -25,4 +25,5 @@ require_once WONDERLAND_BLOCKS_DIR . 'inc/media.php';
 require_once WONDERLAND_BLOCKS_DIR . 'inc/registration.php';
 require_once WONDERLAND_BLOCKS_DIR . 'inc/forms-settings.php';
 require_once WONDERLAND_BLOCKS_DIR . 'inc/forms-submissions.php';
+require_once WONDERLAND_BLOCKS_DIR . 'inc/forms-mail.php';
 require_once WONDERLAND_BLOCKS_DIR . 'inc/contact.php';

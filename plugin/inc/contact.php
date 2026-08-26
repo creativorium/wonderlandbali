@@ -348,11 +348,16 @@ function wonderland_handle_form() {
 		? wonderland_forms_recipient_for( $preset )
 		: get_option( 'admin_email' );
 
-	wp_mail(
-		$recipient,
-		sprintf( '[Wonderland] %s — %s', wonderland_form_label( $preset ), $subject ),
-		$body,
-		$headers
+	// Delivery is tracked on the submission: a mailer that refuses the message
+	// is retried on cron, and a message already sent is never sent twice.
+	wonderland_send_submission_mail(
+		$submission_id,
+		array(
+			'to'      => $recipient,
+			'subject' => sprintf( '[Wonderland] %s — %s', wonderland_form_label( $preset ), $subject ),
+			'body'    => $body,
+			'headers' => $headers,
+		)
 	);
 
 	/**
