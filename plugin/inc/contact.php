@@ -572,6 +572,66 @@ function wonderland_render_form( $args = array() ) {
 			</script>
 		<?php endif; ?>
 
+		<?php
+		// A long Request form is easy to lose: a refresh, a validation bounce, a
+		// phone call mid-way. What is typed is kept in the visitor's own browser
+		// and put back when they return — it never leaves their machine, so there
+		// is no record of an enquiry nobody chose to send.
+		?>
+		<script>
+		( function () {
+			var form = document.currentScript.closest( 'form' );
+			if ( ! form ) { return; }
+
+			var key = 'wl-draft-<?php echo esc_js( $preset ); ?>';
+			// Hidden fields carry the nonce and the honeypot; neither belongs in a
+			// draft, and a stale nonce would be worse than no draft at all.
+			var fields = function () {
+				return Array.prototype.filter.call(
+					form.querySelectorAll( 'input[name^="wl_"], textarea[name^="wl_"], select[name^="wl_"]' ),
+					function ( el ) { return el.type !== 'hidden' && el.name !== 'wl_website'; }
+				);
+			};
+
+			var read = function () {
+				try { return JSON.parse( window.localStorage.getItem( key ) || '{}' ); } catch ( e ) { return {}; }
+			};
+			var clear = function () {
+				try { window.localStorage.removeItem( key ); } catch ( e ) {}
+			};
+
+			// A submission that got through leaves ?wl_sent=1 behind: the draft has
+			// served its purpose and should not repopulate the empty form.
+			if ( /[?&]wl_sent=1(&|$)/.test( window.location.search ) ) {
+				clear();
+				return;
+			}
+
+			var saved = read();
+			fields().forEach( function ( el ) {
+				if ( ! el.value && typeof saved[ el.name ] === 'string' ) {
+					el.value = saved[ el.name ];
+				}
+			} );
+
+			var timer;
+			form.addEventListener( 'input', function () {
+				window.clearTimeout( timer );
+				timer = window.setTimeout( function () {
+					var data = {};
+					fields().forEach( function ( el ) {
+						if ( el.value ) { data[ el.name ] = el.value; }
+					} );
+					try { window.localStorage.setItem( key, JSON.stringify( data ) ); } catch ( e ) {}
+				}, 400 );
+			} );
+
+			// Deliberately not cleared on submit: a bounce back for a missing
+			// field or a failed captcha is exactly when the draft has to survive.
+			// Only the ?wl_sent=1 branch above wipes it.
+		} )();
+		</script>
+
 		<button type="submit" class="wl-form__submit"><?php echo esc_html( $args['button'] ); ?></button>
 
 		<?php
