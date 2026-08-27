@@ -89,6 +89,7 @@ if (toggle && overlay) {
     push('form_submit', {
       form_name: window.wlFormSubmitted, // 'contact' | 'request'
       page_url: location.href,
+      page_path: location.pathname,
       page_title: document.title,
     });
   }
@@ -102,8 +103,37 @@ if (toggle && overlay) {
       if (!a) return;
       const href = a.getAttribute('href') || '';
 
+      // Where the tap happened matters to the ads team: the floating button,
+      // the header CTA and a footer link are different offers, not one number.
+      const placement = a.closest('.wl-wa')
+        ? 'floating'
+        : a.closest('.site-header')
+        ? 'header'
+        : a.closest('.site-footer')
+        ? 'footer'
+        : 'content';
+      const label = (a.getAttribute('aria-label') || a.textContent || '').trim().slice(0, 80);
+
       if (href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp.com') !== -1) {
-        push('whatsapp_click', { link_url: href, page_url: location.href });
+        push('whatsapp_click', {
+          link_url: href,
+          link_text: label,
+          placement,
+          page_url: location.href,
+          page_path: location.pathname,
+        });
+      } else if (a.host === location.host && /(^|\/)(request|contact)\/?$/.test(a.pathname || '')) {
+        // The enquiry CTAs — "Make a Request", "Contact" — wherever they appear.
+        // Matched on the destination rather than a class, so a new button
+        // anywhere on the site is counted without touching this file.
+        push('enquiry_click', {
+          link_url: href,
+          link_text: label,
+          placement,
+          destination: /request/.test(a.pathname) ? 'request' : 'contact',
+          page_url: location.href,
+          page_path: location.pathname,
+        });
       } else if (href.indexOf('tel:') === 0) {
         push('phone_click', { link_url: href });
       } else if (href.indexOf('mailto:') === 0) {
