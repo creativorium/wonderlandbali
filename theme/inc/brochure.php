@@ -62,10 +62,14 @@ add_action(
 				<?php if ( $done ) : ?>
 
 					<h2 class="wl-brochure__title" id="wl-brochure-title">
-						<?php esc_html_e( 'Thank you — your brochure is on the way', 'wonderland' ); ?>
+						<?php esc_html_e( 'Your brochure is ready', 'wonderland' ); ?>
 					</h2>
 					<p class="wl-brochure__text">
-						<?php esc_html_e( 'The download starts on its own. We have your details and will be in touch within 24 hours.', 'wonderland' ); ?>
+						<?php
+						// Nothing is emailed to them, so nothing here should suggest
+						// waiting for something to arrive.
+						esc_html_e( 'The download starts on its own — if it does not, use the button below.', 'wonderland' );
+						?>
 					</p>
 
 					<?php
@@ -84,7 +88,7 @@ add_action(
 						<?php esc_html_e( 'Get the 2026 brochure', 'wonderland' ); ?>
 					</h2>
 					<p class="wl-brochure__text">
-						<?php esc_html_e( 'Packages, inclusions and real celebrations — tell us where to send it and it downloads straight away.', 'wonderland' ); ?>
+						<?php esc_html_e( 'Packages, inclusions and real celebrations — leave your details and it downloads straight away.', 'wonderland' ); ?>
 					</p>
 
 					<?php
