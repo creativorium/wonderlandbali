@@ -30,7 +30,20 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-follow' ) );
 		<?php endif; ?>
 	</div>
 
-	<?php if ( ! empty( $placeholders ) ) : ?>
+	<?php
+	// The live feed wins whenever the plugin that answers the shortcode is
+	// actually running. The placeholder tiles are the stand-in for when it is
+	// not — deactivated, rate-limited, or a token that needs reconnecting —
+	// because an unrendered "[instagram-feed]" on the page is worse than a
+	// handful of stills.
+	$tag       = $shortcode ? trim( strtok( ltrim( $shortcode, '[' ), ' ]' ) ) : '';
+	$has_feed  = $tag && shortcode_exists( $tag );
+	$rendered  = $has_feed ? trim( do_shortcode( $shortcode ) ) : '';
+	?>
+
+	<?php if ( '' !== $rendered ) : ?>
+		<div class="wl-follow__feed"><?php echo $rendered; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+	<?php elseif ( ! empty( $placeholders ) ) : ?>
 		<div class="wl-follow__grid">
 			<?php
 			foreach ( $placeholders as $ph ) :
@@ -56,7 +69,5 @@ $wrapper = get_block_wrapper_attributes( array( 'class' => 'wl-follow' ) );
 				</a>
 			<?php endforeach; ?>
 		</div>
-	<?php elseif ( $shortcode ) : ?>
-		<div class="wl-follow__feed"><?php echo do_shortcode( $shortcode ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 	<?php endif; ?>
 </section>
