@@ -25,9 +25,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string
  */
 function wonderland_brochure_url() {
+	// New file rather than a replacement at the old path: a brochure sits behind
+	// Cloudflare and a browser cache for months, and reusing the URL is how
+	// people keep being handed last year's edition.
 	return (string) apply_filters(
 		'wonderland_brochure_url',
-		content_url( '/uploads/2026/04/Wonderland-Brochure-2026.pdf' )
+		content_url( '/uploads/2026/08/Wonderland-Brochure-2026-2027.pdf' )
 	);
 }
 
