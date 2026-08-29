@@ -174,7 +174,14 @@ add_action(
 			return;
 		}
 
-		$form = is_page( 'request' ) ? 'request' : 'contact';
+		// The brochure dialog appears on every page, so the page cannot say which
+		// form was sent — the redirect flags do.
+		$dl   = isset( $_GET['wl_dl'] ) ? sanitize_key( wp_unslash( $_GET['wl_dl'] ) ) : '';
+		$sub  = isset( $_GET['wl_form'] ) ? sanitize_key( wp_unslash( $_GET['wl_form'] ) ) : '';
+		$form = 'brochure';
+		if ( 'brochure' !== $sub && 'brochure' !== $dl ) {
+			$form = is_page( 'request' ) ? 'request' : 'contact';
+		}
 
 		wp_add_inline_script(
 			'wonderland-main',

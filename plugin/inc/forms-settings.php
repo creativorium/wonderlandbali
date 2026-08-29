@@ -24,6 +24,8 @@ function wonderland_forms_settings() {
 	$defaults = array(
 		'recipient'          => get_option( 'admin_email' ),
 		'recipient_request'  => '',
+		'cc'                 => '',
+		'bcc'                => '',
 		'store_submissions'  => 1,
 		'recaptcha_site'     => '',
 		'recaptcha_secret'   => '',
@@ -61,6 +63,53 @@ function wonderland_forms_recipient_for( $preset = 'contact' ) {
 
 	/** Filters the recipient for a form preset. */
 	return apply_filters( 'wonderland_form_recipient', $to, $preset );
+}
+
+/**
+ * Clean a comma-separated list of addresses, dropping anything invalid.
+ *
+ * @param string $value Raw list.
+ * @return string Comma-separated valid addresses.
+ */
+function wonderland_sanitize_email_list( $value ) {
+	$parts = preg_split( '/[,;\s]+/', (string) $value, -1, PREG_SPLIT_NO_EMPTY );
+	$clean = array();
+
+	foreach ( (array) $parts as $part ) {
+		$mail = sanitize_email( $part );
+		if ( is_email( $mail ) ) {
+			$clean[] = $mail;
+		}
+	}
+
+	return implode( ', ', array_unique( $clean ) );
+}
+
+/**
+ * Mail headers for a submission: content type, and the copies configured in
+ * settings. Reply-To is added by the caller, which knows the enquirer.
+ *
+ * @param string $preset Form preset.
+ * @return string[]
+ */
+function wonderland_form_mail_headers( $preset = 'contact' ) {
+	$s       = wonderland_forms_settings();
+	$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+
+	foreach ( array( 'Cc' => 'cc', 'Bcc' => 'bcc' ) as $header => $key ) {
+		$list = wonderland_sanitize_email_list( $s[ $key ] ?? '' );
+		if ( $list ) {
+			$headers[] = $header . ': ' . $list;
+		}
+	}
+
+	/**
+	 * Filters the headers on a submission notification.
+	 *
+	 * @param string[] $headers Headers.
+	 * @param string   $preset  Form preset.
+	 */
+	return apply_filters( 'wonderland_form_mail_headers', $headers, $preset );
 }
 
 /**
@@ -106,6 +155,8 @@ function wonderland_forms_sanitize( $in ) {
 	return array(
 		'recipient'           => sanitize_email( $in['recipient'] ?? '' ),
 		'recipient_request'   => sanitize_email( $in['recipient_request'] ?? '' ),
+		'cc'                  => wonderland_sanitize_email_list( $in['cc'] ?? '' ),
+		'bcc'                 => wonderland_sanitize_email_list( $in['bcc'] ?? '' ),
 		'store_submissions'   => empty( $in['store_submissions'] ) ? 0 : 1,
 		'recaptcha_site'      => sanitize_text_field( $in['recaptcha_site'] ?? '' ),
 		'recaptcha_secret'    => sanitize_text_field( $in['recaptcha_secret'] ?? '' ),
@@ -143,6 +194,20 @@ function wonderland_forms_settings_page() {
 					<td>
 						<input id="wlf-recipient-request" class="regular-text" type="email" name="<?php echo esc_attr( $name ); ?>[recipient_request]" value="<?php echo esc_attr( $s['recipient_request'] ); ?>" />
 						<p class="description"><?php esc_html_e( 'Optional. Send booking requests to a different address than general enquiries.', 'wonderland-blocks' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="wlf-cc"><?php esc_html_e( 'Cc', 'wonderland-blocks' ); ?></label></th>
+					<td>
+						<input id="wlf-cc" class="regular-text" type="text" name="<?php echo esc_attr( $name ); ?>[cc]" value="<?php echo esc_attr( $s['cc'] ); ?>" />
+						<p class="description"><?php esc_html_e( 'Optional. Comma-separated. Everyone here can see the other recipients.', 'wonderland-blocks' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="wlf-bcc"><?php esc_html_e( 'Bcc', 'wonderland-blocks' ); ?></label></th>
+					<td>
+						<input id="wlf-bcc" class="regular-text" type="text" name="<?php echo esc_attr( $name ); ?>[bcc]" value="<?php echo esc_attr( $s['bcc'] ); ?>" />
+						<p class="description"><?php esc_html_e( 'Optional. Comma-separated. Hidden from the other recipients — use this for an archive address.', 'wonderland-blocks' ); ?></p>
 					</td>
 				</tr>
 				<tr>
@@ -196,6 +261,46 @@ function wonderland_forms_settings_page() {
 			</table>
 
 			<?php submit_button(); ?>
+		</form>
+
+		<hr />
+
+		<h2 class="title"><?php esc_html_e( 'Test the delivery', 'wonderland-blocks' ); ?></h2>
+		<p class="description">
+			<?php esc_html_e( 'Sends a made-up enquiry through the same path a real one takes — same recipients, same Cc and Bcc, same mailer. Nothing is saved to Submissions. Save your changes first: the test uses the settings as stored.', 'wonderland-blocks' ); ?>
+		</p>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+			<input type="hidden" name="action" value="wonderland_test_email" />
+			<?php wp_nonce_field( 'wonderland_test_email' ); ?>
+			<table class="form-table" role="presentation">
+				<tr>
+					<th scope="row"><label for="wlf-test-preset"><?php esc_html_e( 'Pretend it is', 'wonderland-blocks' ); ?></label></th>
+					<td>
+						<select id="wlf-test-preset" name="preset">
+							<?php foreach ( array( 'contact', 'request' ) as $preset ) : ?>
+								<option value="<?php echo esc_attr( $preset ); ?>"><?php echo esc_html( wonderland_form_label( $preset ) ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="wlf-test-to"><?php esc_html_e( 'Send it to', 'wonderland-blocks' ); ?></label></th>
+					<td>
+						<input id="wlf-test-to" class="regular-text" type="email" name="to"
+							placeholder="<?php echo esc_attr( wonderland_forms_recipient_for( 'contact' ) ); ?>" />
+						<p class="description">
+							<?php
+							printf(
+								/* translators: %s: the configured recipient address. */
+								esc_html__( 'Leave empty for the full dress rehearsal — %s plus the Cc and Bcc above. Put an address here to spot-check delivery instead: it goes there alone, with no copies.', 'wonderland-blocks' ),
+								'<strong>' . esc_html( wonderland_forms_recipient_for( 'contact' ) ) . '</strong>'
+							);
+							?>
+						</p>
+					</td>
+				</tr>
+			</table>
+			<?php submit_button( __( 'Send test email', 'wonderland-blocks' ), 'secondary', 'submit', false ); ?>
 		</form>
 	</div>
 	<?php

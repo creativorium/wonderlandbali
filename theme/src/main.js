@@ -89,6 +89,7 @@ if (toggle && overlay) {
     push('form_submit', {
       form_name: window.wlFormSubmitted, // 'contact' | 'request'
       page_url: location.href,
+      page_path: location.pathname,
       page_title: document.title,
     });
   }
@@ -102,8 +103,37 @@ if (toggle && overlay) {
       if (!a) return;
       const href = a.getAttribute('href') || '';
 
+      // Where the tap happened matters to the ads team: the floating button,
+      // the header CTA and a footer link are different offers, not one number.
+      const placement = a.closest('.wl-wa')
+        ? 'floating'
+        : a.closest('.site-header')
+        ? 'header'
+        : a.closest('.site-footer')
+        ? 'footer'
+        : 'content';
+      const label = (a.getAttribute('aria-label') || a.textContent || '').trim().slice(0, 80);
+
       if (href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp.com') !== -1) {
-        push('whatsapp_click', { link_url: href, page_url: location.href });
+        push('whatsapp_click', {
+          link_url: href,
+          link_text: label,
+          placement,
+          page_url: location.href,
+          page_path: location.pathname,
+        });
+      } else if (a.host === location.host && /(^|\/)(request|contact)\/?$/.test(a.pathname || '')) {
+        // The enquiry CTAs — "Make a Request", "Contact" — wherever they appear.
+        // Matched on the destination rather than a class, so a new button
+        // anywhere on the site is counted without touching this file.
+        push('enquiry_click', {
+          link_url: href,
+          link_text: label,
+          placement,
+          destination: /request/.test(a.pathname) ? 'request' : 'contact',
+          page_url: location.href,
+          page_path: location.pathname,
+        });
       } else if (href.indexOf('tel:') === 0) {
         push('phone_click', { link_url: href });
       } else if (href.indexOf('mailto:') === 0) {
@@ -127,6 +157,8 @@ if (toggle && overlay) {
   // Looked up on demand rather than at parse time: script and markup order in
   // the footer has bitten this once already.
   const getModal = () => document.getElementById('wl-brochure');
+
+  let openDialog = () => false;
 
   {
     let lastFocus = null;
@@ -158,6 +190,8 @@ if (toggle && overlay) {
       if (e.key === 'Escape' && modal && !modal.hidden) close();
     });
 
+    openDialog = open;
+
     // Intercept anything that points at the brochure, or opts in explicitly.
     document.addEventListener('click', (e) => {
       const a = e.target.closest && e.target.closest('a[href], [data-brochure]');
@@ -171,8 +205,19 @@ if (toggle && overlay) {
     });
   }
 
-  // Came back from a successful brochure submission: start the download.
+  // Came back from a brochure submission. Success starts the download and shows
+  // the fallback link; a failure just reopens the dialog, where the form's own
+  // message is waiting.
   if (window.wlBrochureDownload) {
+    openDialog();
+
+    const ready = document.querySelector('[data-brochure-ready]');
+    if (ready) {
+      const file = ready.querySelector('[data-brochure-file]');
+      if (file) file.href = window.wlBrochureDownload;
+      ready.hidden = false;
+    }
+
     const a = document.createElement('a');
     a.href = window.wlBrochureDownload;
     a.download = '';
@@ -180,5 +225,7 @@ if (toggle && overlay) {
     document.body.appendChild(a);
     a.click();
     a.remove();
+  } else if (window.wlBrochureFailed) {
+    openDialog();
   }
 })();

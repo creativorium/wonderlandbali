@@ -234,6 +234,69 @@ function wonderland_form_countries() {
 /**
  * Handle a submitted form: validate, email, redirect back.
  */
+/**
+ * How many submissions one address may send, and over what window.
+ *
+ * The honeypot catches the crude bots and reCAPTCHA scores the rest, but
+ * neither stops a script that solves both and simply keeps posting. Both
+ * numbers are filterable: a wedding party filling in the Request form from one
+ * hotel's wifi shares an IP, so the limit is generous on purpose.
+ *
+ * @return array{limit:int,window:int}
+ */
+function wonderland_form_rate_limit() {
+	return array(
+		'limit'  => (int) apply_filters( 'wonderland_form_rate_limit', 5 ),
+		'window' => (int) apply_filters( 'wonderland_form_rate_window', 10 * MINUTE_IN_SECONDS ),
+	);
+}
+
+/**
+ * The rate-limit key for the submitting address.
+ *
+ * The address is hashed: this is a spam counter, and there is no reason for a
+ * transient to hold a visitor's IP in the clear.
+ *
+ * @return string Transient key, or '' when the address is unknown.
+ */
+function wonderland_form_rate_key() {
+	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+	if ( ! $ip ) {
+		return '';
+	}
+	return 'wl_rate_' . md5( $ip . '|' . wp_salt() );
+}
+
+/**
+ * Whether this address has already had its allowance.
+ *
+ * @return bool
+ */
+function wonderland_form_rate_limited() {
+	$key = wonderland_form_rate_key();
+	if ( ! $key ) {
+		return false;
+	}
+	$limits = wonderland_form_rate_limit();
+	return (int) get_transient( $key ) >= $limits['limit'];
+}
+
+/**
+ * Count a submission against the address that sent it.
+ */
+function wonderland_form_rate_record() {
+	$key = wonderland_form_rate_key();
+	if ( ! $key ) {
+		return;
+	}
+	$limits = wonderland_form_rate_limit();
+	$count  = (int) get_transient( $key );
+
+	// The window runs from the first submission, so a flood cannot keep pushing
+	// its own expiry forward and stay under the limit for ever.
+	set_transient( $key, $count + 1, $limits['window'] );
+}
+
 function wonderland_handle_form() {
 	$nonce = isset( $_POST['wl_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['wl_nonce'] ) ) : '';
 	$back  = isset( $_POST['wl_redirect'] ) ? esc_url_raw( wp_unslash( $_POST['wl_redirect'] ) ) : home_url( '/' );
@@ -250,6 +313,18 @@ function wonderland_handle_form() {
 	}
 
 	$preset  = isset( $_POST['wl_preset'] ) ? sanitize_key( wp_unslash( $_POST['wl_preset'] ) ) : 'contact';
+
+	// Every failure carries the form it came from. The brochure dialog closes on
+	// the redirect, so without this its error message would render inside a
+	// hidden panel and the visitor would see nothing happen at all.
+	$back = add_query_arg( 'wl_form', $preset, $back );
+
+	// Flood protection. Checked before any work is done, and before reCAPTCHA,
+	// so a script cannot make us call Google on its behalf either.
+	if ( wonderland_form_rate_limited() ) {
+		wp_safe_redirect( add_query_arg( 'wl_sent', 'slowdown', $back ) . '#form' );
+		exit;
+	}
 	$subject = isset( $_POST['wl_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['wl_subject'] ) ) : 'Website enquiry';
 	$fields  = wonderland_form_fields( $preset );
 
@@ -319,6 +394,8 @@ function wonderland_handle_form() {
 		exit;
 	}
 
+	wonderland_form_rate_record();
+
 	// Store first: a DB record survives a bouncing mail server.
 	$submission_id = 0;
 	if ( function_exists( 'wonderland_store_submission' ) ) {
@@ -339,7 +416,11 @@ function wonderland_handle_form() {
 	}
 	$body .= "\n\n—\n" . __( 'Sent from', 'wonderland-blocks' ) . ' ' . home_url( '/' );
 
-	$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+	// Content type plus any Cc/Bcc configured in settings.
+	$headers = function_exists( 'wonderland_form_mail_headers' )
+		? wonderland_form_mail_headers( $preset )
+		: array( 'Content-Type: text/plain; charset=UTF-8' );
+
 	if ( is_email( $reply_mail ) ) {
 		$headers[] = 'Reply-To: ' . ( $reply_name ? $reply_name . ' <' . $reply_mail . '>' : $reply_mail );
 	}
@@ -348,11 +429,16 @@ function wonderland_handle_form() {
 		? wonderland_forms_recipient_for( $preset )
 		: get_option( 'admin_email' );
 
-	wp_mail(
-		$recipient,
-		sprintf( '[Wonderland] %s — %s', wonderland_form_label( $preset ), $subject ),
-		$body,
-		$headers
+	// Delivery is tracked on the submission: a mailer that refuses the message
+	// is retried on cron, and a message already sent is never sent twice.
+	wonderland_send_submission_mail(
+		$submission_id,
+		array(
+			'to'      => $recipient,
+			'subject' => sprintf( '[Wonderland] %s — %s', wonderland_form_label( $preset ), $subject ),
+			'body'    => $body,
+			'headers' => $headers,
+		)
 	);
 
 	/**
@@ -518,6 +604,8 @@ function wonderland_render_form( $args = array() ) {
 			<p class="wl-form__notice is-error" role="alert">We couldn't verify that you're human. Please reload the page and try again.</p>
 		<?php elseif ( 'required' === $sent ) : ?>
 			<p class="wl-form__notice is-error" role="alert">Please fill in every field marked with an asterisk and send again.</p>
+		<?php elseif ( 'slowdown' === $sent ) : ?>
+			<p class="wl-form__notice is-error" role="alert">We've already had a few messages from you — please give it a few minutes before sending another, or email us directly.</p>
 		<?php elseif ( 'error' === $sent ) : ?>
 			<p class="wl-form__notice is-error" role="alert">Sorry, something went wrong. Please try again.</p>
 		<?php endif; ?>
@@ -566,6 +654,66 @@ function wonderland_render_form( $args = array() ) {
 			} )();
 			</script>
 		<?php endif; ?>
+
+		<?php
+		// A long Request form is easy to lose: a refresh, a validation bounce, a
+		// phone call mid-way. What is typed is kept in the visitor's own browser
+		// and put back when they return — it never leaves their machine, so there
+		// is no record of an enquiry nobody chose to send.
+		?>
+		<script>
+		( function () {
+			var form = document.currentScript.closest( 'form' );
+			if ( ! form ) { return; }
+
+			var key = 'wl-draft-<?php echo esc_js( $preset ); ?>';
+			// Hidden fields carry the nonce and the honeypot; neither belongs in a
+			// draft, and a stale nonce would be worse than no draft at all.
+			var fields = function () {
+				return Array.prototype.filter.call(
+					form.querySelectorAll( 'input[name^="wl_"], textarea[name^="wl_"], select[name^="wl_"]' ),
+					function ( el ) { return el.type !== 'hidden' && el.name !== 'wl_website'; }
+				);
+			};
+
+			var read = function () {
+				try { return JSON.parse( window.localStorage.getItem( key ) || '{}' ); } catch ( e ) { return {}; }
+			};
+			var clear = function () {
+				try { window.localStorage.removeItem( key ); } catch ( e ) {}
+			};
+
+			// A submission that got through leaves ?wl_sent=1 behind: the draft has
+			// served its purpose and should not repopulate the empty form.
+			if ( /[?&]wl_sent=1(&|$)/.test( window.location.search ) ) {
+				clear();
+				return;
+			}
+
+			var saved = read();
+			fields().forEach( function ( el ) {
+				if ( ! el.value && typeof saved[ el.name ] === 'string' ) {
+					el.value = saved[ el.name ];
+				}
+			} );
+
+			var timer;
+			form.addEventListener( 'input', function () {
+				window.clearTimeout( timer );
+				timer = window.setTimeout( function () {
+					var data = {};
+					fields().forEach( function ( el ) {
+						if ( el.value ) { data[ el.name ] = el.value; }
+					} );
+					try { window.localStorage.setItem( key, JSON.stringify( data ) ); } catch ( e ) {}
+				}, 400 );
+			} );
+
+			// Deliberately not cleared on submit: a bounce back for a missing
+			// field or a failed captcha is exactly when the draft has to survive.
+			// Only the ?wl_sent=1 branch above wipes it.
+		} )();
+		</script>
 
 		<button type="submit" class="wl-form__submit"><?php echo esc_html( $args['button'] ); ?></button>
 

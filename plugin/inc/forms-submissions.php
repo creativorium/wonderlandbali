@@ -172,6 +172,7 @@ add_filter(
 			'wl_email' => __( 'Email', 'wonderland-blocks' ),
 			'wl_phone' => __( 'Phone', 'wonderland-blocks' ),
 			'wl_extra' => __( 'Summary', 'wonderland-blocks' ),
+			'wl_mail'  => __( 'Notification', 'wonderland-blocks' ),
 			'date'     => __( 'Received', 'wonderland-blocks' ),
 		);
 	}
@@ -202,6 +203,25 @@ add_action(
 
 			case 'wl_phone':
 				echo esc_html( get_post_meta( $post_id, '_wl_phone', true ) ?: '—' );
+				break;
+
+			case 'wl_mail':
+				$state = wonderland_mail_status( $post_id );
+				printf(
+					'<span style="color:%s;font-weight:600">%s</span>',
+					esc_attr( $state['colour'] ),
+					esc_html( $state['label'] )
+				);
+				if ( in_array( $state['status'], array( 'failed', 'unknown' ), true ) && get_post_meta( $post_id, '_wl_mail_payload', true ) ) {
+					printf(
+						'<br /><a href="%s">%s</a>',
+						esc_url( wonderland_resend_url( $post_id ) ),
+						esc_html__( 'Send again', 'wonderland-blocks' )
+					);
+				}
+				if ( $state['detail'] ) {
+					printf( '<br /><span class="description">%s</span>', esc_html( $state['detail'] ) );
+				}
 				break;
 
 			case 'wl_extra':
