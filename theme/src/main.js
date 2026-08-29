@@ -158,6 +158,8 @@ if (toggle && overlay) {
   // the footer has bitten this once already.
   const getModal = () => document.getElementById('wl-brochure');
 
+  let openDialog = () => false;
+
   {
     let lastFocus = null;
 
@@ -188,6 +190,8 @@ if (toggle && overlay) {
       if (e.key === 'Escape' && modal && !modal.hidden) close();
     });
 
+    openDialog = open;
+
     // Intercept anything that points at the brochure, or opts in explicitly.
     document.addEventListener('click', (e) => {
       const a = e.target.closest && e.target.closest('a[href], [data-brochure]');
@@ -201,8 +205,19 @@ if (toggle && overlay) {
     });
   }
 
-  // Came back from a successful brochure submission: start the download.
+  // Came back from a brochure submission. Success starts the download and shows
+  // the fallback link; a failure just reopens the dialog, where the form's own
+  // message is waiting.
   if (window.wlBrochureDownload) {
+    openDialog();
+
+    const ready = document.querySelector('[data-brochure-ready]');
+    if (ready) {
+      const file = ready.querySelector('[data-brochure-file]');
+      if (file) file.href = window.wlBrochureDownload;
+      ready.hidden = false;
+    }
+
     const a = document.createElement('a');
     a.href = window.wlBrochureDownload;
     a.download = '';
@@ -210,5 +225,7 @@ if (toggle && overlay) {
     document.body.appendChild(a);
     a.click();
     a.remove();
+  } else if (window.wlBrochureFailed) {
+    openDialog();
   }
 })();

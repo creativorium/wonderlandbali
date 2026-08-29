@@ -67,6 +67,19 @@ add_action(
 					)
 				);
 				?>
+
+				<?php
+				// A browser may refuse a download it did not see a click for, and
+				// then the visitor has given us their email for nothing. This link
+				// is revealed alongside the automatic download so there is always
+				// something to press.
+				?>
+				<p class="wl-brochure__ready" data-brochure-ready hidden>
+					<?php esc_html_e( 'Your download is starting.', 'wonderland' ); ?>
+					<a href="<?php echo esc_url( wonderland_brochure_url() ); ?>" download data-brochure-file>
+						<?php esc_html_e( 'Click here if it does not.', 'wonderland' ); ?>
+					</a>
+				</p>
 			</div>
 		</div>
 		<?php
@@ -86,6 +99,16 @@ add_action(
 		$sent = isset( $_GET['wl_sent'] ) ? sanitize_text_field( wp_unslash( $_GET['wl_sent'] ) ) : '';
 		$dl   = isset( $_GET['wl_dl'] ) ? sanitize_key( wp_unslash( $_GET['wl_dl'] ) ) : '';
 		// phpcs:enable
+
+		$form = isset( $_GET['wl_form'] ) ? sanitize_key( wp_unslash( $_GET['wl_form'] ) ) : '';
+
+		// A brochure submission that failed — a missing field, the rate limit,
+		// a captcha score — comes back without the download flag. Reopen the
+		// dialog for it too, so the reason is on screen instead of hidden.
+		if ( 'brochure' === $form && '1' !== $sent ) {
+			wp_add_inline_script( 'wonderland-main', 'window.wlBrochureFailed = true;', 'before' );
+			return;
+		}
 
 		if ( '1' !== $sent || 'brochure' !== $dl ) {
 			return;

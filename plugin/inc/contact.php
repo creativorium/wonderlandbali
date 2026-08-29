@@ -312,14 +312,19 @@ function wonderland_handle_form() {
 		exit;
 	}
 
+	$preset  = isset( $_POST['wl_preset'] ) ? sanitize_key( wp_unslash( $_POST['wl_preset'] ) ) : 'contact';
+
+	// Every failure carries the form it came from. The brochure dialog closes on
+	// the redirect, so without this its error message would render inside a
+	// hidden panel and the visitor would see nothing happen at all.
+	$back = add_query_arg( 'wl_form', $preset, $back );
+
 	// Flood protection. Checked before any work is done, and before reCAPTCHA,
 	// so a script cannot make us call Google on its behalf either.
 	if ( wonderland_form_rate_limited() ) {
 		wp_safe_redirect( add_query_arg( 'wl_sent', 'slowdown', $back ) . '#form' );
 		exit;
 	}
-
-	$preset  = isset( $_POST['wl_preset'] ) ? sanitize_key( wp_unslash( $_POST['wl_preset'] ) ) : 'contact';
 	$subject = isset( $_POST['wl_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['wl_subject'] ) ) : 'Website enquiry';
 	$fields  = wonderland_form_fields( $preset );
 
