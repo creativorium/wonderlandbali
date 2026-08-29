@@ -68,6 +68,29 @@
 
 	// Award badge and reply promise are already on the page around this dialog.
 	.wl-form__reassure { border-top-color: rgba(0, 0, 0, 0.15); }
+	// The delivery link on the thank-you state: the one thing left to press.
+	&__file {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 1.5rem;
+		padding: 0.95rem 2.1rem;
+		border: 1px solid var(--wl-ink, #000);
+		background: var(--wl-ink, #000);
+		color: #fff;
+		font-family: var(--wl-font-label, sans-serif);
+		font-weight: 500;
+		font-size: 0.78rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		text-decoration: none;
+		transition: background-color 0.2s ease, color 0.2s ease;
+
+		&:hover {
+			background: transparent;
+			color: var(--wl-ink, #000);
+		}
+	}
 }
 
 body.wl-brochure-open { overflow: hidden; }

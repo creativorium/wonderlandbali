@@ -43,6 +43,14 @@ add_action(
 		if ( ! function_exists( 'wonderland_render_form' ) ) {
 			return; // blocks plugin inactive
 		}
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only flags.
+		$sent = isset( $_GET['wl_sent'] ) ? sanitize_text_field( wp_unslash( $_GET['wl_sent'] ) ) : '';
+		$dl   = isset( $_GET['wl_dl'] ) ? sanitize_key( wp_unslash( $_GET['wl_dl'] ) ) : '';
+		// phpcs:enable
+
+		// They have already given us their details — asking again on the way out
+		// reads like the send failed.
+		$done = ( '1' === $sent && 'brochure' === $dl );
 		?>
 		<div class="wl-brochure" id="wl-brochure" hidden>
 			<div class="wl-brochure__backdrop" data-brochure-close></div>
@@ -51,35 +59,45 @@ add_action(
 				<button class="wl-brochure__close" data-brochure-close
 					aria-label="<?php esc_attr_e( 'Close', 'wonderland' ); ?>">&times;</button>
 
-				<h2 class="wl-brochure__title" id="wl-brochure-title">
-					<?php esc_html_e( 'Get the 2026 brochure', 'wonderland' ); ?>
-				</h2>
-				<p class="wl-brochure__text">
-					<?php esc_html_e( 'Packages, inclusions and real celebrations — tell us where to send it and it downloads straight away.', 'wonderland' ); ?>
-				</p>
+				<?php if ( $done ) : ?>
 
-				<?php
-				echo wonderland_render_form( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					array(
-						'preset'  => 'brochure',
-						'subject' => 'Brochure download',
-						'button'  => __( 'Send me the brochure', 'wonderland' ),
-					)
-				);
-				?>
+					<h2 class="wl-brochure__title" id="wl-brochure-title">
+						<?php esc_html_e( 'Thank you — your brochure is on the way', 'wonderland' ); ?>
+					</h2>
+					<p class="wl-brochure__text">
+						<?php esc_html_e( 'The download starts on its own. We have your details and will be in touch within 24 hours.', 'wonderland' ); ?>
+					</p>
 
-				<?php
-				// A browser may refuse a download it did not see a click for, and
-				// then the visitor has given us their email for nothing. This link
-				// is revealed alongside the automatic download so there is always
-				// something to press.
-				?>
-				<p class="wl-brochure__ready" data-brochure-ready hidden>
-					<?php esc_html_e( 'Your download is starting.', 'wonderland' ); ?>
-					<a href="<?php echo esc_url( wonderland_brochure_url() ); ?>" download data-brochure-file>
-						<?php esc_html_e( 'Click here if it does not.', 'wonderland' ); ?>
+					<?php
+					// A browser can refuse a download it did not see a click for, so
+					// there is always something to press. `data-brochure-file` keeps
+					// it out of the interceptor that opens this dialog.
+					?>
+					<a class="wl-brochure__file" href="<?php echo esc_url( wonderland_brochure_url() ); ?>"
+						download data-brochure-file>
+						<?php esc_html_e( 'Download the brochure', 'wonderland' ); ?>
 					</a>
-				</p>
+
+				<?php else : ?>
+
+					<h2 class="wl-brochure__title" id="wl-brochure-title">
+						<?php esc_html_e( 'Get the 2026 brochure', 'wonderland' ); ?>
+					</h2>
+					<p class="wl-brochure__text">
+						<?php esc_html_e( 'Packages, inclusions and real celebrations — tell us where to send it and it downloads straight away.', 'wonderland' ); ?>
+					</p>
+
+					<?php
+					echo wonderland_render_form( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						array(
+							'preset'  => 'brochure',
+							'subject' => 'Brochure download',
+							'button'  => __( 'Send me the brochure', 'wonderland' ),
+						)
+					);
+					?>
+
+				<?php endif; ?>
 			</div>
 		</div>
 		<?php

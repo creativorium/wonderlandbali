@@ -196,6 +196,11 @@ if (toggle && overlay) {
     document.addEventListener('click', (e) => {
       const a = e.target.closest && e.target.closest('a[href], [data-brochure]');
       if (!a) return;
+      // The delivery link itself points at the same PDF, so without this the
+      // dialog would reopen instead of handing the file over — and the
+      // programmatic click that starts the automatic download is caught by this
+      // very listener, which is why it silently did nothing.
+      if (a.hasAttribute('data-brochure-file')) return;
       const href = a.getAttribute('href') || '';
       const wants = a.hasAttribute('data-brochure') || /brochure[^/]*\.pdf($|\?)/i.test(href);
       if (!wants) return;
@@ -211,17 +216,11 @@ if (toggle && overlay) {
   if (window.wlBrochureDownload) {
     openDialog();
 
-    const ready = document.querySelector('[data-brochure-ready]');
-    if (ready) {
-      const file = ready.querySelector('[data-brochure-file]');
-      if (file) file.href = window.wlBrochureDownload;
-      ready.hidden = false;
-    }
-
     const a = document.createElement('a');
     a.href = window.wlBrochureDownload;
     a.download = '';
     a.rel = 'noopener';
+    a.setAttribute('data-brochure-file', ''); // exempt from the interceptor above
     document.body.appendChild(a);
     a.click();
     a.remove();
