@@ -95,9 +95,28 @@
 		svg { width: 46px; height: 46px; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35)); }
 	}
 
+	// The feed replaces the placeholder row, so it inherits the same job: one
+	// edge-to-edge band of squares tucked under the title. Smash Balloon boxes
+	// and pads its own grid from the feed settings, and sets some of it inline,
+	// which is why these have to shout.
 	&__feed {
-		max-width: var(--wl-content-max, 1200px);
-		margin-inline: auto;
+		position: relative;
+		z-index: 1;
+
+		#sb_instagram {
+			width: 100%;
+			padding: 0 !important;
+		}
+
+		#sbi_images {
+			gap: 0 !important;
+			padding: 0 !important;
+		}
+
+		.sbi_item {
+			padding: 0 !important;
+			margin: 0 !important;
+		}
 	}
 
 	@media (max-width: 720px) {
