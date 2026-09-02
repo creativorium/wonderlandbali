@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WONDERLAND_VERSION', '0.2.0' );
+define( 'WONDERLAND_VERSION', '0.2.1' );
 define( 'WONDERLAND_DIR', get_stylesheet_directory() );
 define( 'WONDERLAND_URI', get_stylesheet_directory_uri() );
 

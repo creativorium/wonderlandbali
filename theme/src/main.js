@@ -87,7 +87,12 @@ if (toggle && overlay) {
   // A form was submitted successfully on the page we just landed on.
   if (window.wlFormSubmitted) {
     push('form_submit', {
-      form_name: window.wlFormSubmitted, // 'contact' | 'request'
+      // form_id is what the ads team keys their triggers on: 'contact',
+      // 'request' or 'brochure', matching the form's own id in the markup
+      // (wl-form-contact and so on). form_name stays for the reports that
+      // already use it.
+      form_id: window.wlFormSubmitted,
+      form_name: window.wlFormSubmitted,
       page_url: location.href,
       page_path: location.pathname,
       page_title: document.title,

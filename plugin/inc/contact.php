@@ -297,6 +297,19 @@ function wonderland_form_rate_record() {
 	set_transient( $key, $count + 1, $limits['window'] );
 }
 
+/**
+ * The fragment that scrolls a visitor back to the form they used.
+ *
+ * The brochure form lives in a dialog that is hidden on load, so an anchor to it
+ * would scroll nowhere; that one is reopened by script instead.
+ *
+ * @param string $preset Form preset.
+ * @return string
+ */
+function wonderland_form_anchor( $preset ) {
+	return 'brochure' === $preset ? '' : '#wl-form-' . sanitize_key( $preset );
+}
+
 function wonderland_handle_form() {
 	$nonce = isset( $_POST['wl_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['wl_nonce'] ) ) : '';
 	$back  = isset( $_POST['wl_redirect'] ) ? esc_url_raw( wp_unslash( $_POST['wl_redirect'] ) ) : home_url( '/' );
@@ -322,7 +335,7 @@ function wonderland_handle_form() {
 	// Flood protection. Checked before any work is done, and before reCAPTCHA,
 	// so a script cannot make us call Google on its behalf either.
 	if ( wonderland_form_rate_limited() ) {
-		wp_safe_redirect( add_query_arg( 'wl_sent', 'slowdown', $back ) . '#form' );
+		wp_safe_redirect( add_query_arg( 'wl_sent', 'slowdown', $back ) . wonderland_form_anchor( $preset ) );
 		exit;
 	}
 	$subject = isset( $_POST['wl_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['wl_subject'] ) ) : 'Website enquiry';
@@ -335,7 +348,7 @@ function wonderland_handle_form() {
 		$result = wonderland_verify_recaptcha( $token );
 
 		if ( ! $result['ok'] ) {
-			wp_safe_redirect( add_query_arg( 'wl_sent', 'captcha', $back ) . '#form' );
+			wp_safe_redirect( add_query_arg( 'wl_sent', 'captcha', $back ) . wonderland_form_anchor( $preset ) );
 			exit;
 		}
 		$score = $result['score'];
@@ -390,7 +403,7 @@ function wonderland_handle_form() {
 	}
 
 	if ( $missing ) {
-		wp_safe_redirect( add_query_arg( 'wl_sent', 'required', $back ) . '#form' );
+		wp_safe_redirect( add_query_arg( 'wl_sent', 'required', $back ) . wonderland_form_anchor( $preset ) );
 		exit;
 	}
 
@@ -452,7 +465,7 @@ function wonderland_handle_form() {
 	 */
 	$redirect = apply_filters( 'wonderland_form_redirect', add_query_arg( 'wl_sent', '1', $back ), $preset );
 
-	wp_safe_redirect( $redirect . '#form' );
+	wp_safe_redirect( $redirect . wonderland_form_anchor( $preset ) );
 	exit;
 }
 
@@ -597,7 +610,10 @@ function wonderland_render_form( $args = array() ) {
 
 	ob_start();
 	?>
-	<form class="wl-form wl-form--<?php echo esc_attr( $preset ); ?>" id="form" method="post" action="<?php echo esc_url( get_permalink() ); ?>">
+	<form class="wl-form wl-form--<?php echo esc_attr( $preset ); ?>"
+		id="wl-form-<?php echo esc_attr( $preset ); ?>"
+		data-form-id="<?php echo esc_attr( $preset ); ?>"
+		method="post" action="<?php echo esc_url( get_permalink() ); ?>">
 		<?php if ( '1' === $sent ) : ?>
 			<p class="wl-form__notice is-success" role="status">Thank you! Your message has been sent — we'll be in touch soon.</p>
 		<?php elseif ( 'captcha' === $sent ) : ?>
