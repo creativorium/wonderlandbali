@@ -197,10 +197,22 @@ content/pages/*.html      authoring record of each page's block markup (see §8)
 
 ## 7. Deploying
 
-Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds and rsyncs the theme
-and plugins to the server over SSH. **Page content is not deployed by default** — it only
-syncs when you run the workflow manually and tick `sync_content`, so a routine code deploy
-can never overwrite something edited in wp-admin.
+**Staging** deploys itself: pushing to `main` triggers `.github/workflows/deploy.yml`, which
+builds and rsyncs the theme and plugins over SSH. **Page content is not deployed by default** —
+it only syncs when you run the workflow manually and tick `sync_content`, so a routine code
+deploy can never overwrite something edited in wp-admin.
+
+**Live has no SSH wiring**, so it updates from wp-admin instead:
+
+1. Bump the version in `theme/style.css` (and `functions.php`) or `plugin/wonderland-blocks.php`.
+2. Merge to `main`, then run **Actions → Release**. It builds, packages both components as
+   `wonderland-<version>.zip` / `wonderland-blocks-<version>.zip`, and publishes a GitHub
+   Release. It refuses to reuse a version that already has a release.
+3. On the site: **Dashboard → Updates → Check again**, then update Wonderland and Wonderland
+   Blocks like any other theme or plugin.
+
+`plugin/inc/updates.php` is what points WordPress at those releases — for both components, so
+theme updates stop being offered if the blocks plugin is deactivated.
 
 ---
 

@@ -1,0 +1,101 @@
+name: Release
+
+# Builds the theme and the blocks plugin and attaches them to a GitHub Release,
+# which is where the sites look for updates (plugin/inc/updates.php). This is
+# what replaces uploading zips by hand.
+#
+# The asset filenames carry the versions — wonderland-0.2.1.zip,
+# wonderland-blocks-0.2.4.zip — so one release can ship the two components at
+# their own version numbers, and the updater knows which is which.
+#
+# Bump the version in theme/style.css or plugin/wonderland-blocks.php, merge to
+# main, then run this workflow. It refuses to publish a version that already has
+# a release, so a forgotten bump fails loudly instead of shipping the old code
+# under a new tag.
+
+on:
+  workflow_dispatch:
+    inputs:
+      notes:
+        description: What changed (one line, shown on the release and in wp-admin)
+        type: string
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Fail if the build produced nothing
+        run: |
+          test -s theme/build/main.css        || { echo "theme/build/main.css missing"; exit 1; }
+          test -s plugin/build/frontend.css   || { echo "plugin/build/frontend.css missing"; exit 1; }
+          test -s plugin/build/editor.js      || { echo "plugin/build/editor.js missing"; exit 1; }
+
+      - name: Read the versions
+        id: versions
+        run: |
+          theme=$(grep -m1 '^Version:' theme/style.css | tr -d ' \r' | cut -d: -f2)
+          blocks=$(grep -m1 '^ \* Version:' plugin/wonderland-blocks.php | tr -d ' \r' | cut -d: -f2)
+          [ -n "$theme" ] && [ -n "$blocks" ] || { echo "could not read a version"; exit 1; }
+          echo "theme=$theme"   >> "$GITHUB_OUTPUT"
+          echo "blocks=$blocks" >> "$GITHUB_OUTPUT"
+          echo "tag=v$theme+blocks$blocks" >> "$GITHUB_OUTPUT"
+          echo "→ theme $theme, blocks $blocks"
+
+      - name: Refuse to republish the same versions
+        run: |
+          tag="${{ steps.versions.outputs.tag }}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "::error::$tag already exists — bump the version in theme/style.css or plugin/wonderland-blocks.php first."
+            exit 1
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Package
+        run: |
+          mkdir -p dist/wonderland dist/wonderland-blocks
+          # The folder inside the zip is the folder WordPress installs to, so it
+          # has to be the real one rather than "theme" / "plugin".
+          cp -r theme/.   dist/wonderland/
+          cp -r plugin/.  dist/wonderland-blocks/
+          rm -rf dist/wonderland/node_modules dist/wonderland-blocks/node_modules
+          cd dist
+          zip -qr "wonderland-${{ steps.versions.outputs.theme }}.zip" wonderland
+          zip -qr "wonderland-blocks-${{ steps.versions.outputs.blocks }}.zip" wonderland-blocks
+          ls -la *.zip
+
+      - name: Publish the release
+        run: |
+          notes="${{ inputs.notes }}"
+          [ -n "$notes" ] || notes="Theme ${{ steps.versions.outputs.theme }}, blocks ${{ steps.versions.outputs.blocks }}."
+          gh release create "${{ steps.versions.outputs.tag }}" \
+            dist/wonderland-${{ steps.versions.outputs.theme }}.zip \
+            dist/wonderland-blocks-${{ steps.versions.outputs.blocks }}.zip \
+            --title "${{ steps.versions.outputs.tag }}" \
+            --notes "$notes" \
+            --target "${{ github.sha }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Where it landed
+        run: |
+          echo "### Released ${{ steps.versions.outputs.tag }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "The sites will offer this within 12 hours, or immediately via Dashboard → Updates → Check again." >> "$GITHUB_STEP_SUMMARY"
