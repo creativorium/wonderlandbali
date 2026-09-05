@@ -97,7 +97,7 @@ jobs:
       # The theme needs its PHP, assets and build output. src/ is build-time only.
       - name: Upload the theme
         run: |
-          rsync -az --delete \
+          rsync -az --delete --old-args \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ vars.SSH_PORT || 22 }}" \
             --exclude '.git*' --exclude 'src/' --exclude 'node_modules/' \
             theme/ \
@@ -107,7 +107,7 @@ jobs:
       # src/blocks/*/block.json and each block's render.php. Do not exclude it.
       - name: Upload the blocks plugin
         run: |
-          rsync -az --delete \
+          rsync -az --delete --old-args \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ vars.SSH_PORT || 22 }}" \
             --exclude '.git*' --exclude 'node_modules/' \
             plugin/ \
@@ -115,7 +115,7 @@ jobs:
 
       - name: Upload the maintenance plugin
         run: |
-          rsync -az --delete \
+          rsync -az --delete --old-args \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ vars.SSH_PORT || 22 }}" \
             --exclude '.git*' \
             plugin-maintenance/ \
@@ -123,7 +123,7 @@ jobs:
 
       - name: Upload the content records and deploy script
         run: |
-          rsync -az \
+          rsync -az --old-args \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ vars.SSH_PORT || 22 }}" \
             content/ scripts/ \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/"
