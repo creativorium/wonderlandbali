@@ -234,6 +234,24 @@
 		padding-right: 2.25rem;
 	}
 
+	// Budget: a currency select fused to the amount field, read as one control.
+	&__budget {
+		display: flex;
+
+		.wl-form__budget-currency {
+			flex: 0 0 auto;
+			width: 5.5rem;
+			border-right: 0;
+			padding-right: 1.75rem; // room for the chevron at this narrower width
+			background-position: calc(100% - 0.7rem) 55%, calc(100% - 0.4rem) 55%;
+		}
+
+		.wl-form__budget-amount {
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+	}
+
 	&__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
 	&__legal {

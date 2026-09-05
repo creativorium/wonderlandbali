@@ -105,9 +105,10 @@ function wonderland_form_fields( $preset = 'contact' ) {
 		),
 		'budget'       => array(
 			'label'       => 'Budget',
-			'type'        => 'text',
+			'type'        => 'budget',
 			'required'    => true,
-			'placeholder' => 'e.g. USD 20,000',
+			'placeholder' => 'e.g. 20,000',
+			'currencies'  => array( 'USD', 'AUD' ),
 			'half'        => true,
 		),
 		'venue'        => array(
@@ -367,7 +368,22 @@ function wonderland_handle_form() {
 			continue;
 		}
 
-		$raw = isset( $_POST[ 'wl_' . $key ] ) ? wp_unslash( $_POST[ 'wl_' . $key ] ) : '';
+		// A budget field posts two inputs (currency + amount) that combine into
+		// one value everywhere downstream — the stored submission, the email
+		// body and the required-field check all still see a single string.
+		if ( 'budget' === $field['type'] ) {
+			$currencies = ! empty( $field['currencies'] ) ? (array) $field['currencies'] : array();
+			$currency   = isset( $_POST[ 'wl_' . $key . '_currency' ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'wl_' . $key . '_currency' ] ) ) : '';
+			$amount     = isset( $_POST[ 'wl_' . $key . '_amount' ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'wl_' . $key . '_amount' ] ) ) : '';
+
+			if ( $currencies && ! in_array( $currency, $currencies, true ) ) {
+				$currency = '';
+			}
+
+			$raw = ( $currency && '' !== trim( $amount ) ) ? $currency . ' ' . trim( $amount ) : '';
+		} else {
+			$raw = isset( $_POST[ 'wl_' . $key ] ) ? wp_unslash( $_POST[ 'wl_' . $key ] ) : '';
+		}
 
 		if ( 'textarea' === $field['type'] ) {
 			$value = sanitize_textarea_field( $raw );
@@ -559,7 +575,26 @@ function wonderland_render_field( $key, $field ) {
 			<?php echo esc_html( $field['label'] ); ?>
 			<?php if ( $required ) : ?><span class="wl-form__req" aria-hidden="true">*</span><?php endif; ?>
 		</label>
-		<?php if ( 'textarea' === $field['type'] ) : ?>
+		<?php if ( 'budget' === $field['type'] ) : ?>
+			<?php
+			$currencies = ! empty( $field['currencies'] ) ? (array) $field['currencies'] : array( 'USD' );
+			$cur_id     = $id . '-currency';
+			$amt_id     = $id . '-amount';
+			?>
+			<div class="wl-form__budget">
+				<select id="<?php echo esc_attr( $cur_id ); ?>" name="<?php echo esc_attr( $name ); ?>_currency"
+					class="wl-form__budget-currency" aria-label="<?php esc_attr_e( 'Currency', 'wonderland-blocks' ); ?>"
+					<?php echo $required ? 'required' : ''; ?>>
+					<?php foreach ( $currencies as $currency ) : ?>
+						<option value="<?php echo esc_attr( $currency ); ?>"><?php echo esc_html( $currency ); ?></option>
+					<?php endforeach; ?>
+				</select>
+				<input type="text" id="<?php echo esc_attr( $amt_id ); ?>" name="<?php echo esc_attr( $name ); ?>_amount"
+					class="wl-form__budget-amount" inputmode="numeric"
+					placeholder="<?php echo esc_attr( $field['placeholder'] ?? '' ); ?>"
+					<?php echo $required ? 'required' : ''; ?> />
+			</div>
+		<?php elseif ( 'textarea' === $field['type'] ) : ?>
 			<textarea
 				id="<?php echo esc_attr( $id ); ?>"
 				name="<?php echo esc_attr( $name ); ?>"
