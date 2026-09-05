@@ -64,14 +64,19 @@ function wonderland_content_sync_section() {
 				</td>
 			</tr>
 		</table>
+		<p>
+			<label>
+				<input type="checkbox" name="confirm" value="1" required />
+				<?php esc_html_e( 'I understand this replaces the page\'s content immediately, live.', 'wonderland-blocks' ); ?>
+			</label>
+		</p>
 		<?php
-		submit_button(
-			__( 'Apply', 'wonderland-blocks' ),
-			'secondary',
-			'submit',
-			false,
-			array( 'onclick' => "return confirm('" . esc_js( __( 'This replaces the page\'s content immediately, live. Continue?', 'wonderland-blocks' ) ) . "');" )
-		);
+		// A native required checkbox rather than a JS confirm(): a page a
+		// browser has already dismissed a few dialogs on can silently suppress
+		// further window.confirm() calls (Chrome's "prevent additional dialogs"),
+		// which makes the button look like it does nothing at all — exactly what
+		// happened here while testing.
+		submit_button( __( 'Apply', 'wonderland-blocks' ), 'secondary', 'submit', false );
 		?>
 	</form>
 	<?php
