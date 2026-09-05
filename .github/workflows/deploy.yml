@@ -15,8 +15,11 @@ on:
       environment:
         description: Target environment
         type: choice
-        options: [staging, production]
-        default: staging
+        # Must match the GitHub Environment names exactly — Settings → Environments
+        # lists them as "Staging" and "Production", and environment-scoped secrets
+        # are only found on an exact, case-sensitive match against that name.
+        options: [Staging, Production]
+        default: Staging
       sync_content:
         description: 'Re-apply page content from content/pages/ (overwrites edits made in wp-admin)'
         type: boolean
@@ -33,7 +36,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment || 'staging' }}
+    environment: ${{ inputs.environment || 'Staging' }}
 
     steps:
       - uses: actions/checkout@v4
