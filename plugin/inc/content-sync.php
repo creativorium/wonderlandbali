@@ -10,6 +10,15 @@
  * comments. This tool disables that filter the same way the project's own
  * deploy tooling does, so what is pasted is what gets stored, byte for byte.
  *
+ * Lives on the Wonderland Forms settings screen rather than a page of its own:
+ * a standalone admin page under a brand-new slug hit "Sorry, you are not
+ * allowed to access this page" for an account that is genuinely an
+ * Administrator, on a site running two capability-restricting security plugins
+ * (restrict-user-access, really-simple-ssl) — deactivating restrict-user-access
+ * did not clear it, and the settings screen was confirmed reachable throughout,
+ * so folding this into that already-working page sidesteps whatever the new
+ * slug was tripping, rather than chasing it further.
+ *
  * @package WonderlandBlocks
  */
 
@@ -17,97 +26,111 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action(
-	'admin_menu',
-	function () {
-		add_submenu_page(
-			'wonderland-forms',
-			__( 'Apply Page Content', 'wonderland-blocks' ),
-			__( 'Apply Page Content', 'wonderland-blocks' ),
-			'manage_options',
-			'wonderland-content-sync',
-			'wonderland_content_sync_page'
+/**
+ * The form, printed inside wonderland_forms_settings_page().
+ */
+function wonderland_content_sync_section() {
+	?>
+	<h2 class="title"><?php esc_html_e( 'Apply page content', 'wonderland-blocks' ); ?></h2>
+	<p class="description" style="max-width:70ch">
+		<?php
+		esc_html_e(
+			'Replaces one page\'s content wholesale with what is pasted below — the same effect as ' .
+			'`wp post update <id> content/pages/<slug>.html`, for sites with no WP-CLI. Copy the full ' .
+			'contents of the matching file from content/pages/ in the repository, exactly as it is — ' .
+			'do not retype or reformat it.',
+			'wonderland-blocks'
 		);
+		?>
+	</p>
+	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+		<input type="hidden" name="action" value="wonderland_content_sync" />
+		<?php wp_nonce_field( 'wonderland_content_sync' ); ?>
+		<table class="form-table" role="presentation">
+			<tr>
+				<th scope="row"><label for="wcs-slug"><?php esc_html_e( 'Page slug', 'wonderland-blocks' ); ?></label></th>
+				<td>
+					<input id="wcs-slug" name="slug" type="text" class="regular-text" placeholder="home" required />
+					<p class="description">
+						<?php esc_html_e( 'The filename without .html — "home" for content/pages/home.html, "portfolio" for content/pages/portfolio.html.', 'wonderland-blocks' ); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><label for="wcs-content"><?php esc_html_e( 'File contents', 'wonderland-blocks' ); ?></label></th>
+				<td>
+					<textarea id="wcs-content" name="content" rows="18" class="large-text code" required
+						placeholder="<!-- wp:wonderland/hero {...} /-->"></textarea>
+				</td>
+			</tr>
+		</table>
+		<?php
+		submit_button(
+			__( 'Apply', 'wonderland-blocks' ),
+			'secondary',
+			'submit',
+			false,
+			array( 'onclick' => "return confirm('" . esc_js( __( 'This replaces the page\'s content immediately, live. Continue?', 'wonderland-blocks' ) ) . "');" )
+		);
+		?>
+	</form>
+	<?php
+}
+
+add_action(
+	'admin_post_wonderland_content_sync',
+	function () {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You cannot do that.', 'wonderland-blocks' ) );
+		}
+		check_admin_referer( 'wonderland_content_sync' );
+
+		$result = wonderland_content_sync_apply();
+
+		set_transient(
+			'wonderland_content_sync_result',
+			is_wp_error( $result )
+				? array( 'ok' => false, 'message' => $result->get_error_message() )
+				: array( 'ok' => true ) + $result,
+			MINUTE_IN_SECONDS
+		);
+
+		wp_safe_redirect( admin_url( 'admin.php?page=wonderland-forms&wl_content_sync=1' ) );
+		exit;
 	}
 );
 
-/**
- * The admin screen.
- */
-function wonderland_content_sync_page() {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( esc_html__( 'You cannot access this page.', 'wonderland-blocks' ) );
-	}
+add_action(
+	'admin_notices',
+	function () {
+		if ( ! isset( $_GET['wl_content_sync'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return;
+		}
+		$result = get_transient( 'wonderland_content_sync_result' );
+		if ( ! is_array( $result ) ) {
+			return;
+		}
+		delete_transient( 'wonderland_content_sync_result' );
 
-	$result = null;
-	if ( isset( $_POST['wonderland_content_sync_nonce'] ) && check_admin_referer( 'wonderland_content_sync', 'wonderland_content_sync_nonce' ) ) {
-		$result = wonderland_content_sync_apply();
-	}
-
-	$slug    = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-	$content = isset( $_POST['content'] ) ? wp_unslash( $_POST['content'] ) : ''; // Raw on purpose — see wonderland_content_sync_apply().
-	?>
-	<div class="wrap">
-		<h1><?php esc_html_e( 'Apply Page Content', 'wonderland-blocks' ); ?></h1>
-		<p class="description" style="max-width:70ch">
-			<?php
-			esc_html_e(
-				'Replaces one page\'s content wholesale with what is pasted below — the same effect as ' .
-				'`wp post update <id> content/pages/<slug>.html`, for the sites that have no WP-CLI. ' .
-				'Copy the full contents of the matching file from content/pages/ in the repository, exactly ' .
-				'as it is — do not retype or reformat it.',
-				'wonderland-blocks'
+		if ( ! empty( $result['ok'] ) ) {
+			$message = sprintf(
+				/* translators: 1: page slug, 2: post ID, 3: byte count. */
+				__( 'Applied to "%1$s" (post #%2$d) — %3$s bytes written.', 'wonderland-blocks' ),
+				$result['slug'],
+				(int) $result['post_id'],
+				number_format_i18n( $result['bytes'] )
 			);
-			?>
-		</p>
+		} else {
+			$message = $result['message'] ?? __( 'Something went wrong.', 'wonderland-blocks' );
+		}
 
-		<?php if ( is_wp_error( $result ) ) : ?>
-			<div class="notice notice-error"><p><?php echo esc_html( $result->get_error_message() ); ?></p></div>
-		<?php elseif ( is_array( $result ) ) : ?>
-			<div class="notice notice-success">
-				<p>
-					<?php
-					printf(
-						/* translators: 1: page slug, 2: post ID, 3: byte count. */
-						esc_html__( 'Applied to "%1$s" (post #%2$d) — %3$s bytes written.', 'wonderland-blocks' ),
-						esc_html( $result['slug'] ),
-						(int) $result['post_id'],
-						esc_html( number_format_i18n( $result['bytes'] ) )
-					);
-					?>
-					<a href="<?php echo esc_url( get_permalink( $result['post_id'] ) ); ?>" target="_blank" rel="noopener">
-						<?php esc_html_e( 'View the page', 'wonderland-blocks' ); ?>
-					</a>
-				</p>
-			</div>
-		<?php endif; ?>
-
-		<form method="post">
-			<?php wp_nonce_field( 'wonderland_content_sync', 'wonderland_content_sync_nonce' ); ?>
-			<table class="form-table" role="presentation">
-				<tr>
-					<th scope="row"><label for="wcs-slug"><?php esc_html_e( 'Page slug', 'wonderland-blocks' ); ?></label></th>
-					<td>
-						<input id="wcs-slug" name="slug" type="text" class="regular-text" value="<?php echo esc_attr( $slug ); ?>"
-							placeholder="home" required />
-						<p class="description">
-							<?php esc_html_e( 'The filename without .html — "home" for content/pages/home.html, "portfolio" for content/pages/portfolio.html.', 'wonderland-blocks' ); ?>
-						</p>
-					</td>
-				</tr>
-				<tr>
-					<th scope="row"><label for="wcs-content"><?php esc_html_e( 'File contents', 'wonderland-blocks' ); ?></label></th>
-					<td>
-						<textarea id="wcs-content" name="content" rows="18" class="large-text code" required
-							placeholder="<!-- wp:wonderland/hero {...} /-->"><?php echo esc_textarea( $content ); ?></textarea>
-					</td>
-				</tr>
-			</table>
-			<?php submit_button( __( 'Apply', 'wonderland-blocks' ), 'primary', 'submit', true, array( 'onclick' => "return confirm('" . esc_js( __( 'This replaces the page\'s content immediately, live. Continue?', 'wonderland-blocks' ) ) . "');" ) ); ?>
-		</form>
-	</div>
-	<?php
-}
+		printf(
+			'<div class="notice notice-%s is-dismissible"><p>%s</p></div>',
+			! empty( $result['ok'] ) ? 'success' : 'error',
+			esc_html( $message )
+		);
+	}
+);
 
 /**
  * Find the page by slug and overwrite its content, exactly as pasted.

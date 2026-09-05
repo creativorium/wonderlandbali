@@ -302,6 +302,11 @@ function wonderland_forms_settings_page() {
 			</table>
 			<?php submit_button( __( 'Send test email', 'wonderland-blocks' ), 'secondary', 'submit', false ); ?>
 		</form>
+
+		<?php if ( function_exists( 'wonderland_content_sync_section' ) ) : ?>
+			<hr />
+			<?php wonderland_content_sync_section(); ?>
+		<?php endif; ?>
 	</div>
 	<?php
 }
